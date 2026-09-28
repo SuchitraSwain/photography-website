@@ -1,91 +1,80 @@
 "use client";
 
 import {
+  motion,
+  useInView,
+  useReducedMotion,
+  type HTMLMotionProps,
+} from "framer-motion";
+import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
-  type CSSProperties,
   type ReactNode,
 } from "react";
 
-import { cn } from "@/lib/utils";
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
-
-  return reduced;
-}
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 type RevealOnScrollProps = {
   children: ReactNode;
   className?: string;
   delay?: number;
-};
+} & Omit<HTMLMotionProps<"div">, "children">;
 
 /**
- * Scroll reveal that never leaves content stuck invisible.
- * Starts visible; plays a one-shot keyframe when entering the viewport.
+ * Scroll reveal without flicker:
+ * - Above-fold on mount → stay visible (no hide→show)
+ * - Below-fold → hide offscreen, then animate in once when scrolled into view
  */
 export function RevealOnScroll({
   children,
   className,
   delay = 0,
+  ...props
 }: RevealOnScrollProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [play, setPlay] = useState(false);
-  const reduced = usePrefersReducedMotion();
+  const reduceMotion = useReducedMotion();
+  const inView = useInView(ref, { once: true, amount: 0.2 });
+  // boot: visible | static: above-fold, stay put | hidden: below-fold | shown: animated in
+  const [mode, setMode] = useState<"boot" | "static" | "hidden" | "shown">(
+    "boot",
+  );
+
+  useLayoutEffect(() => {
+    if (reduceMotion) {
+      setMode("static");
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const onScreen =
+      rect.top < window.innerHeight * 0.85 && rect.bottom > 40;
+    setMode(onScreen ? "static" : "hidden");
+  }, [reduceMotion]);
 
   useEffect(() => {
-    if (reduced) return;
-    const node = ref.current;
-    if (!node) return;
+    if (mode === "hidden" && inView) setMode("shown");
+  }, [mode, inView]);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setPlay(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
-    );
-
-    observer.observe(node);
-
-    // Safety: if already in view (or IO glitches), reveal immediately
-    const rect = node.getBoundingClientRect();
-    const inView =
-      rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
-    if (inView) {
-      setPlay(true);
-      observer.disconnect();
-    }
-
-    // Absolute fallback — never leave content waiting forever
-    const timeout = window.setTimeout(() => setPlay(true), 1200);
-
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(timeout);
-    };
-  }, [reduced]);
+  const hidden = mode === "hidden";
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      className={cn("motion-reveal", play && "motion-reveal-play", className)}
-      style={{ "--motion-delay": `${delay}s` } as CSSProperties}
+      className={className}
+      initial={false}
+      animate={hidden ? { opacity: 0, y: 24 } : { opacity: 1, y: 0 }}
+      transition={
+        mode === "shown"
+          ? { duration: 0.55, delay, ease: EASE }
+          : { duration: 0 }
+      }
+      {...props}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
 
@@ -101,52 +90,50 @@ export function StaggerReveal({
   stagger = 0.1,
 }: StaggerProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [play, setPlay] = useState(false);
-  const reduced = usePrefersReducedMotion();
+  const reduceMotion = useReducedMotion();
+  const inView = useInView(ref, { once: true, amount: 0.2 });
+  const [mode, setMode] = useState<"boot" | "static" | "hidden" | "shown">(
+    "boot",
+  );
+
+  useLayoutEffect(() => {
+    if (reduceMotion) {
+      setMode("static");
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const onScreen =
+      rect.top < window.innerHeight * 0.85 && rect.bottom > 40;
+    setMode(onScreen ? "static" : "hidden");
+  }, [reduceMotion]);
 
   useEffect(() => {
-    if (reduced) return;
-    const node = ref.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setPlay(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
-    );
-
-    observer.observe(node);
-
-    const rect = node.getBoundingClientRect();
-    if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
-      setPlay(true);
-      observer.disconnect();
-    }
-
-    const timeout = window.setTimeout(() => setPlay(true), 1200);
-
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(timeout);
-    };
-  }, [reduced]);
+    if (mode === "hidden" && inView) setMode("shown");
+  }, [mode, inView]);
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      className={cn(
-        "motion-stagger",
-        play && "motion-stagger-play",
-        className,
-      )}
-      style={{ "--stagger": `${stagger}s` } as CSSProperties}
+      className={className}
+      initial={false}
+      animate={
+        mode === "hidden" ? "hidden" : mode === "shown" ? "show" : "rest"
+      }
+      variants={{
+        rest: {},
+        hidden: {},
+        show: {
+          transition: {
+            staggerChildren: stagger,
+            delayChildren: 0.04,
+          },
+        },
+      }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
 
@@ -157,5 +144,20 @@ export function StaggerItem({
   children: ReactNode;
   className?: string;
 }) {
-  return <div className={cn("motion-stagger-item", className)}>{children}</div>;
+  return (
+    <motion.div
+      className={className}
+      variants={{
+        rest: { opacity: 1, y: 0 },
+        hidden: { opacity: 0, y: 24 },
+        show: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.5, ease: EASE },
+        },
+      }}
+    >
+      {children}
+    </motion.div>
+  );
 }

@@ -1,9 +1,10 @@
 "use client";
 
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+
 import { SafeImage } from "@/components/media/safe-image";
 import type { GalleryImage } from "@/lib/types/content";
-import { cn } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
 
 const CATEGORY_LABELS: Record<string, string> = {
   weddings: "Weddings",
@@ -11,6 +12,8 @@ const CATEGORY_LABELS: Record<string, string> = {
   events: "Events",
   editorial: "Editorial",
 };
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 type GalleryMasonryProps = {
   images: GalleryImage[];
@@ -27,55 +30,48 @@ function GalleryTile({
   onSelect: () => void;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
-  const [play, setPlay] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const inView = useInView(ref, { once: true, amount: 0.15 });
+  const [mode, setMode] = useState<"boot" | "static" | "hidden" | "shown">(
+    "boot",
+  );
+
+  useLayoutEffect(() => {
+    if (reduceMotion) {
+      setMode("static");
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const onScreen = rect.top < window.innerHeight * 0.9 && rect.bottom > 0;
+    setMode(onScreen ? "static" : "hidden");
+  }, [reduceMotion]);
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mq.matches) return;
-
-    const node = ref.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setPlay(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -5% 0px" },
-    );
-    observer.observe(node);
-
-    const rect = node.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      setPlay(true);
-      observer.disconnect();
-    }
-
-    const timeout = window.setTimeout(() => setPlay(true), 1500);
-
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(timeout);
-    };
-  }, []);
+    if (mode === "hidden" && inView) setMode("shown");
+  }, [mode, inView]);
 
   return (
-    <button
+    <motion.button
       ref={ref}
       type="button"
+      initial={false}
+      animate={
+        mode === "hidden" ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }
+      }
+      transition={
+        mode === "shown"
+          ? {
+              duration: reduceMotion ? 0 : 0.45,
+              delay: reduceMotion ? 0 : Math.min(index, 8) * 0.08,
+              ease: EASE,
+            }
+          : { duration: 0 }
+      }
       onClick={onSelect}
       aria-label={`Open ${image.title} in lightbox`}
-      className={cn(
-        "group relative mb-3 block w-full break-inside-avoid overflow-hidden bg-secondary text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:mb-4 motion-reveal",
-        play && "motion-reveal-play",
-      )}
-      style={
-        {
-          "--motion-delay": `${Math.min(index, 8) * 0.08}s`,
-        } as React.CSSProperties
-      }
+      className="group relative mb-3 block w-full break-inside-avoid overflow-hidden bg-secondary text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:mb-4"
     >
       <SafeImage
         src={image.src}
@@ -95,7 +91,7 @@ function GalleryTile({
           {image.title}
         </span>
       </span>
-    </button>
+    </motion.button>
   );
 }
 

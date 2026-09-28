@@ -1,21 +1,24 @@
 "use client";
 
 import Image from "next/image";
+
 import {
   StaggerItem,
   StaggerReveal,
 } from "@/components/motion/reveal-on-scroll";
 
 /**
- * Edit founders here — image paths, bios, and titles.
- * Swap SVG placeholders for real headshots in /public/images/founders later.
+ * Edit founders here — bios, titles, and Dicebear seeds / imageSrc.
+ * Swap imageSrc for real headshots in /public/images/founders later.
  */
 const FOUNDERS = [
   {
     name: "Sagar Zinzala",
     role: "Co-Founder",
     title: "Co-Founder & Photographer",
-    imageSrc: "/images/founders/sagar.svg",
+    /** Dicebear seed — change seed (and imageSrc) to regenerate the placeholder */
+    seed: "Sagar",
+    imageSrc: "https://api.dicebear.com/7.x/notionists/svg?seed=Sagar",
     imageAlt: "Portrait placeholder for Sagar Zinzala",
     bio: "Sagar is a software engineer by trade and a photographer by obsession. What started as a way to unwind from shipping code turned into a genuine craft — he brings the same precision he applies to systems design to composing a frame. Based in [CITY], drawn to natural light and unscripted moments.",
   },
@@ -23,16 +26,17 @@ const FOUNDERS = [
     name: "Suchitra Swain",
     role: "Co-Founder",
     title: "Co-Founder & Photographer",
-    imageSrc: "/images/founders/suchitra.svg",
+    seed: "Suchitra",
+    imageSrc: "https://api.dicebear.com/7.x/notionists/svg?seed=Suchitra",
     imageAlt: "Portrait placeholder for Suchitra Swain",
     bio: "Suchitra spends her days solving engineering problems and her weekends chasing golden hour. She co-founded ATELIER to prove that a technical mind and an artistic eye aren't opposites — they're the same instinct for noticing what matters. Focused on portraits and the quiet, in-between moments most people rush past.",
   },
-] as const;
+];
 
 export function FoundersSection() {
   return (
     <section className="mt-24 border-t border-border pt-16 md:mt-28 md:pt-20">
-      <StaggerReveal className="space-y-10" stagger={0.12}>
+      <StaggerReveal className="space-y-10" stagger={0.1}>
         <StaggerItem>
           <p className="text-[0.7rem] font-medium tracking-[0.35em] text-muted-foreground uppercase">
             Engineers turned photographers

@@ -42,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" suppressHydrationWarning className="dark h-full">
       <body
+        suppressHydrationWarning
         className={`${display.variable} ${GeistSans.variable} flex min-h-full flex-col font-sans antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
