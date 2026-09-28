@@ -48,7 +48,7 @@ export function FeaturedStrip({ images }: FeaturedStripProps) {
                 alt={image.alt}
                 fill
                 sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover transition duration-700 ease-out group-hover:scale-[1.025] group-hover:opacity-90"
+                className="object-cover transition duration-700 ease-out group-hover:scale-[1.025] group-hover:opacity-90 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
               />
               <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-5 pt-16 pb-5 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
                 {image.title}

@@ -1,15 +1,11 @@
 import type { SiteSettings } from "@/lib/types/content";
 
-type SiteFooterProps = Pick<
-  SiteSettings,
-  "brandName" | "socialLinks" | "location"
->;
+type SiteFooterProps = {
+  settings: Pick<SiteSettings, "brandName" | "socialLinks" | "location">;
+};
 
-export function SiteFooter({
-  brandName,
-  socialLinks,
-  location,
-}: SiteFooterProps) {
+export function SiteFooter({ settings }: SiteFooterProps) {
+  const { brandName, socialLinks, location } = settings;
   const year = new Date().getFullYear();
 
   return (
