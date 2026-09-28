@@ -5,7 +5,6 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -90,30 +89,25 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2">
-          <div className={cn(overHero && "[&_button]:border-white/40")}>
-            <ThemeToggle />
-          </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className={cn(
-              "lg:hidden",
-              overHero && "text-white hover:bg-white/10 hover:text-white",
-            )}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-nav"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            onClick={() => setMobileOpen((open) => !open)}
-          >
-            {mobileOpen ? (
-              <X className="size-5" aria-hidden />
-            ) : (
-              <Menu className="size-5" aria-hidden />
-            )}
-          </Button>
-        </div>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className={cn(
+            "lg:hidden",
+            overHero && "text-white hover:bg-white/10 hover:text-white",
+          )}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMobileOpen((open) => !open)}
+        >
+          {mobileOpen ? (
+            <X className="size-5" aria-hidden />
+          ) : (
+            <Menu className="size-5" aria-hidden />
+          )}
+        </Button>
       </div>
 
       <nav
