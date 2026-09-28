@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { mockSiteSettings } from "@/lib/mock/content";
 import { GeistSans } from "geist/font/sans";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
@@ -26,7 +29,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         className={`${display.variable} ${GeistSans.variable} flex min-h-full flex-col font-sans antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <SiteHeader brandName={mockSiteSettings.brandName} />
           {children}
+          <SiteFooter
+            brandName={mockSiteSettings.brandName}
+            socialLinks={mockSiteSettings.socialLinks}
+            location={mockSiteSettings.location}
+          />
         </ThemeProvider>
       </body>
     </html>
