@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { auth, signOut } from "@/lib/auth";
+import { isAdminEmail } from "@/lib/booking/config";
 import { Button } from "@/components/ui/button";
 
 export default async function AdminLayout({
@@ -9,6 +11,15 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  // Sign-in page is under /admin/sign-in — allow without admin check via
+  // separate layout would be cleaner; for now only enforce on authenticated routes
+  // when a session exists but is not allowlisted.
+  if (
+    session?.user?.email &&
+    !isAdminEmail(session.user.email)
+  ) {
+    redirect("/admin/sign-in");
+  }
 
   return (
     <div className="min-h-screen bg-background">
