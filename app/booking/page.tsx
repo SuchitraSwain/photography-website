@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { BookingForm } from "@/components/booking/booking-form";
+import { isGoogleBookingConfigured } from "@/lib/booking/config";
 import { getSiteSettings } from "@/lib/sanity/fetch";
 
 /** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 
 export default async function BookingPage() {
   const { contactEmail } = await getSiteSettings();
+  const bookingEnabled = isGoogleBookingConfigured();
 
   return (
     <main className="px-4 py-16 md:px-8">
@@ -25,12 +27,16 @@ export default async function BookingPage() {
           Booking
         </h1>
         <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-          Share the details of your session. Fields match our upcoming online
-          booking flow—submit stays off until launch.
+          {bookingEnabled
+            ? "Choose an open time from the calendar, then share a few details about your session."
+            : "Share the details of your session. Online booking unlocks once Google Calendar is connected."}
         </p>
 
         <div className="mt-12">
-          <BookingForm contactEmail={contactEmail} />
+          <BookingForm
+            contactEmail={contactEmail}
+            bookingEnabled={bookingEnabled}
+          />
         </div>
       </div>
     </main>

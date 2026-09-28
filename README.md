@@ -125,11 +125,61 @@ The site owner must also grant the content editors access to the Sanity project.
 
 The project uses strict TypeScript (`strict: true`, `noUncheckedIndexedAccess: true`). Run `npx tsc --noEmit` to type-check.
 
-## Phase 2
+## Phase 2 — Google Calendar booking + Gmail
 
-Form delivery, persistent booking workflows, rate limiting, authenticated
-preview, and tag-scoped (per-document) revalidation are intentionally deferred
-to Phase 2. Phase 1 ships time-based revalidation plus a shared-secret webhook
-that purges the whole site.
-The Phase 1 booking and contact forms are non-submitting UI shells and state
-that clearly in the interface.
+Booking and contact submit to your Google account (Calendar FreeBusy + tentative
+events + Gmail). Admin UI lives at `/admin`.
+
+### 1. Create a Supabase Postgres database
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. Copy the connection string (Settings → Database) into `DATABASE_URL`.
+3. From the app root:
+
+   ```bash
+   npx prisma migrate dev --name init
+   ```
+
+### 2. Create Google OAuth credentials
+
+1. Open [Google Cloud Console](https://console.cloud.google.com/).
+2. Create a project (or pick one) and enable **Google Calendar API** and **Gmail API**.
+3. Configure the OAuth consent screen (External is fine for personal use).
+4. Create an OAuth client ID of type **Web application**.
+5. Add authorized redirect URI:
+
+   `http://127.0.0.1:3000/api/auth/callback/google`
+
+   (Add your production `https://…/api/auth/callback/google` later.)
+6. Copy Client ID → `AUTH_GOOGLE_ID` and Client Secret → `AUTH_GOOGLE_SECRET`.
+
+### 3. Fill `.env.local`
+
+```bash
+cp .env.example .env.local
+openssl rand -base64 32   # paste into AUTH_SECRET
+```
+
+Set:
+
+- `DATABASE_URL`
+- `AUTH_SECRET`
+- `AUTH_URL=http://127.0.0.1:3000`
+- `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET`
+- `ADMIN_EMAILS=you@gmail.com` (the Google account that owns the calendar)
+
+### 4. Connect Google
+
+1. `npm run dev`
+2. Open [http://127.0.0.1:3000/admin/sign-in](http://127.0.0.1:3000/admin/sign-in)
+3. Sign in with the admin Gmail account (consent to Calendar + Gmail)
+4. Booking (`/booking`) and contact (`/contact`) unlock automatically once env + DB + OAuth are set
+
+### Credentials to request
+
+- Supabase / Postgres `DATABASE_URL`
+- Google OAuth Client ID + Secret
+- Admin Google email(s) for `ADMIN_EMAILS`
+- Generated `AUTH_SECRET`
+
+Without these variables the site still runs; booking/contact stay gated with mailto fallbacks.

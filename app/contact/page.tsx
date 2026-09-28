@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/contact/contact-form";
+import { isGoogleBookingConfigured } from "@/lib/booking/config";
 import { getSiteSettings } from "@/lib/sanity/fetch";
 
 /** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const { contactEmail, location, socialLinks } = await getSiteSettings();
+  const contactEnabled = isGoogleBookingConfigured();
 
   return (
     <main className="px-4 py-16 md:px-8">
@@ -25,8 +27,8 @@ export default async function ContactPage() {
           Contact
         </h1>
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Questions, collaborations, or press—use the form shape below. Until
-          messaging goes live, email is the fastest way to reach us.
+          Questions, collaborations, or press—send a message and we&apos;ll reply
+          by email.
         </p>
 
         <div className="mt-12">
@@ -34,6 +36,7 @@ export default async function ContactPage() {
             contactEmail={contactEmail}
             location={location}
             socialLinks={socialLinks}
+            contactEnabled={contactEnabled}
           />
         </div>
       </div>

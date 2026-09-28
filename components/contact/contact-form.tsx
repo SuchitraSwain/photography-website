@@ -1,23 +1,71 @@
+"use client";
+
+import { useState, useTransition } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { SocialLink } from "@/lib/types/content";
+import { cn } from "@/lib/utils";
 
 type ContactFormProps = {
   contactEmail: string;
   location: string;
   socialLinks: SocialLink[];
+  contactEnabled: boolean;
 };
 
 export function ContactForm({
   contactEmail,
   location,
   socialLinks,
+  contactEnabled,
 }: ContactFormProps) {
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [message, setMessage] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+
+  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!contactEnabled) return;
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    startTransition(async () => {
+      setStatus("idle");
+      setMessage(null);
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: String(formData.get("name") ?? ""),
+            email: String(formData.get("email") ?? ""),
+            subject: String(formData.get("subject") ?? ""),
+            message: String(formData.get("message") ?? ""),
+          }),
+        });
+        const data = (await res.json()) as { error?: string };
+        if (!res.ok) {
+          setStatus("error");
+          setMessage(data.error ?? "Could not send message");
+          return;
+        }
+        setStatus("success");
+        setMessage("Message sent. We'll get back to you soon.");
+        form.reset();
+      } catch {
+        setStatus("error");
+        setMessage("Could not send message");
+      }
+    });
+  }
+
   return (
     <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16 lg:items-start">
-      <form className="space-y-6" noValidate>
+      <form className="space-y-6" onSubmit={onSubmit} noValidate>
         <div className="space-y-2">
           <Label htmlFor="contact-name">Name</Label>
           <Input id="contact-name" name="name" autoComplete="name" required />
@@ -42,36 +90,53 @@ export function ContactForm({
         </div>
 
         <div className="space-y-3 border-t border-border pt-6">
-          <Button type="submit" disabled className="w-full sm:w-auto">
-            Send message
+          <Button
+            type="submit"
+            disabled={!contactEnabled || pending}
+            className="w-full sm:w-auto"
+          >
+            {pending ? "Sending…" : "Send message"}
           </Button>
-          <p className="text-sm text-muted-foreground">
-            Online messaging launches soon — meanwhile email{" "}
-            <a
-              href={`mailto:${contactEmail}`}
-              className="text-foreground underline-offset-4 hover:underline"
+          {!contactEnabled ? (
+            <p className="text-sm text-muted-foreground">
+              Online messaging unlocks after Google is connected — meanwhile email{" "}
+              <a
+                className="underline underline-offset-4 hover:text-foreground"
+                href={`mailto:${contactEmail}`}
+              >
+                {contactEmail}
+              </a>
+              .
+            </p>
+          ) : null}
+          {message ? (
+            <p
+              className={cn(
+                "text-sm",
+                status === "error" ? "text-destructive" : "text-muted-foreground",
+              )}
+              role="status"
             >
-              {contactEmail}
-            </a>
-            .
-          </p>
+              {message}
+            </p>
+          ) : null}
         </div>
       </form>
 
-      <aside className="space-y-8 lg:sticky lg:top-24">
-        <div>
-          <h2 className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
+      <aside className="space-y-8">
+        <div className="space-y-2">
+          <h2 className="font-[family-name:var(--font-display)] text-2xl">
             Studio
           </h2>
           {location ? (
-            <p className="mt-3 text-base leading-relaxed text-foreground/90">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {location}
             </p>
           ) : null}
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-sm">
             <a
+              className="underline underline-offset-4 hover:text-foreground"
               href={`mailto:${contactEmail}`}
-              className="transition-colors hover:text-foreground"
             >
               {contactEmail}
             </a>
@@ -79,21 +144,21 @@ export function ContactForm({
         </div>
 
         {socialLinks.length > 0 ? (
-          <div>
+          <div className="space-y-3">
             <h2 className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
               Connect
             </h2>
-            <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-              {socialLinks.map(({ label, url }) => (
-                <li key={url}>
+            <ul className="space-y-2">
+              {socialLinks.map((link) => (
+                <li key={link.url}>
                   <a
-                    href={url}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    {...(url.startsWith("http")
+                    href={link.url}
+                    className="text-sm underline-offset-4 hover:underline"
+                    {...(link.url.startsWith("http")
                       ? { target: "_blank", rel: "noopener noreferrer" }
                       : {})}
                   >
-                    {label}
+                    {link.label}
                   </a>
                 </li>
               ))}
@@ -102,12 +167,9 @@ export function ContactForm({
         ) : null}
 
         {location ? (
-          <figure className="border border-border bg-secondary px-6 py-8">
-            <blockquote className="font-[family-name:var(--font-display)] text-2xl leading-snug font-medium tracking-tight">
-              {location}
-            </blockquote>
-            <figcaption className="mt-3 text-xs tracking-[0.18em] text-muted-foreground uppercase">
-              Service area
+          <figure className="border border-border bg-secondary/30 p-6">
+            <figcaption className="text-sm text-muted-foreground">
+              Service area: {location}
             </figcaption>
           </figure>
         ) : null}
