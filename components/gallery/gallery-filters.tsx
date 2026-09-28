@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 import type { Category } from "@/lib/types/content";
 
 type GalleryFiltersProps = {
@@ -31,13 +35,20 @@ export function GalleryFilters({
             type="button"
             aria-pressed={isActive}
             onClick={() => onFilterChange(slug)}
-            className={`rounded-full border px-4 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${
+            className={`relative rounded-full border px-4 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${
               isActive
-                ? "border-foreground bg-foreground text-background"
+                ? "border-transparent text-background"
                 : "border-border hover:border-foreground"
             }`}
           >
-            {label}
+            {isActive ? (
+              <motion.span
+                layoutId="gallery-filter-pill"
+                className="absolute inset-0 rounded-full bg-foreground"
+                transition={{ type: "spring", stiffness: 380, damping: 32 }}
+              />
+            ) : null}
+            <span className="relative z-10">{label}</span>
           </button>
         );
       })}

@@ -1,16 +1,13 @@
 import Link from "next/link";
 
 import { RevealOnScroll } from "@/components/motion/reveal-on-scroll";
+import { foundersCredit } from "@/lib/site-config";
 
 type IntroSectionProps = {
   tagline: string;
-  brandName?: string;
 };
 
-export function IntroSection({
-  tagline,
-  brandName = "ATELIER",
-}: IntroSectionProps) {
+export function IntroSection({ tagline }: IntroSectionProps) {
   return (
     <section className="relative overflow-hidden px-6 py-28 sm:px-10 sm:py-36 lg:px-16">
       <div
@@ -34,16 +31,16 @@ export function IntroSection({
           </h2>
           <div className="mt-12 grid gap-10 border-t border-border/80 pt-10 md:grid-cols-[1.4fr_0.6fr]">
             <p className="max-w-xl text-base leading-[1.75] text-muted-foreground sm:text-lg">
-              Weddings, portraits, events, and editorial stories — composed with
-              patience and a bias toward natural light. Less posing, more
-              presence.
+              A two-person studio — {foundersCredit()} — shooting weddings,
+              portraits, events, and editorial stories with patience and a bias
+              toward natural light. Less posing, more presence.
             </p>
             <div className="md:pt-1 md:text-right">
               <Link
                 href="/about"
                 className="group inline-flex items-center gap-3 text-[0.7rem] font-semibold tracking-[0.24em] text-foreground uppercase"
               >
-                Meet {brandName}
+                Meet the founders
                 <span
                   aria-hidden
                   className="block h-px w-8 bg-foreground transition-all duration-300 group-hover:w-12"

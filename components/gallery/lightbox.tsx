@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
+import { SafeImage } from "@/components/media/safe-image";
 import {
   Dialog,
   DialogClose,
@@ -24,6 +24,13 @@ type LightboxProps = {
 };
 
 const SWIPE_THRESHOLD = 50;
+
+const CATEGORY_LABELS: Record<string, string> = {
+  weddings: "Weddings",
+  portraits: "Portraits",
+  events: "Events",
+  editorial: "Editorial",
+};
 
 export function Lightbox({
   image,
@@ -84,14 +91,13 @@ export function Lightbox({
           {image.alt}. Image {position + 1} of {total}.
         </DialogDescription>
 
-        <Image
+        <SafeImage
           key={image._id}
           src={image.src}
           alt={image.alt}
           fill
           sizes="100vw"
           priority
-          placeholder={image.lqip ? "blur" : "empty"}
           blurDataURL={image.lqip}
           className="object-contain p-14 sm:p-16"
         />
@@ -125,7 +131,10 @@ export function Lightbox({
         )}
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-6 pt-14 pb-5 text-center">
-          <p className="text-sm font-medium">{image.title}</p>
+          <p className="text-[0.65rem] tracking-[0.2em] text-white/65 uppercase">
+            {CATEGORY_LABELS[image.categorySlug] ?? image.categorySlug}
+          </p>
+          <p className="mt-1 text-sm font-medium">{image.title}</p>
           <p className="mt-1 text-xs text-white/70">
             {position + 1} / {total}
           </p>

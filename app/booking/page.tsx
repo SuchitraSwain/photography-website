@@ -1,25 +1,18 @@
 import type { Metadata } from "next";
 
-import { BookingForm } from "@/components/booking/booking-form";
-import { isGoogleBookingConfigured } from "@/lib/booking/config";
-import { getSiteSettings } from "@/lib/sanity/fetch";
-
-/** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
-export const revalidate = 300;
+import { CalEmbed } from "@/components/booking/cal-embed";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Booking",
   description:
-    "Request a wedding, portrait, or event session — share your date, location, and vision with ATELIER.",
+    "Schedule a wedding, portrait, or event session with ATELIER — pick a time that works for you.",
 };
 
-export default async function BookingPage() {
-  const { contactEmail } = await getSiteSettings();
-  const bookingEnabled = isGoogleBookingConfigured();
-
+export default function BookingPage() {
   return (
     <main className="px-4 py-16 md:px-8">
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-3xl">
         <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
           Inquire
         </p>
@@ -27,16 +20,12 @@ export default async function BookingPage() {
           Booking
         </h1>
         <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-          {bookingEnabled
-            ? "Choose an open time from the calendar, then share a few details about your session."
-            : "Share the details of your session. Online booking unlocks once Google Calendar is connected."}
+          Choose a time that works for you. Confirmations are handled through
+          the scheduling calendar — no account setup required on your end.
         </p>
 
         <div className="mt-12">
-          <BookingForm
-            contactEmail={contactEmail}
-            bookingEnabled={bookingEnabled}
-          />
+          <CalEmbed calUrl={siteConfig.calUrl} />
         </div>
       </div>
     </main>

@@ -1,7 +1,13 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
 
-import { RevealOnScroll } from "@/components/motion/reveal-on-scroll";
+import { SafeImage } from "@/components/media/safe-image";
+import {
+  RevealOnScroll,
+  StaggerItem,
+  StaggerReveal,
+} from "@/components/motion/reveal-on-scroll";
 import type { GalleryImage } from "@/lib/types/content";
 
 type FeaturedStripProps = {
@@ -40,33 +46,35 @@ export function FeaturedStrip({ images }: FeaturedStripProps) {
           </Link>
         </div>
 
-        <div className="grid gap-3 lg:grid-cols-12 lg:gap-4">
+        <StaggerReveal className="grid gap-3 lg:grid-cols-12 lg:gap-4">
           {heroImage ? (
-            <Link
-              href="/gallery"
-              className="group relative col-span-1 block aspect-[4/5] overflow-hidden bg-secondary sm:aspect-[5/4] lg:col-span-7 lg:aspect-auto lg:min-h-[36rem]"
-              aria-label={`View ${heroImage.title} in the gallery`}
-            >
-              <Image
-                src={heroImage.src}
-                alt={heroImage.alt}
-                fill
-                sizes="(min-width: 1024px) 58vw, 100vw"
-                className="object-cover transition duration-[900ms] ease-out group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-              />
-              <div className="image-veil opacity-80" />
-              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-                <p className="text-[0.65rem] tracking-[0.28em] text-white/65 uppercase">
-                  Feature
-                </p>
-                <p className="font-display mt-2 text-2xl text-white sm:text-3xl">
-                  {heroImage.title}
-                </p>
-              </div>
-            </Link>
+            <StaggerItem className="lg:col-span-7">
+              <Link
+                href="/gallery"
+                className="group relative block aspect-[4/5] overflow-hidden bg-secondary sm:aspect-[5/4] lg:aspect-auto lg:min-h-[36rem]"
+                aria-label={`View ${heroImage.title} in the gallery`}
+              >
+                <SafeImage
+                  src={heroImage.src}
+                  alt={heroImage.alt}
+                  fill
+                  sizes="(min-width: 1024px) 58vw, 100vw"
+                  className="object-cover transition duration-[900ms] ease-out group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                />
+                <div className="image-veil opacity-80" />
+                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+                  <p className="text-[0.65rem] tracking-[0.28em] text-white/65 uppercase">
+                    Feature
+                  </p>
+                  <p className="font-display mt-2 text-2xl text-white sm:text-3xl">
+                    {heroImage.title}
+                  </p>
+                </div>
+              </Link>
+            </StaggerItem>
           ) : null}
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1 lg:gap-4">
+          <StaggerItem className="grid gap-3 sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1 lg:gap-4">
             {sideImages.map((image) => (
               <Link
                 key={image._id}
@@ -74,20 +82,21 @@ export function FeaturedStrip({ images }: FeaturedStripProps) {
                 className="group relative block aspect-[3/4] overflow-hidden bg-secondary lg:aspect-[16/10]"
                 aria-label={`View ${image.title} in the gallery`}
               >
-                <Image
+                <SafeImage
                   src={image.src}
                   alt={image.alt}
                   fill
                   sizes="(min-width: 1024px) 35vw, (min-width: 640px) 33vw, 100vw"
                   className="object-cover transition duration-[900ms] ease-out group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
+                <span className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/25" />
                 <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent px-5 pt-16 pb-4 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:opacity-100">
                   {image.title}
                 </span>
               </Link>
             ))}
-          </div>
-        </div>
+          </StaggerItem>
+        </StaggerReveal>
       </RevealOnScroll>
     </section>
   );

@@ -10,7 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Portrait, wedding, and event photography packages — what's included, optional add-ons, and transparent pricing.",
+    "ATELIER photography packages for portraits, full wedding days, and brand events — inclusions, add-ons, and pricing.",
 };
 
 function sortPackages(packages: ServicePackage[]): ServicePackage[] {

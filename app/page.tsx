@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 
+import { CtaBand } from "@/components/home/cta-band";
 import { FeaturedStrip } from "@/components/home/featured-strip";
 import { Hero } from "@/components/home/hero";
 import { IntroSection } from "@/components/home/intro-section";
+import { StatsStrip } from "@/components/home/stats-strip";
+import { Testimonials } from "@/components/home/testimonials";
 import { LocalBusinessJsonLd } from "@/components/seo/json-ld";
 import {
   getFeaturedGalleryImages,
@@ -15,8 +18,11 @@ export const revalidate = 300;
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   return {
-    title: settings.brandName,
-    description: settings.seo.description,
+    title: {
+      absolute: `${settings.brandName} · Wedding, Portrait & Editorial Photography`,
+    },
+    description:
+      "Editorial photography for weddings, portraits, and events — composed with natural light and unhurried storytelling.",
     openGraph: {
       title: settings.brandName,
       description: settings.seo.description,
@@ -46,11 +52,11 @@ export default async function HomePage() {
         tagline={settings.tagline}
         images={settings.heroImages}
       />
-      <IntroSection
-        tagline={settings.tagline}
-        brandName={settings.brandName}
-      />
+      <IntroSection tagline={settings.tagline} />
+      <StatsStrip />
+      <Testimonials />
       <FeaturedStrip images={featured} />
+      <CtaBand />
     </main>
   );
 }

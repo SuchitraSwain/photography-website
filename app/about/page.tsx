@@ -9,7 +9,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Meet ATELIER — our story, philosophy, and selected press on wedding, portrait, and editorial photography.",
+    "Meet Sagar Zinzala and Suchitra Swain — the two friends behind ATELIER, a photography practice for weddings, portraits, and editorial work.",
 };
 
 export default async function AboutPage() {

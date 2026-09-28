@@ -1,3 +1,4 @@
+import { foundersCredit } from "@/lib/site-config";
 import type { SiteSettings } from "@/lib/types/content";
 
 type SiteFooterProps = {
@@ -7,6 +8,7 @@ type SiteFooterProps = {
 export function SiteFooter({ settings }: SiteFooterProps) {
   const { brandName, socialLinks, location } = settings;
   const year = new Date().getFullYear();
+  const founders = foundersCredit();
 
   return (
     <footer className="mt-auto border-t border-border/70">
@@ -15,13 +17,16 @@ export function SiteFooter({ settings }: SiteFooterProps) {
           <p className="font-display text-3xl tracking-[0.12em] uppercase">
             {brandName}
           </p>
+          <p className="text-[0.7rem] tracking-[0.18em] text-muted-foreground uppercase">
+            {founders}
+          </p>
           {location ? (
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
               {location}
             </p>
           ) : null}
           <p className="text-[0.7rem] tracking-[0.2em] text-muted-foreground uppercase">
-            © {year} {brandName}
+            © {year} {brandName} · {founders}
           </p>
         </div>
 

@@ -9,7 +9,8 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Events",
-  description: "Upcoming studio evenings, workshops, and pop-up gallery events.",
+  description:
+    "Upcoming ATELIER open studios, portrait workshops, and seasonal pop-up gallery events.",
 };
 
 function upcomingEvents(events: EventItem[]): EventItem[] {

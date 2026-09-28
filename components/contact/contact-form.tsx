@@ -6,29 +6,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { getFormspreeEndpoint, siteConfig } from "@/lib/site-config";
 import type { SocialLink } from "@/lib/types/content";
 import { cn } from "@/lib/utils";
 
 type ContactFormProps = {
-  contactEmail: string;
+  contactEmail?: string;
   location: string;
   socialLinks: SocialLink[];
-  contactEnabled: boolean;
 };
 
 export function ContactForm({
-  contactEmail,
+  contactEmail = siteConfig.contactEmail,
   location,
   socialLinks,
-  contactEnabled,
 }: ContactFormProps) {
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const endpoint = getFormspreeEndpoint();
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!contactEnabled) return;
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -36,35 +35,52 @@ export function ContactForm({
     startTransition(async () => {
       setStatus("idle");
       setMessage(null);
+
+      if (!endpoint) {
+        setStatus("error");
+        setMessage(
+          `Add your Formspree form ID (NEXT_PUBLIC_FORMSPREE_ID) to enable submissions, or email ${contactEmail} directly.`,
+        );
+        return;
+      }
+
       try {
-        const res = await fetch("/api/contact", {
+        const res = await fetch(endpoint, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             name: String(formData.get("name") ?? ""),
             email: String(formData.get("email") ?? ""),
             subject: String(formData.get("subject") ?? ""),
             message: String(formData.get("message") ?? ""),
+            _replyto: String(formData.get("email") ?? ""),
           }),
         });
-        const data = (await res.json()) as { error?: string };
+
         if (!res.ok) {
+          const data = (await res.json().catch(() => ({}))) as {
+            error?: string;
+          };
           setStatus("error");
-          setMessage(data.error ?? "Could not send message");
+          setMessage(data.error ?? "Could not send message. Please try again.");
           return;
         }
+
         setStatus("success");
-        setMessage("Message sent. We'll get back to you soon.");
+        setMessage("Message sent. We’ll get back to you soon.");
         form.reset();
       } catch {
         setStatus("error");
-        setMessage("Could not send message");
+        setMessage("Could not send message. Please try again.");
       }
     });
   }
 
   return (
-    <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16 lg:items-start">
+    <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-16">
       <form className="space-y-6" onSubmit={onSubmit} noValidate>
         <div className="space-y-2">
           <Label htmlFor="contact-name">Name</Label>
@@ -90,30 +106,18 @@ export function ContactForm({
         </div>
 
         <div className="space-y-3 border-t border-border pt-6">
-          <Button
-            type="submit"
-            disabled={!contactEnabled || pending}
-            className="w-full sm:w-auto"
-          >
+          <Button type="submit" disabled={pending} className="w-full sm:w-auto">
             {pending ? "Sending…" : "Send message"}
           </Button>
-          {!contactEnabled ? (
-            <p className="text-sm text-muted-foreground">
-              Online messaging unlocks after Google is connected — meanwhile email{" "}
-              <a
-                className="underline underline-offset-4 hover:text-foreground"
-                href={`mailto:${contactEmail}`}
-              >
-                {contactEmail}
-              </a>
-              .
-            </p>
-          ) : null}
           {message ? (
             <p
               className={cn(
                 "text-sm",
-                status === "error" ? "text-destructive" : "text-muted-foreground",
+                status === "error"
+                  ? "text-destructive"
+                  : status === "success"
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-muted-foreground",
               )}
               role="status"
             >
@@ -136,7 +140,11 @@ export function ContactForm({
           <p className="text-sm">
             <a
               className="underline underline-offset-4 hover:text-foreground"
-              href={`mailto:${contactEmail}`}
+              href={
+                contactEmail.includes("@") && !contactEmail.startsWith("[")
+                  ? `mailto:${contactEmail}`
+                  : undefined
+              }
             >
               {contactEmail}
             </a>

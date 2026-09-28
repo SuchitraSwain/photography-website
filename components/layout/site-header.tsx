@@ -67,19 +67,26 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
               key={href}
               href={href}
               className={cn(
-                "text-[0.7rem] tracking-[0.22em] uppercase transition-colors",
+                "group relative text-[0.7rem] tracking-[0.22em] uppercase transition-colors",
                 overHero
                   ? "text-white/70 hover:text-white"
                   : "text-muted-foreground hover:text-foreground",
               )}
             >
               {label}
+              <span
+                aria-hidden
+                className={cn(
+                  "absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100",
+                  overHero ? "bg-white" : "bg-foreground",
+                )}
+              />
             </Link>
           ))}
           <Link
             href="/booking"
             className={cn(
-              "inline-flex h-9 items-center px-4 text-[0.65rem] font-semibold tracking-[0.2em] uppercase transition-colors",
+              "inline-flex h-9 items-center px-4 text-[0.65rem] font-semibold tracking-[0.2em] uppercase transition-transform duration-300 hover:scale-[1.03] motion-reduce:hover:scale-100",
               overHero
                 ? "bg-white text-black hover:bg-white/90"
                 : "bg-foreground text-background hover:opacity-90",
