@@ -1,9 +1,9 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 import { RevealOnScroll } from "@/components/motion/reveal-on-scroll";
+import { cn } from "@/lib/utils";
 
 /**
  * Edit quotes here — carousel logic stays the same.
@@ -31,8 +31,13 @@ const TESTIMONIALS = [
 
 export function Testimonials() {
   const [index, setIndex] = useState(0);
-  const reduceMotion = useReducedMotion();
+  const [reduceMotion, setReduceMotion] = useState(false);
   const active = TESTIMONIALS[index] ?? TESTIMONIALS[0];
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduceMotion(mq.matches);
+  }, []);
 
   useEffect(() => {
     if (reduceMotion || TESTIMONIALS.length < 2) return;
@@ -53,28 +58,22 @@ export function Testimonials() {
         </h2>
 
         <div className="relative mt-14 min-h-[14rem] border-t border-border/80 pt-10 md:min-h-[12rem]">
-          <AnimatePresence mode="wait">
-            <motion.blockquote
-              key={active.name}
-              initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-3xl"
-            >
-              <p className="font-display text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.35] text-foreground/95 italic">
-                “{active.quote}”
+          <blockquote
+            key={active.name}
+            className={cn("max-w-3xl motion-fade")}
+          >
+            <p className="font-display text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.35] text-foreground/95 italic">
+              “{active.quote}”
+            </p>
+            <footer className="mt-8">
+              <p className="text-sm font-medium tracking-wide text-foreground">
+                {active.name}
               </p>
-              <footer className="mt-8">
-                <p className="text-sm font-medium tracking-wide text-foreground">
-                  {active.name}
-                </p>
-                <p className="mt-1 text-[0.7rem] tracking-[0.2em] text-muted-foreground uppercase">
-                  {active.detail}
-                </p>
-              </footer>
-            </motion.blockquote>
-          </AnimatePresence>
+              <p className="mt-1 text-[0.7rem] tracking-[0.2em] text-muted-foreground uppercase">
+                {active.detail}
+              </p>
+            </footer>
+          </blockquote>
         </div>
 
         <div

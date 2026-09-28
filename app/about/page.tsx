@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { AboutView } from "@/components/about/about-view";
+import { FoundersSection } from "@/components/about/founders-section";
 import { getPageAbout } from "@/lib/sanity/fetch";
 
 /** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
@@ -9,7 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Meet Sagar Zinzala and Suchitra Swain — the two friends behind ATELIER, a photography practice for weddings, portraits, and editorial work.",
+    "Meet Sagar Zinzala and Suchitra Swain — engineers turned photographers behind ATELIER.",
 };
 
 export default async function AboutPage() {
@@ -21,7 +22,10 @@ export default async function AboutPage() {
         <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
           The studio
         </p>
-        <AboutView about={about} />
+        <div className="mt-3">
+          <AboutView about={about} />
+        </div>
+        <FoundersSection />
       </div>
     </main>
   );

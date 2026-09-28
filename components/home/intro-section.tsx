@@ -20,7 +20,7 @@ export function IntroSection({ tagline }: IntroSectionProps) {
       <RevealOnScroll className="relative mx-auto grid max-w-[100rem] gap-14 lg:grid-cols-[0.35fr_1fr] lg:gap-20">
         <div className="space-y-6">
           <p className="text-[0.7rem] font-medium tracking-[0.35em] text-muted-foreground uppercase">
-            The studio
+            We debug by day. We shoot at golden hour.
           </p>
           <div className="editorial-rule w-16" />
         </div>
