@@ -1,26 +1,70 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 0 0% 98%;
+  --foreground: 0 0% 8%;
+  --muted: 30 5% 45%;
+  --accent: 36 20% 70%;
+  --border: 30 5% 85%;
+  --input: 30 5% 85%;
+  --ring: 36 20% 70%;
+  --destructive: 0 72% 51%;
+  --radius: 0.375rem;
+}
+
+.dark {
+  --background: 0 0% 4%;
+  --foreground: 40 20% 95%;
+  --muted: 30 5% 55%;
+  --accent: 36 20% 70%;
+  --border: 0 0% 16%;
+  --input: 0 0% 16%;
+  --ring: 36 20% 70%;
+  --destructive: 0 63% 50%;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--background));
+  --color-card-foreground: hsl(var(--foreground));
+  --color-popover: hsl(var(--background));
+  --color-popover-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--foreground));
+  --color-primary-foreground: hsl(var(--background));
+  --color-secondary: hsl(var(--border));
+  --color-secondary-foreground: hsl(var(--foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(0 0% 8%);
+  --color-destructive: hsl(var(--destructive));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-editorial: var(--font-display);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100%;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+* {
+  border-color: hsl(var(--border));
 }
