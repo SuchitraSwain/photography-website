@@ -13,13 +13,20 @@ const display = Cormorant_Garamond({
   weight: ["400", "500", "600"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "ATELIER",
-    template: "%s · ATELIER",
+    default: mockSiteSettings.brandName,
+    template: mockSiteSettings.seo.titleTemplate,
   },
-  description:
-    "ATELIER is a photography studio specializing in weddings, portraits, events, and editorial work.",
+  description: mockSiteSettings.seo.description,
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: mockSiteSettings.brandName,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
