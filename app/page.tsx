@@ -26,9 +26,11 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: settings.brandName,
       description: settings.seo.description,
-      ...(settings.seo.ogImage
-        ? { images: [{ url: settings.seo.ogImage }] }
-        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: settings.brandName,
+      description: settings.seo.description,
     },
   };
 }

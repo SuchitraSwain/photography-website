@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-
+import { MagneticButton } from "@/components/effects/magnetic-button";
 import { RevealOnScroll } from "@/components/motion/reveal-on-scroll";
 
 export function CtaBand() {
@@ -17,12 +16,12 @@ export function CtaBand() {
             frame.
           </h2>
         </div>
-        <Link
+        <MagneticButton
           href="/booking"
-          className="inline-flex h-12 shrink-0 items-center justify-center bg-background px-8 text-[0.7rem] font-semibold tracking-[0.22em] text-foreground uppercase transition-transform duration-300 hover:scale-[1.03] motion-reduce:hover:scale-100"
+          className="shrink-0 bg-background text-foreground focus-visible:outline-background"
         >
           Start your booking
-        </Link>
+        </MagneticButton>
       </RevealOnScroll>
     </section>
   );

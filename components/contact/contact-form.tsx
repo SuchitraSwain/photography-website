@@ -139,7 +139,7 @@ export function ContactForm({
           ) : null}
           <p className="text-sm">
             <a
-              className="underline underline-offset-4 hover:text-foreground"
+              className="underline underline-offset-4 hover:text-brass"
               href={
                 contactEmail.includes("@") && !contactEmail.startsWith("[")
                   ? `mailto:${contactEmail}`

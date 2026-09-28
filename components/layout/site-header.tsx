@@ -62,27 +62,32 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
           className="hidden items-center gap-8 lg:flex"
           aria-label="Primary"
         >
-          {NAV_LINKS.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "group relative text-[0.7rem] tracking-[0.22em] uppercase transition-colors",
-                overHero
-                  ? "text-white/70 hover:text-white"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {label}
-              <span
-                aria-hidden
+          {NAV_LINKS.map(({ href, label }) => {
+            const active =
+              pathname === href || pathname.startsWith(`${href}/`);
+            return (
+              <Link
+                key={href}
+                href={href}
                 className={cn(
-                  "absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100",
-                  overHero ? "bg-white" : "bg-foreground",
+                  "group relative text-[0.7rem] tracking-[0.22em] uppercase transition-colors",
+                  overHero
+                    ? "text-white/70 hover:text-white"
+                    : "text-muted-foreground hover:text-foreground",
+                  active && (overHero ? "text-white" : "text-foreground"),
                 )}
-              />
-            </Link>
-          ))}
+              >
+                {label}
+                <span
+                  aria-hidden
+                  className={cn(
+                    "absolute inset-x-0 -bottom-1 h-px origin-left bg-brass transition-transform duration-300",
+                    active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100",
+                  )}
+                />
+              </Link>
+            );
+          })}
           <Link
             href="/booking"
             className={cn(

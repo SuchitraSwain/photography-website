@@ -34,7 +34,11 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: brandName,
       title: brandName,
       description: seo.description,
-      ...(seo.ogImage ? { images: [{ url: seo.ogImage }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: brandName,
+      description: seo.description,
     },
   };
 }

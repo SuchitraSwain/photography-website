@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+import { MagneticButton } from "@/components/effects/magnetic-button";
 import { SafeImage } from "@/components/media/safe-image";
 
 type HeroProps = {
@@ -71,7 +71,6 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/20" />
 
       <div className="relative mx-auto flex min-h-[100svh] max-w-[100rem] flex-col justify-end px-6 pb-12 pt-28 sm:px-10 sm:pb-16 lg:px-16 lg:pb-20">
-        {/* Eyebrow / brand first in sequence (headline), then tagline, subtext, CTAs */}
         <motion.h1
           custom={0}
           variants={loadIn}
@@ -109,18 +108,18 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
           animate="show"
           className="mt-10 flex flex-col gap-4 border-t border-white/25 pt-8 sm:flex-row sm:items-center"
         >
-          <Link
+          <MagneticButton
             href="/gallery"
-            className="inline-flex h-12 items-center justify-center bg-white px-8 text-[0.7rem] font-semibold tracking-[0.22em] text-black uppercase transition-transform duration-300 hover:scale-[1.03] hover:bg-white/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:hover:scale-100"
+            className="bg-white text-black hover:bg-white/90 focus-visible:outline-white"
           >
             View work
-          </Link>
-          <Link
+          </MagneticButton>
+          <MagneticButton
             href="/booking"
-            className="inline-flex h-12 items-center justify-center border border-white/80 px-8 text-[0.7rem] font-semibold tracking-[0.22em] text-white uppercase transition-transform duration-300 hover:scale-[1.03] hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:hover:scale-100"
+            className="border border-white/80 text-white hover:bg-white hover:text-black focus-visible:outline-white"
           >
             Book now
-          </Link>
+          </MagneticButton>
         </motion.div>
 
         {images.length > 1 ? (

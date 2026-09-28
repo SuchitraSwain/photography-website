@@ -35,7 +35,7 @@ export function SiteFooter({ settings }: SiteFooterProps) {
             <li key={url}>
               <a
                 href={url}
-                className="text-[0.7rem] tracking-[0.22em] text-muted-foreground uppercase transition-colors hover:text-foreground"
+                className="text-[0.7rem] tracking-[0.22em] text-muted-foreground uppercase transition-colors hover:text-brass"
                 {...(url.startsWith("http")
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}

@@ -45,7 +45,13 @@ export function AboutView({ about }: AboutViewProps) {
           ))}
         </div>
 
-        <blockquote className="mt-12 border-l-2 border-accent pl-6">
+        <blockquote className="relative mt-12 border-l-2 border-brass pl-6">
+          <span
+            aria-hidden
+            className="font-display absolute -top-3 left-4 text-5xl leading-none text-brass select-none"
+          >
+            &ldquo;
+          </span>
           <p className="text-sm font-medium tracking-[0.18em] text-muted-foreground uppercase">
             Philosophy
           </p>
@@ -68,7 +74,7 @@ export function AboutView({ about }: AboutViewProps) {
                     rel="noopener noreferrer"
                     className="group block"
                   >
-                    <p className="font-[family-name:var(--font-display)] text-xl font-medium tracking-tight transition-opacity group-hover:opacity-70">
+                    <p className="font-[family-name:var(--font-display)] text-xl font-medium tracking-tight transition-colors group-hover:text-brass">
                       {item.title}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">

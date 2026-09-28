@@ -35,6 +35,7 @@ function GalleryTile({
       <button
         type="button"
         onClick={onSelect}
+        data-cursor="gallery"
         aria-label={`Open ${image.title} in lightbox`}
         className="group relative block w-full overflow-hidden bg-secondary text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
       >

@@ -36,12 +36,12 @@ export function FeaturedStrip({ images }: FeaturedStripProps) {
           </div>
           <Link
             href="/gallery"
-            className="group inline-flex items-center gap-3 text-[0.7rem] font-semibold tracking-[0.24em] uppercase"
+            className="group inline-flex items-center gap-3 text-[0.7rem] font-semibold tracking-[0.24em] uppercase transition-colors hover:text-brass"
           >
             Explore gallery
             <span
               aria-hidden
-              className="block h-px w-8 bg-foreground transition-all duration-300 group-hover:w-14"
+              className="block h-px w-8 bg-current transition-all duration-300 group-hover:w-14"
             />
           </Link>
         </div>
@@ -51,6 +51,7 @@ export function FeaturedStrip({ images }: FeaturedStripProps) {
             <StaggerItem className="lg:col-span-7">
               <Link
                 href="/gallery"
+                data-cursor="gallery"
                 className="group relative block aspect-[4/5] overflow-hidden bg-secondary sm:aspect-[5/4] lg:aspect-auto lg:min-h-[36rem]"
                 aria-label={`View ${heroImage.title} in the gallery`}
               >
@@ -79,6 +80,7 @@ export function FeaturedStrip({ images }: FeaturedStripProps) {
               <Link
                 key={image._id}
                 href="/gallery"
+                data-cursor="gallery"
                 className="group relative block aspect-[3/4] overflow-hidden bg-secondary lg:aspect-[16/10]"
                 aria-label={`View ${image.title} in the gallery`}
               >

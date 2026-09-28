@@ -17,7 +17,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
         <h2 className="font-[family-name:var(--font-display)] text-3xl font-medium tracking-tight">
           {pkg.name}
         </h2>
-        <p className="text-sm font-medium tracking-wide text-muted-foreground">
+        <p className="text-sm font-medium tracking-wide text-brass">
           {pkg.priceLabel}
         </p>
       </div>
