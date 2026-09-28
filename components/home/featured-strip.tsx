@@ -13,56 +13,81 @@ export function FeaturedStrip({ images }: FeaturedStripProps) {
     return null;
   }
 
+  const [heroImage, ...rest] = images;
+  const sideImages = rest.slice(0, 3);
+
   return (
-    <section className="border-t border-border px-6 py-20 sm:px-10 sm:py-28 lg:px-14">
-      <RevealOnScroll className="mx-auto max-w-7xl">
-        <div className="mb-10 flex items-end justify-between gap-6">
+    <section className="border-t border-border/70 px-6 py-24 sm:px-10 sm:py-32 lg:px-16">
+      <RevealOnScroll className="mx-auto max-w-[100rem]">
+        <div className="mb-14 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
+            <p className="text-[0.7rem] font-medium tracking-[0.35em] text-muted-foreground uppercase">
               Selected stories
             </p>
-            <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-medium tracking-tight sm:text-5xl">
+            <h2 className="font-display mt-4 text-[clamp(2.5rem,5vw,4rem)] leading-none font-medium tracking-[-0.02em]">
               Featured work
             </h2>
           </div>
           <Link
             href="/gallery"
-            className="hidden border-b border-foreground pb-1 text-sm font-medium transition-opacity hover:opacity-60 sm:inline-block"
+            className="group inline-flex items-center gap-3 text-[0.7rem] font-semibold tracking-[0.24em] uppercase"
           >
             Explore gallery
+            <span
+              aria-hidden
+              className="block h-px w-8 bg-foreground transition-all duration-300 group-hover:w-14"
+            />
           </Link>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {images.map((image, index) => (
+        <div className="grid gap-3 lg:grid-cols-12 lg:gap-4">
+          {heroImage ? (
             <Link
-              key={image._id}
               href="/gallery"
-              className={`group relative block overflow-hidden bg-secondary ${
-                index % 3 === 1 ? "aspect-[4/5]" : "aspect-[3/4]"
-              }`}
-              aria-label={`View ${image.title} in the gallery`}
+              className="group relative col-span-1 block aspect-[4/5] overflow-hidden bg-secondary sm:aspect-[5/4] lg:col-span-7 lg:aspect-auto lg:min-h-[36rem]"
+              aria-label={`View ${heroImage.title} in the gallery`}
             >
               <Image
-                src={image.src}
-                alt={image.alt}
+                src={heroImage.src}
+                alt={heroImage.alt}
                 fill
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover transition duration-700 ease-out group-hover:scale-[1.025] group-hover:opacity-90 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                sizes="(min-width: 1024px) 58vw, 100vw"
+                className="object-cover transition duration-[900ms] ease-out group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
               />
-              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-5 pt-16 pb-5 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
-                {image.title}
-              </span>
+              <div className="image-veil opacity-80" />
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+                <p className="text-[0.65rem] tracking-[0.28em] text-white/65 uppercase">
+                  Feature
+                </p>
+                <p className="font-display mt-2 text-2xl text-white sm:text-3xl">
+                  {heroImage.title}
+                </p>
+              </div>
             </Link>
-          ))}
-        </div>
+          ) : null}
 
-        <Link
-          href="/gallery"
-          className="mt-8 inline-block border-b border-foreground pb-1 text-sm font-medium transition-opacity hover:opacity-60 sm:hidden"
-        >
-          Explore gallery
-        </Link>
+          <div className="grid gap-3 sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1 lg:gap-4">
+            {sideImages.map((image) => (
+              <Link
+                key={image._id}
+                href="/gallery"
+                className="group relative block aspect-[3/4] overflow-hidden bg-secondary lg:aspect-[16/10]"
+                aria-label={`View ${image.title} in the gallery`}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes="(min-width: 1024px) 35vw, (min-width: 640px) 33vw, 100vw"
+                  className="object-cover transition duration-[900ms] ease-out group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                />
+                <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent px-5 pt-16 pb-4 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:opacity-100">
+                  {image.title}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
       </RevealOnScroll>
     </section>
   );

@@ -9,23 +9,28 @@ export function SiteFooter({ settings }: SiteFooterProps) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto border-t border-border">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-2">
+    <footer className="mt-auto border-t border-border/70">
+      <div className="mx-auto flex max-w-[100rem] flex-col gap-10 px-6 py-14 sm:flex-row sm:items-end sm:justify-between lg:px-10">
+        <div className="space-y-4">
+          <p className="font-display text-3xl tracking-[0.12em] uppercase">
+            {brandName}
+          </p>
           {location ? (
-            <p className="text-sm text-muted-foreground">{location}</p>
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+              {location}
+            </p>
           ) : null}
-          <p className="text-sm text-muted-foreground">
+          <p className="text-[0.7rem] tracking-[0.2em] text-muted-foreground uppercase">
             © {year} {brandName}
           </p>
         </div>
 
-        <ul className="flex flex-wrap gap-x-6 gap-y-2">
+        <ul className="flex flex-wrap gap-x-8 gap-y-3">
           {socialLinks.map(({ label, url }) => (
             <li key={url}>
               <a
                 href={url}
-                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                className="text-[0.7rem] tracking-[0.22em] text-muted-foreground uppercase transition-colors hover:text-foreground"
                 {...(url.startsWith("http")
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}

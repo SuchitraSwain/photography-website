@@ -2,19 +2,18 @@
 
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { href: "/", label: "Home" },
   { href: "/gallery", label: "Gallery" },
   { href: "/events", label: "Events" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/booking", label: "Booking" },
   { href: "/contact", label: "Contact" },
 ] as const;
 
@@ -23,40 +22,86 @@ type SiteHeaderProps = {
 };
 
 export function SiteHeader({ brandName }: SiteHeaderProps) {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const isHome = pathname === "/";
+  const overHero = isHome && !scrolled && !mobileOpen;
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6">
+    <header
+      className={cn(
+        "sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
+        overHero
+          ? "border-b border-transparent bg-transparent"
+          : "border-b border-border/80 bg-background/85 backdrop-blur-md",
+      )}
+    >
+      <div className="mx-auto flex h-16 max-w-[100rem] items-center justify-between gap-4 px-6 lg:px-10">
         <Link
           href="/"
-          className="font-[family-name:var(--font-display)] text-xl tracking-[0.2em] text-foreground uppercase"
+          className={cn(
+            "font-display text-lg tracking-[0.28em] uppercase transition-colors sm:text-xl",
+            overHero ? "text-white" : "text-foreground",
+          )}
         >
           {brandName}
         </Link>
 
         <nav
-          className="hidden items-center gap-6 md:flex"
+          className="hidden items-center gap-8 lg:flex"
           aria-label="Primary"
         >
           {NAV_LINKS.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className={cn(
+                "text-[0.7rem] tracking-[0.22em] uppercase transition-colors",
+                overHero
+                  ? "text-white/70 hover:text-white"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
             >
               {label}
             </Link>
           ))}
+          <Link
+            href="/booking"
+            className={cn(
+              "inline-flex h-9 items-center px-4 text-[0.65rem] font-semibold tracking-[0.2em] uppercase transition-colors",
+              overHero
+                ? "bg-white text-black hover:bg-white/90"
+                : "bg-foreground text-background hover:opacity-90",
+            )}
+          >
+            Book
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
+          <div className={cn(overHero && "[&_button]:border-white/40")}>
+            <ThemeToggle />
+          </div>
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className={cn(
+              "lg:hidden",
+              overHero && "text-white hover:bg-white/10 hover:text-white",
+            )}
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -74,23 +119,25 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
       <nav
         id="mobile-nav"
         className={cn(
-          "border-t border-border md:hidden",
+          "border-t border-border bg-background lg:hidden",
           mobileOpen ? "block" : "hidden",
         )}
         aria-label="Primary mobile"
       >
-        <ul className="mx-auto flex max-w-6xl flex-col px-6 py-4">
-          {NAV_LINKS.map(({ href, label }) => (
-            <li key={href}>
-              <Link
-                href={href}
-                className="block py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                onClick={() => setMobileOpen(false)}
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
+        <ul className="mx-auto flex max-w-[100rem] flex-col px-6 py-5">
+          {[...NAV_LINKS, { href: "/booking", label: "Book" }].map(
+            ({ href, label }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="block py-3 text-sm tracking-[0.18em] text-foreground uppercase"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {label}
+                </Link>
+              </li>
+            ),
+          )}
         </ul>
       </nav>
     </header>

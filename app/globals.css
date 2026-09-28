@@ -2,25 +2,25 @@
 @import "tw-animate-css";
 
 :root {
-  --background: 0 0% 98%;
-  --foreground: 0 0% 8%;
-  --muted: 30 5% 45%;
-  --accent: 36 20% 70%;
-  --border: 30 5% 85%;
-  --input: 30 5% 85%;
-  --ring: 36 20% 70%;
+  --background: 40 12% 97%;
+  --foreground: 0 0% 6%;
+  --muted: 30 6% 42%;
+  --accent: 36 28% 68%;
+  --border: 30 8% 88%;
+  --input: 30 8% 88%;
+  --ring: 36 28% 68%;
   --destructive: 0 72% 51%;
-  --radius: 0.375rem;
+  --radius: 0;
 }
 
 .dark {
-  --background: 0 0% 4%;
-  --foreground: 40 20% 95%;
-  --muted: 30 5% 55%;
-  --accent: 36 20% 70%;
-  --border: 0 0% 16%;
-  --input: 0 0% 16%;
-  --ring: 36 20% 70%;
+  --background: 0 0% 3%;
+  --foreground: 40 18% 96%;
+  --muted: 30 6% 58%;
+  --accent: 36 32% 72%;
+  --border: 0 0% 14%;
+  --input: 0 0% 14%;
+  --ring: 36 32% 72%;
   --destructive: 0 63% 50%;
 }
 
@@ -45,26 +45,92 @@
   --color-ring: hsl(var(--ring));
   --font-sans: var(--font-geist-sans);
   --font-editorial: var(--font-display);
-  --radius-sm: calc(var(--radius) - 2px);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 2px);
-  --radius-xl: calc(var(--radius) + 6px);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
 }
 
 html {
   color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 .light {
   color-scheme: light;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   min-height: 100%;
   background: hsl(var(--background));
   color: hsl(var(--foreground));
+  /* Subtle vignette atmosphere — not flat */
+  background-image:
+    radial-gradient(
+      ellipse 120% 80% at 50% -20%,
+      hsl(36 20% 20% / 0.18),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 80% 50% at 100% 100%,
+      hsl(0 0% 100% / 0.03),
+      transparent 45%
+    );
+  background-attachment: fixed;
+}
+
+.light body {
+  background-image:
+    radial-gradient(
+      ellipse 120% 80% at 50% -20%,
+      hsl(36 30% 70% / 0.22),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 70% 40% at 0% 100%,
+      hsl(30 10% 80% / 0.35),
+      transparent 50%
+    );
 }
 
 * {
   border-color: hsl(var(--border));
+}
+
+::selection {
+  background: hsl(var(--accent) / 0.35);
+  color: hsl(var(--foreground));
+}
+
+/* Fashion editorial utilities */
+.font-display {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+}
+
+.editorial-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    hsl(var(--foreground) / 0.55),
+    hsl(var(--foreground) / 0.08) 70%,
+    transparent
+  );
+}
+
+.image-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    hsl(0 0% 0% / 0.15) 0%,
+    transparent 35%,
+    hsl(0 0% 0% / 0.55) 100%
+  );
+  pointer-events: none;
 }

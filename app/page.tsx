@@ -46,7 +46,10 @@ export default async function HomePage() {
         tagline={settings.tagline}
         images={settings.heroImages}
       />
-      <IntroSection tagline={settings.tagline} />
+      <IntroSection
+        tagline={settings.tagline}
+        brandName={settings.brandName}
+      />
       <FeaturedStrip images={featured} />
     </main>
   );

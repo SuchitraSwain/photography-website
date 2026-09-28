@@ -4,32 +4,50 @@ import { RevealOnScroll } from "@/components/motion/reveal-on-scroll";
 
 type IntroSectionProps = {
   tagline: string;
+  brandName?: string;
 };
 
-export function IntroSection({ tagline }: IntroSectionProps) {
+export function IntroSection({
+  tagline,
+  brandName = "ATELIER",
+}: IntroSectionProps) {
   return (
-    <section className="px-6 py-24 sm:px-10 sm:py-32 lg:px-14">
-      <RevealOnScroll className="mx-auto grid max-w-7xl gap-12 md:grid-cols-[1fr_2fr] md:gap-16">
-        <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
-          The studio
-        </p>
+    <section className="relative overflow-hidden px-6 py-28 sm:px-10 sm:py-36 lg:px-16">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-16 right-0 font-display text-[min(28vw,12rem)] leading-none tracking-[-0.06em] text-foreground/[0.04] uppercase select-none"
+      >
+        Studio
+      </div>
+
+      <RevealOnScroll className="relative mx-auto grid max-w-[100rem] gap-14 lg:grid-cols-[0.35fr_1fr] lg:gap-20">
+        <div className="space-y-6">
+          <p className="text-[0.7rem] font-medium tracking-[0.35em] text-muted-foreground uppercase">
+            The studio
+          </p>
+          <div className="editorial-rule w-16" />
+        </div>
 
         <div>
-          <h2 className="max-w-4xl font-[family-name:var(--font-display)] text-4xl leading-tight font-medium tracking-tight text-foreground sm:text-6xl">
-            {tagline}.
+          <h2 className="font-display max-w-4xl text-[clamp(2.4rem,5.5vw,4.75rem)] leading-[1.05] font-medium tracking-[-0.02em] text-foreground">
+            {tagline}
           </h2>
-          <div className="mt-10 grid gap-8 border-t border-border pt-8 sm:grid-cols-2">
-            <p className="max-w-xl leading-relaxed text-muted-foreground">
-              We document weddings, portraits, events, and editorial stories
-              with a calm eye—leaving room for light, gesture, and the moments
-              that unfold without direction.
+          <div className="mt-12 grid gap-10 border-t border-border/80 pt-10 md:grid-cols-[1.4fr_0.6fr]">
+            <p className="max-w-xl text-base leading-[1.75] text-muted-foreground sm:text-lg">
+              Weddings, portraits, events, and editorial stories — composed with
+              patience and a bias toward natural light. Less posing, more
+              presence.
             </p>
-            <div className="sm:text-right">
+            <div className="md:pt-1 md:text-right">
               <Link
                 href="/about"
-                className="inline-block border-b border-foreground pb-1 text-sm font-medium text-foreground transition-opacity hover:opacity-60"
+                className="group inline-flex items-center gap-3 text-[0.7rem] font-semibold tracking-[0.24em] text-foreground uppercase"
               >
-                Meet ATELIER
+                Meet {brandName}
+                <span
+                  aria-hidden
+                  className="block h-px w-8 bg-foreground transition-all duration-300 group-hover:w-12"
+                />
               </Link>
             </div>
           </div>

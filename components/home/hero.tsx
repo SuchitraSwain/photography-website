@@ -24,13 +24,13 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
 
     const interval = window.setInterval(() => {
       setActiveImage((current) => (current + 1) % images.length);
-    }, 6000);
+    }, 6500);
 
     return () => window.clearInterval(interval);
   }, [images.length]);
 
   return (
-    <section className="relative isolate min-h-[calc(100svh-4rem)] overflow-hidden bg-zinc-950 text-white">
+    <section className="relative isolate -mt-16 min-h-[100svh] overflow-hidden bg-black text-white">
       <div className="absolute inset-0" aria-hidden={images.length === 0}>
         {images.map((image, index) => (
           <Image
@@ -42,44 +42,70 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
             sizes="100vw"
             placeholder={image.lqip ? "blur" : "empty"}
             blurDataURL={image.lqip}
-            className={`object-cover transition-opacity duration-[1600ms] ease-in-out ${
-              index === activeImage ? "opacity-100" : "opacity-0"
+            className={`object-cover transition-[opacity,transform] duration-[2000ms] ease-out motion-reduce:transition-opacity ${
+              index === activeImage
+                ? "scale-105 opacity-100 motion-reduce:scale-100"
+                : "scale-100 opacity-0"
             }`}
           />
         ))}
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-black/70" />
+      <div className="image-veil" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/20" />
 
-      <div className="relative mx-auto flex min-h-[calc(100svh-4rem)] max-w-[96rem] flex-col justify-end px-6 py-14 sm:px-10 sm:py-20 lg:px-14">
-        <p className="mb-5 max-w-xl text-xs font-medium tracking-[0.28em] text-white/75 uppercase sm:text-sm">
+      <div className="relative mx-auto flex min-h-[100svh] max-w-[100rem] flex-col justify-end px-6 pb-12 pt-28 sm:px-10 sm:pb-16 lg:px-16 lg:pb-20">
+        <p className="mb-6 max-w-md text-[0.7rem] font-medium tracking-[0.42em] text-white/70 uppercase sm:text-xs">
           {tagline}
         </p>
-        <h1 className="font-[family-name:var(--font-display)] text-[clamp(5rem,18vw,17rem)] leading-[0.68] font-medium tracking-[-0.055em] uppercase">
+
+        <h1 className="font-display max-w-[18ch] text-[clamp(4.5rem,16vw,14rem)] leading-[0.78] font-medium tracking-[-0.04em] text-white uppercase">
           {brandName}
         </h1>
 
-        <div className="mt-10 flex flex-col gap-8 border-t border-white/35 pt-7 md:flex-row md:items-end md:justify-between">
-          <p className="max-w-lg text-base leading-relaxed text-white/80 sm:text-lg">
-            Quiet, intentional photography shaped by natural light and honest
-            connection.
+        <div className="mt-12 grid gap-10 border-t border-white/25 pt-8 md:grid-cols-[minmax(0,1.2fr)_auto] md:items-end">
+          <p className="max-w-md text-base leading-relaxed text-white/78 sm:text-lg">
+            Photography for people who want the frame to feel like memory —
+            unhurried, intimate, and unforgettable.
           </p>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <Link
               href="/gallery"
-              className="inline-flex h-11 items-center justify-center border border-white bg-white px-6 text-sm font-medium text-zinc-950 transition-colors hover:bg-transparent hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex h-12 items-center justify-center bg-white px-8 text-[0.7rem] font-semibold tracking-[0.22em] text-black uppercase transition-colors hover:bg-white/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
-              View the work
+              View work
             </Link>
             <Link
               href="/booking"
-              className="inline-flex h-11 items-center justify-center border border-white/70 px-6 text-sm font-medium text-white transition-colors hover:border-white hover:bg-white hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex h-12 items-center justify-center border border-white/80 px-8 text-[0.7rem] font-semibold tracking-[0.22em] text-white uppercase transition-colors hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
-              Book a session
+              Book now
             </Link>
           </div>
         </div>
+
+        {images.length > 1 ? (
+          <div
+            className="mt-10 flex items-center gap-2"
+            aria-label="Featured image indicators"
+          >
+            {images.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                aria-label={`Show image ${index + 1}`}
+                aria-current={index === activeImage}
+                onClick={() => setActiveImage(index)}
+                className={`h-px transition-all duration-500 ${
+                  index === activeImage
+                    ? "w-10 bg-white"
+                    : "w-5 bg-white/35 hover:bg-white/60"
+                }`}
+              />
+            ))}
+          </div>
+        ) : null}
       </div>
     </section>
   );
