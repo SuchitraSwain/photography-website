@@ -10,5 +10,7 @@ export const sanityClient = createClient({
   projectId: getSanityProjectId() ?? "placeholder",
   dataset: getSanityDataset(),
   apiVersion: getSanityApiVersion(),
-  useCdn: true,
+  // Next.js owns caching via `next: { revalidate }`; the Sanity CDN would add a
+  // second, independent stale window that webhook revalidation cannot clear.
+  useCdn: false,
 });

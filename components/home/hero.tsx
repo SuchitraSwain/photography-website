@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 type HeroProps = {
   brandName: string;
   tagline: string;
-  images: Array<{ src: string; alt: string }>;
+  images: Array<{ src: string; alt: string; lqip?: string }>;
 };
 
 export function Hero({ brandName, tagline, images }: HeroProps) {
@@ -40,6 +40,8 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
             fill
             priority={index === 0}
             sizes="100vw"
+            placeholder={image.lqip ? "blur" : "empty"}
+            blurDataURL={image.lqip}
             className={`object-cover transition-opacity duration-[1600ms] ease-in-out ${
               index === activeImage ? "opacity-100" : "opacity-0"
             }`}

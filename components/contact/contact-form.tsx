@@ -4,10 +4,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { SocialLink } from "@/lib/types/content";
 
-/** Static OSM embed (no API key). Marker is illustrative; see location text for service area. */
-const OSM_EMBED_SRC =
-  "https://www.openstreetmap.org/export/embed.html?bbox=-0.15%2C51.48%2C0.05%2C51.54&layer=mapnik&marker=51.5074%2C-0.1278";
-
 type ContactFormProps = {
   contactEmail: string;
   location: string;
@@ -67,9 +63,11 @@ export function ContactForm({
           <h2 className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
             Studio
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-foreground/90">
-            {location}
-          </p>
+          {location ? (
+            <p className="mt-3 text-base leading-relaxed text-foreground/90">
+              {location}
+            </p>
+          ) : null}
           <p className="mt-2 text-sm text-muted-foreground">
             <a
               href={`mailto:${contactEmail}`}
@@ -103,18 +101,16 @@ export function ContactForm({
           </div>
         ) : null}
 
-        <figure className="overflow-hidden border border-border bg-secondary">
-          <iframe
-            title="Studio location map"
-            src={OSM_EMBED_SRC}
-            className="aspect-[4/3] w-full border-0"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-          <figcaption className="border-t border-border px-4 py-3 text-xs text-muted-foreground">
-            {location}
-          </figcaption>
-        </figure>
+        {location ? (
+          <figure className="border border-border bg-secondary px-6 py-8">
+            <blockquote className="font-[family-name:var(--font-display)] text-2xl leading-snug font-medium tracking-tight">
+              {location}
+            </blockquote>
+            <figcaption className="mt-3 text-xs tracking-[0.18em] text-muted-foreground uppercase">
+              Service area
+            </figcaption>
+          </figure>
+        ) : null}
       </aside>
     </div>
   );

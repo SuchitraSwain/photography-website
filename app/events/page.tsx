@@ -4,6 +4,9 @@ import { EventCard } from "@/components/events/event-card";
 import { getEvents } from "@/lib/sanity/fetch";
 import type { EventItem } from "@/lib/types/content";
 
+/** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Events",
   description: "Upcoming studio evenings, workshops, and pop-up gallery events.",

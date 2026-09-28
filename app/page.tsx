@@ -9,6 +9,9 @@ import {
   getSiteSettings,
 } from "@/lib/sanity/fetch";
 
+/** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
+export const revalidate = 300;
+
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   return {

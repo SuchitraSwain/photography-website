@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/layout/site-shell";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { mockSiteSettings } from "@/lib/mock/content";
+import { getSiteSettings } from "@/lib/sanity/fetch";
 import { GeistSans } from "geist/font/sans";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
@@ -14,19 +14,29 @@ const display = Cormorant_Garamond({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: mockSiteSettings.brandName,
-    template: mockSiteSettings.seo.titleTemplate,
-  },
-  description: mockSiteSettings.seo.description,
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    siteName: mockSiteSettings.brandName,
-  },
-};
+/** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { brandName, seo } = await getSiteSettings();
+
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: brandName,
+      template: seo.titleTemplate,
+    },
+    description: seo.description,
+    openGraph: {
+      type: "website",
+      locale: "en_US",
+      siteName: brandName,
+      title: brandName,
+      description: seo.description,
+      ...(seo.ogImage ? { images: [{ url: seo.ogImage }] } : {}),
+    },
+  };
+}
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import { AboutView } from "@/components/about/about-view";
 import { getPageAbout } from "@/lib/sanity/fetch";
 
+/** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "About",
   description:

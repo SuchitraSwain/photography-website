@@ -1,36 +1,12 @@
 import Image from "next/image";
 
 import { AddToCalendarButton } from "@/components/events/add-to-calendar-button";
+import { formatEventDateRange } from "@/lib/datetime";
 import type { EventItem } from "@/lib/types/content";
 
 type EventCardProps = {
   event: EventItem;
 };
-
-function formatEventDateRange(startIso: string, endIso: string): string {
-  const start = new Date(startIso);
-  const end = new Date(endIso);
-  const dateFormatter = new Intl.DateTimeFormat(undefined, {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-  const timeFormatter = new Intl.DateTimeFormat(undefined, {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-  const sameDay =
-    start.getFullYear() === end.getFullYear() &&
-    start.getMonth() === end.getMonth() &&
-    start.getDate() === end.getDate();
-
-  if (sameDay) {
-    return `${dateFormatter.format(start)} · ${timeFormatter.format(start)} – ${timeFormatter.format(end)}`;
-  }
-
-  return `${dateFormatter.format(start)} – ${dateFormatter.format(end)}`;
-}
 
 export function EventCard({ event }: EventCardProps) {
   return (

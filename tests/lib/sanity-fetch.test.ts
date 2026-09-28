@@ -62,7 +62,8 @@ describe("Sanity content fetchers", () => {
     expect(about.headline).toContain("Light");
   });
 
-  it("falls back to mock content when a configured Sanity request fails", async () => {
+  it("falls back to mock content and logs when a configured Sanity request fails", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "test-project");
     sanityFetchMock.mockRejectedValue(new Error("Sanity unavailable"));
 
@@ -72,6 +73,169 @@ describe("Sanity content fetchers", () => {
       brandName: "ATELIER",
     });
     expect(sanityFetchMock).toHaveBeenCalledOnce();
+    expect(errorSpy).toHaveBeenCalledWith(
+      expect.stringContaining("[sanity]"),
+      expect.anything(),
+      expect.any(Error),
+    );
+  });
+
+  it("requests content with a revalidation window", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "test-project");
+    sanityFetchMock.mockResolvedValue([]);
+
+    const { CONTENT_REVALIDATE_SECONDS, getCategories } = await import(
+      "@/lib/sanity/fetch"
+    );
+
+    await getCategories();
+
+    expect(sanityFetchMock).toHaveBeenCalledWith(
+      expect.any(String),
+      {},
+      { next: { revalidate: CONTENT_REVALIDATE_SECONDS } },
+    );
+  });
+
+  it("normalizes null site settings fields so the UI never receives null", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "test-project");
+    sanityFetchMock.mockResolvedValue({
+      brandName: "Studio",
+      tagline: null,
+      heroImages: null,
+      socialLinks: null,
+      location: null,
+      contactEmail: null,
+      seoDefaults: null,
+    });
+
+    const { getSiteSettings } = await import("@/lib/sanity/fetch");
+    const settings = await getSiteSettings();
+
+    expect(settings).toMatchObject({
+      brandName: "Studio",
+      tagline: "",
+      heroImages: [],
+      socialLinks: [],
+      location: "",
+    });
+    expect(settings.contactEmail).toBeTruthy();
+    expect(settings.seo.titleTemplate).toBeTruthy();
+    expect(settings.seo.description).toBeTruthy();
+  });
+
+  it("drops social links and hero images that have no usable data", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "test-project");
+    sanityFetchMock.mockResolvedValue({
+      brandName: "Studio",
+      tagline: "Quiet photographs",
+      heroImages: [
+        { alt: null, image: null, lqip: null },
+        { alt: null, image: { asset: { _ref: "image-hero-100x100-jpg" } } },
+      ],
+      socialLinks: [{ label: "Broken", url: null }, { label: null, url: "https://x.example" }],
+      location: "Worldwide",
+      contactEmail: "hello@example.com",
+      seoDefaults: { titleTemplate: null, description: null, ogImage: null },
+    });
+
+    const { getSiteSettings } = await import("@/lib/sanity/fetch");
+    const settings = await getSiteSettings();
+
+    expect(settings.heroImages).toEqual([
+      { src: "mapped:image-hero-100x100-jpg", alt: "" },
+    ]);
+    expect(settings.socialLinks).toEqual([
+      { label: "https://x.example", url: "https://x.example" },
+    ]);
+    expect(settings.seo.ogImage).toBeUndefined();
+  });
+
+  it("skips gallery images and events that are missing required fields", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "test-project");
+    sanityFetchMock.mockResolvedValue([
+      { _id: "no-image", title: "Missing asset", categorySlug: "portraits" },
+      {
+        _id: "ok",
+        title: null,
+        alt: null,
+        image: { asset: { _ref: "image-gallery-100x100-jpg" } },
+        width: null,
+        height: null,
+        categorySlug: "portraits",
+        featured: null,
+        order: null,
+      },
+    ]);
+
+    const { getGalleryImages } = await import("@/lib/sanity/fetch");
+
+    await expect(getGalleryImages()).resolves.toEqual([
+      {
+        _id: "ok",
+        title: "",
+        alt: "",
+        src: "mapped:image-gallery-100x100-jpg",
+        width: 1600,
+        height: 1200,
+        categorySlug: "portraits",
+        featured: false,
+        order: 1,
+      },
+    ]);
+  });
+
+  it("drops events without a start instant and defaults the end to the start", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "test-project");
+    sanityFetchMock.mockResolvedValue([
+      { _id: "undated", title: "No date", start: null },
+      {
+        _id: "evt-1",
+        title: "Open Studio",
+        slug: null,
+        start: "2026-11-14T18:00:00.000Z",
+        end: null,
+        location: null,
+        description: null,
+        addToCalendar: null,
+      },
+    ]);
+
+    const { getEvents } = await import("@/lib/sanity/fetch");
+
+    await expect(getEvents()).resolves.toEqual([
+      {
+        _id: "evt-1",
+        title: "Open Studio",
+        slug: "",
+        start: "2026-11-14T18:00:00.000Z",
+        end: "2026-11-14T18:00:00.000Z",
+        location: "",
+        description: "",
+        addToCalendar: false,
+      },
+    ]);
+  });
+
+  it("normalizes a partial about document", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "test-project");
+    sanityFetchMock.mockResolvedValue({
+      headline: null,
+      bio: null,
+      philosophy: null,
+      portrait: null,
+      portraitAlt: null,
+      press: null,
+    });
+
+    const { getPageAbout } = await import("@/lib/sanity/fetch");
+    const about = await getPageAbout();
+
+    expect(about.bio).toBe("");
+    expect(about.philosophy).toBe("");
+    expect(about.press).toEqual([]);
+    expect(about.portraitSrc).toBeTruthy();
+    expect(about.headline).toBeTruthy();
   });
 
   it("maps seoDefaults to the public seo shape", async () => {

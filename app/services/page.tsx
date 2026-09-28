@@ -4,6 +4,9 @@ import { PackageCard } from "@/components/services/package-card";
 import { getServicePackages } from "@/lib/sanity/fetch";
 import type { ServicePackage } from "@/lib/types/content";
 
+/** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Services",
   description:

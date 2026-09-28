@@ -1,3 +1,5 @@
+import { serializeJsonLd } from "@/lib/seo/json-ld";
+
 export function LocalBusinessJsonLd({
   name,
   description,
@@ -21,7 +23,7 @@ export function LocalBusinessJsonLd({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }}
     />
   );
 }

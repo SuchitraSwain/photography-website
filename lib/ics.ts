@@ -4,6 +4,10 @@ export type IcsEventInput = {
   location: string;
   start: string;
   end: string;
+  /** Stable identifier so re-importing updates the event instead of duplicating it. */
+  uid?: string;
+  /** Overridable for deterministic tests; defaults to the current instant. */
+  dtstamp?: string;
 };
 
 function escapeIcsText(value: string): string {
@@ -27,13 +31,43 @@ function formatIcsUtc(iso: string): string {
   );
 }
 
+export function slugifyForFilename(value: string): string {
+  return (
+    value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "event"
+  );
+}
+
+function uidDomain(): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
+  if (!siteUrl) {
+    return "atelier.local";
+  }
+
+  try {
+    return new URL(siteUrl).hostname;
+  } catch {
+    return "atelier.local";
+  }
+}
+
 export function buildIcsEvent({
   title,
   description,
   location,
   start,
   end,
+  uid,
+  dtstamp,
 }: IcsEventInput): string {
+  const uidLocalPart = uid ?? `${slugifyForFilename(title)}-${formatIcsUtc(start)}`;
+  const eventUid = uidLocalPart.includes("@")
+    ? uidLocalPart
+    : `${uidLocalPart}@${uidDomain()}`;
+
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -41,6 +75,8 @@ export function buildIcsEvent({
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
+    `UID:${escapeIcsText(eventUid)}`,
+    `DTSTAMP:${formatIcsUtc(dtstamp ?? new Date().toISOString())}`,
     `DTSTART:${formatIcsUtc(start)}`,
     `DTEND:${formatIcsUtc(end)}`,
     `SUMMARY:${escapeIcsText(title)}`,

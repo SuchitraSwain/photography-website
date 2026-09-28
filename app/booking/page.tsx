@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import { BookingForm } from "@/components/booking/booking-form";
 import { getSiteSettings } from "@/lib/sanity/fetch";
 
+/** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Booking",
   description:
