@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/layout/site-shell";
+import { SmoothScrollProvider } from "@/components/motion/smooth-scroll";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { getSiteSettings } from "@/lib/sanity/fetch";
 import { GeistSans } from "geist/font/sans";
@@ -46,7 +47,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         className={`${display.variable} ${GeistSans.variable} flex min-h-full flex-col font-sans antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <SiteShell>{children}</SiteShell>
+          <SmoothScrollProvider>
+            <SiteShell>{children}</SiteShell>
+          </SmoothScrollProvider>
         </ThemeProvider>
       </body>
     </html>

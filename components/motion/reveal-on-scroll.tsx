@@ -2,19 +2,12 @@
 
 import {
   motion,
-  useInView,
   useReducedMotion,
   type HTMLMotionProps,
 } from "framer-motion";
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import type { ReactNode } from "react";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const EASE = [0.4, 0, 0.2, 1] as const;
 
 type RevealOnScrollProps = {
   children: ReactNode;
@@ -22,55 +15,26 @@ type RevealOnScrollProps = {
   delay?: number;
 } & Omit<HTMLMotionProps<"div">, "children">;
 
-/**
- * Scroll reveal without flicker:
- * - Above-fold on mount → stay visible (no hide→show)
- * - Below-fold → hide offscreen, then animate in once when scrolled into view
- */
+/** Scroll-triggered fade/slide — matches site-wide motion spec. */
 export function RevealOnScroll({
   children,
   className,
   delay = 0,
   ...props
 }: RevealOnScrollProps) {
-  const ref = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
-  const inView = useInView(ref, { once: true, amount: 0.2 });
-  // boot: visible | static: above-fold, stay put | hidden: below-fold | shown: animated in
-  const [mode, setMode] = useState<"boot" | "static" | "hidden" | "shown">(
-    "boot",
-  );
 
-  useLayoutEffect(() => {
-    if (reduceMotion) {
-      setMode("static");
-      return;
-    }
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const onScreen =
-      rect.top < window.innerHeight * 0.85 && rect.bottom > 40;
-    setMode(onScreen ? "static" : "hidden");
-  }, [reduceMotion]);
-
-  useEffect(() => {
-    if (mode === "hidden" && inView) setMode("shown");
-  }, [mode, inView]);
-
-  const hidden = mode === "hidden";
+  if (reduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <motion.div
-      ref={ref}
       className={className}
-      initial={false}
-      animate={hidden ? { opacity: 0, y: 24 } : { opacity: 1, y: 0 }}
-      transition={
-        mode === "shown"
-          ? { duration: 0.55, delay, ease: EASE }
-          : { duration: 0 }
-      }
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, delay, ease: EASE }}
       {...props}
     >
       {children}
@@ -84,53 +48,39 @@ type StaggerProps = {
   stagger?: number;
 };
 
+const staggerItem = {
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: EASE },
+  },
+};
+
+/** Parent for staggered grid/list reveals (gallery, services, founders). */
 export function StaggerReveal({
   children,
   className,
   stagger = 0.1,
 }: StaggerProps) {
-  const ref = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
-  const inView = useInView(ref, { once: true, amount: 0.2 });
-  const [mode, setMode] = useState<"boot" | "static" | "hidden" | "shown">(
-    "boot",
-  );
 
-  useLayoutEffect(() => {
-    if (reduceMotion) {
-      setMode("static");
-      return;
-    }
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const onScreen =
-      rect.top < window.innerHeight * 0.85 && rect.bottom > 40;
-    setMode(onScreen ? "static" : "hidden");
-  }, [reduceMotion]);
-
-  useEffect(() => {
-    if (mode === "hidden" && inView) setMode("shown");
-  }, [mode, inView]);
+  if (reduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <motion.div
-      ref={ref}
       className={className}
-      initial={false}
-      animate={
-        mode === "hidden" ? "hidden" : mode === "shown" ? "show" : "rest"
-      }
       variants={{
-        rest: {},
         hidden: {},
         show: {
-          transition: {
-            staggerChildren: stagger,
-            delayChildren: 0.04,
-          },
+          transition: { staggerChildren: stagger },
         },
       }}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.2 }}
     >
       {children}
     </motion.div>
@@ -144,19 +94,14 @@ export function StaggerItem({
   children: ReactNode;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
-    <motion.div
-      className={className}
-      variants={{
-        rest: { opacity: 1, y: 0 },
-        hidden: { opacity: 0, y: 24 },
-        show: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.5, ease: EASE },
-        },
-      }}
-    >
+    <motion.div className={className} variants={staggerItem}>
       {children}
     </motion.div>
   );

@@ -12,10 +12,21 @@ type HeroProps = {
   images: Array<{ src: string; alt: string; lqip?: string }>;
 };
 
-/**
- * Hero load-in uses CSS keyframes (not set-hidden-then-show) so the first
- * paint never flashes visible → invisible → visible.
- */
+const EASE = [0.4, 0, 0.2, 1] as const;
+
+const loadIn = {
+  hidden: { opacity: 0, y: 24 },
+  show: (order: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      delay: order * 0.15,
+      ease: EASE,
+    },
+  }),
+};
+
 export function Hero({ brandName, tagline, images }: HeroProps) {
   const [activeImage, setActiveImage] = useState(0);
   const reduceMotion = useReducedMotion();
@@ -60,30 +71,43 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/20" />
 
       <div className="relative mx-auto flex min-h-[100svh] max-w-[100rem] flex-col justify-end px-6 pb-12 pt-28 sm:px-10 sm:pb-16 lg:px-16 lg:pb-20">
-        <h1
-          className="hero-rise font-display max-w-[18ch] text-[clamp(4.5rem,16vw,14rem)] leading-[0.78] font-medium tracking-[-0.04em] text-white uppercase"
-          style={{ animationDelay: "0ms" }}
+        {/* Eyebrow / brand first in sequence (headline), then tagline, subtext, CTAs */}
+        <motion.h1
+          custom={0}
+          variants={loadIn}
+          initial={reduceMotion ? false : "hidden"}
+          animate="show"
+          className="font-display max-w-[18ch] text-[clamp(4.5rem,16vw,14rem)] leading-[0.78] font-medium tracking-[-0.04em] text-white uppercase"
         >
           {brandName}
-        </h1>
+        </motion.h1>
 
-        <p
-          className="hero-rise mt-6 max-w-md text-[0.7rem] font-medium tracking-[0.42em] text-white/70 uppercase sm:text-xs"
-          style={{ animationDelay: "150ms" }}
+        <motion.p
+          custom={1}
+          variants={loadIn}
+          initial={reduceMotion ? false : "hidden"}
+          animate="show"
+          className="mt-6 max-w-md text-[0.7rem] font-medium tracking-[0.42em] text-white/70 uppercase sm:text-xs"
         >
           {tagline}
-        </p>
+        </motion.p>
 
-        <p
-          className="hero-rise mt-8 max-w-md text-base leading-relaxed text-white/78 sm:text-lg"
-          style={{ animationDelay: "300ms" }}
+        <motion.p
+          custom={2}
+          variants={loadIn}
+          initial={reduceMotion ? false : "hidden"}
+          animate="show"
+          className="mt-8 max-w-md text-base leading-relaxed text-white/78 sm:text-lg"
         >
           Some moments aren&apos;t posed. They&apos;re witnessed.
-        </p>
+        </motion.p>
 
-        <div
-          className="hero-rise mt-10 flex flex-col gap-4 border-t border-white/25 pt-8 sm:flex-row sm:items-center"
-          style={{ animationDelay: "450ms" }}
+        <motion.div
+          custom={3}
+          variants={loadIn}
+          initial={reduceMotion ? false : "hidden"}
+          animate="show"
+          className="mt-10 flex flex-col gap-4 border-t border-white/25 pt-8 sm:flex-row sm:items-center"
         >
           <Link
             href="/gallery"
@@ -97,7 +121,7 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
           >
             Book now
           </Link>
-        </div>
+        </motion.div>
 
         {images.length > 1 ? (
           <div
