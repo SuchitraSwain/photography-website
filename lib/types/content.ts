@@ -34,6 +34,7 @@ export type GalleryImage = {
   height: number;
   categorySlug: string;
   featured: boolean;
+  shootDate?: string;
   order: number;
 };
 

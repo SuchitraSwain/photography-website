@@ -6,6 +6,12 @@ vi.mock("@/lib/sanity/client", () => ({
   sanityClient: { fetch: sanityFetchMock },
 }));
 
+vi.mock("@/lib/sanity/image", () => ({
+  urlFor: vi.fn((image: { asset?: { _ref?: string } }) =>
+    image.asset?._ref ? `mapped:${image.asset._ref}` : "mapped:image",
+  ),
+}));
+
 describe("Sanity content fetchers", () => {
   afterEach(() => {
     vi.resetModules();
@@ -66,5 +72,87 @@ describe("Sanity content fetchers", () => {
       brandName: "ATELIER",
     });
     expect(sanityFetchMock).toHaveBeenCalledOnce();
+  });
+
+  it("maps seoDefaults to the public seo shape", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "test-project");
+    sanityFetchMock.mockResolvedValue({
+      brandName: "Studio",
+      tagline: "Quiet photographs",
+      heroImages: [],
+      socialLinks: [],
+      location: "Worldwide",
+      contactEmail: "hello@example.com",
+      seoDefaults: {
+        titleTemplate: "%s · Studio",
+        description: "Editorial photography",
+        ogImage: "https://cdn.sanity.io/og.jpg",
+      },
+    });
+
+    const { getSiteSettings } = await import("@/lib/sanity/fetch");
+
+    await expect(getSiteSettings()).resolves.toMatchObject({
+      seo: {
+        titleTemplate: "%s · Studio",
+        description: "Editorial photography",
+        ogImage: "https://cdn.sanity.io/og.jpg",
+      },
+    });
+  });
+
+  it("flattens portable text bio blocks to plain text", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "test-project");
+    sanityFetchMock.mockResolvedValue({
+      headline: "About",
+      bio: [
+        {
+          _type: "block",
+          children: [
+            { _type: "span", text: "First " },
+            { _type: "span", text: "paragraph." },
+          ],
+        },
+        {
+          _type: "block",
+          children: [{ _type: "span", text: "Second paragraph." }],
+        },
+      ],
+      philosophy: "Carefully observed.",
+      portrait: { asset: { _ref: "image-portrait-100x100-jpg" } },
+      portraitAlt: "Photographer",
+      press: [],
+    });
+
+    const { getPageAbout } = await import("@/lib/sanity/fetch");
+
+    await expect(getPageAbout()).resolves.toMatchObject({
+      bio: "First paragraph.\n\nSecond paragraph.",
+      portraitSrc: "mapped:image-portrait-100x100-jpg",
+    });
+  });
+
+  it("preserves an optional gallery shoot date", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "test-project");
+    sanityFetchMock.mockResolvedValue([
+      {
+        _id: "image-1",
+        title: "Portrait",
+        alt: "A portrait",
+        image: { asset: { _ref: "image-gallery-100x100-jpg" } },
+        width: 100,
+        height: 100,
+        categorySlug: "portraits",
+        featured: false,
+        order: 1,
+        shootDate: "2026-09-28",
+      },
+    ]);
+
+    const { getGalleryImages } = await import("@/lib/sanity/fetch");
+
+    await expect(getGalleryImages()).resolves.toMatchObject([
+      { shootDate: "2026-09-28" },
+    ]);
   });
 });

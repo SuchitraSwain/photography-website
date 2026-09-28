@@ -61,7 +61,8 @@ export const siteSettings = defineType({
       validation: (rule) => rule.email(),
     }),
     defineField({
-      name: "seo",
+      name: "seoDefaults",
+      title: "SEO defaults",
       type: "object",
       fields: [
         defineField({ name: "titleTemplate", type: "string" }),

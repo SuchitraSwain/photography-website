@@ -29,6 +29,7 @@ export const galleryImage = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({ name: "featured", type: "boolean", initialValue: false }),
+    defineField({ name: "shootDate", title: "Shoot date", type: "date" }),
     defineField({ name: "order", type: "number", initialValue: 0 }),
   ],
 });

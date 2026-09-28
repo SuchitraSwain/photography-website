@@ -12,7 +12,7 @@ export const siteSettingsQuery = defineQuery(`
     socialLinks[] { label, url },
     location,
     contactEmail,
-    seo {
+    seoDefaults {
       titleTemplate,
       description,
       "ogImage": ogImage.asset->url
@@ -40,6 +40,7 @@ export const galleryImagesQuery = defineQuery(`
     "height": image.asset->metadata.dimensions.height,
     "categorySlug": category->slug.current,
     featured,
+    shootDate,
     order
   }
 `);
@@ -55,6 +56,7 @@ export const featuredGalleryImagesQuery = defineQuery(`
     "height": image.asset->metadata.dimensions.height,
     "categorySlug": category->slug.current,
     featured,
+    shootDate,
     order
   }
 `);

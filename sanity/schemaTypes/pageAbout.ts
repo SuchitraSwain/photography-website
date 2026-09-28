@@ -12,7 +12,8 @@ export const pageAbout = defineType({
     }),
     defineField({
       name: "bio",
-      type: "text",
+      type: "array",
+      of: [defineArrayMember({ type: "block" })],
       validation: (rule) => rule.required(),
     }),
     defineField({

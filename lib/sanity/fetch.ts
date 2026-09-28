@@ -22,12 +22,13 @@ import type {
 
 type ImageSource = Parameters<typeof urlFor>[0];
 
-type RawSiteSettings = Omit<SiteSettings, "heroImages"> & {
+type RawSiteSettings = Omit<SiteSettings, "heroImages" | "seo"> & {
   heroImages: Array<{
     alt: string;
     image: ImageSource;
     lqip?: string;
   }>;
+  seoDefaults: SiteSettings["seo"];
 };
 
 type RawGalleryImage = Omit<GalleryImage, "src"> & {
@@ -38,7 +39,12 @@ type RawEvent = Omit<EventItem, "imageSrc"> & {
   image?: ImageSource;
 };
 
-type RawPageAbout = Omit<PageAbout, "portraitSrc"> & {
+type PortableTextBlock = {
+  children?: Array<{ text?: string }>;
+};
+
+type RawPageAbout = Omit<PageAbout, "bio" | "portraitSrc"> & {
+  bio: PortableTextBlock[];
   portrait: ImageSource;
 };
 
@@ -65,13 +71,14 @@ export function getSiteSettings(): Promise<SiteSettings> {
   return fetchContent(
     siteSettingsQuery,
     mockContent.siteSettings,
-    (settings: RawSiteSettings) => ({
+    ({ heroImages, seoDefaults, ...settings }: RawSiteSettings) => ({
       ...settings,
-      heroImages: settings.heroImages.map(({ alt, image, lqip }) => ({
+      heroImages: heroImages.map(({ alt, image, lqip }) => ({
         src: urlFor(image),
         alt,
         lqip,
       })),
+      seo: seoDefaults,
     }),
   );
 }
@@ -128,8 +135,13 @@ export function getPageAbout(): Promise<PageAbout> {
   return fetchContent(
     pageAboutQuery,
     mockContent.about,
-    ({ portrait, ...about }: RawPageAbout) => ({
+    ({ bio, portrait, ...about }: RawPageAbout) => ({
       ...about,
+      bio: bio
+        .map((block) =>
+          (block.children ?? []).map((span) => span.text ?? "").join(""),
+        )
+        .join("\n\n"),
       portraitSrc: urlFor(portrait),
     }),
   );
