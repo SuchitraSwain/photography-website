@@ -163,7 +163,7 @@ export function MediaUploadForm({
             {images.map((image) => (
               <li
                 key={image.id}
-                className="overflow-hidden rounded-md border border-border"
+                className="surface-card overflow-hidden"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img

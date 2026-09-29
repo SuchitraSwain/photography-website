@@ -9,38 +9,38 @@ export function PackageCard({ pkg }: PackageCardProps) {
   return (
     <article
       className={cn(
-        "border border-border p-8 md:p-10",
-        pkg.featured && "border-accent ring-1 ring-accent/40",
+        "surface-card p-8 md:p-10",
+        pkg.featured && "surface-card-featured",
       )}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 className="font-[family-name:var(--font-display)] text-3xl font-medium tracking-tight">
+        <h2 className="font-display text-3xl font-bold tracking-tight">
           {pkg.name}
         </h2>
-        <p className="text-sm font-medium tracking-wide text-brass">
+        <p className="font-mono-nav text-sm tracking-[0.08em] text-accent">
           {pkg.priceLabel}
         </p>
       </div>
 
       {pkg.featured ? (
-        <p className="mt-3 text-xs font-medium tracking-[0.2em] text-accent uppercase">
+        <p className="font-mono-nav mt-3 text-[0.65rem] tracking-[0.18em] text-accent uppercase">
           Featured
         </p>
       ) : null}
 
-      <p className="mt-6 max-w-prose text-base leading-relaxed text-foreground/90">
+      <p className="mt-6 max-w-prose text-base leading-relaxed text-foreground/85">
         {pkg.description}
       </p>
 
       <div className="mt-10 grid gap-10 sm:grid-cols-2">
         <div>
-          <h3 className="text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase">
+          <h3 className="font-mono-nav text-[0.65rem] tracking-[0.18em] text-muted-foreground uppercase">
             Includes
           </h3>
           <ul className="mt-4 space-y-2 text-sm leading-relaxed text-foreground/90">
             {pkg.includes.map((item) => (
               <li key={item} className="flex gap-2">
-                <span aria-hidden className="text-muted-foreground">
+                <span aria-hidden className="text-accent">
                   —
                 </span>
                 <span>{item}</span>
@@ -51,7 +51,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
 
         {pkg.addOns.length > 0 ? (
           <div>
-            <h3 className="text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase">
+            <h3 className="font-mono-nav text-[0.65rem] tracking-[0.18em] text-muted-foreground uppercase">
               Add-ons
             </h3>
             <ul className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">

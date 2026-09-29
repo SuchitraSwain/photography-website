@@ -8,15 +8,16 @@
   --muted: 215 18% 64%; /* #97a3b8 */
   --accent: 217 84% 69%; /* #6c9bf2 */
   --brass: #6c9bf2; /* legacy alias → accent blue */
-  --border: 217 25% 18%;
-  --input: 217 25% 18%;
+  --border: 217 28% 22%;
+  --input: 217 28% 16%;
   --ring: 217 84% 69%;
   --destructive: 0 72% 51%;
   --radius: 0;
+  --surface: 222 35% 7%;
   --grid-line: rgba(148, 176, 224, 0.04);
   --glow-a: rgba(15, 76, 129, 0.34);
   --glow-b: rgba(78, 146, 214, 0.13);
-  --cta-border: rgba(148, 176, 224, 0.14);
+  --cta-border: rgba(148, 176, 224, 0.22);
 }
 
 .dark {
@@ -25,10 +26,11 @@
   --muted: 215 18% 64%;
   --accent: 217 84% 69%;
   --brass: #6c9bf2;
-  --border: 217 25% 18%;
-  --input: 217 25% 18%;
+  --border: 217 28% 22%;
+  --input: 217 28% 16%;
   --ring: 217 84% 69%;
   --destructive: 0 63% 50%;
+  --surface: 222 35% 7%;
 }
 
 @theme inline {
@@ -40,7 +42,7 @@
   --color-popover-foreground: hsl(var(--foreground));
   --color-primary: hsl(var(--foreground));
   --color-primary-foreground: hsl(var(--background));
-  --color-secondary: hsl(var(--border));
+  --color-secondary: hsl(var(--surface));
   --color-secondary-foreground: hsl(var(--foreground));
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted));
@@ -51,6 +53,7 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+  --color-surface: hsl(var(--surface));
   --font-sans: var(--font-body);
   --font-mono: var(--font-mono);
   --font-editorial: var(--font-display);
@@ -195,6 +198,21 @@ body {
   border-color: hsl(var(--accent) / 0.55);
   color: hsl(var(--accent));
   background: hsl(var(--accent) / 0.06);
+}
+
+.surface-card {
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--surface));
+}
+
+.surface-card-featured {
+  border-color: hsl(var(--accent) / 0.55);
+  background: linear-gradient(
+    180deg,
+    hsl(var(--accent) / 0.1),
+    hsl(var(--surface))
+  );
+  box-shadow: inset 0 0 0 1px hsl(var(--accent) / 0.2);
 }
 
 @keyframes motion-fade-up {
