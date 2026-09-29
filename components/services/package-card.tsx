@@ -14,10 +14,10 @@ export function PackageCard({ pkg }: PackageCardProps) {
       )}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 className="font-display text-3xl font-bold tracking-tight">
+        <h2 className="font-display text-3xl font-bold tracking-tight text-foreground">
           {pkg.name}
         </h2>
-        <p className="font-mono-nav text-sm tracking-[0.08em] text-accent">
+        <p className="font-mono-nav text-sm tracking-[0.08em] text-foreground/90">
           {pkg.priceLabel}
         </p>
       </div>
@@ -28,7 +28,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
         </p>
       ) : null}
 
-      <p className="mt-6 max-w-prose text-base leading-relaxed text-foreground/85">
+      <p className="mt-6 max-w-prose text-base leading-relaxed text-muted-foreground">
         {pkg.description}
       </p>
 
