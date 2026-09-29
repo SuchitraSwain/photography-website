@@ -14,9 +14,9 @@
   --destructive: 0 72% 51%;
   --radius: 0;
   --surface: 220 30% 7%; /* #0b101a */
-  --grid-line: rgba(148, 176, 224, 0.055);
-  --glow-a: rgba(15, 76, 129, 0.38);
-  --glow-b: rgba(78, 146, 214, 0.16);
+  --grid-line: rgba(148, 176, 224, 0.038);
+  --glow-a: rgba(15, 76, 129, 0.34);
+  --glow-b: rgba(78, 146, 214, 0.13);
   --cta-border: rgba(148, 176, 224, 0.22);
   --card-border: rgba(148, 176, 224, 0.14);
   --card-border-strong: rgba(148, 176, 224, 0.22);
@@ -179,21 +179,21 @@ body {
 
 .atmos-grid {
   position: absolute;
-  inset: -4rem;
+  inset: -64px;
   background-image:
     linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(var(--grid-line) 1px, transparent 1px);
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 64px 64px;
-  /* Soft falloff only — personal site reveals grid via glow light, not a hard mask */
+  /* Exact personal-site falloff — glow light reveals the grid */
   mask-image: radial-gradient(
-    ellipse 120% 100% at 50% 40%,
-    #000 35%,
-    transparent 85%
+    ellipse 90% 70% at 50% 30%,
+    #000 30%,
+    transparent 100%
   );
   -webkit-mask-image: radial-gradient(
-    ellipse 120% 100% at 50% 40%,
-    #000 35%,
-    transparent 85%
+    ellipse 90% 70% at 50% 30%,
+    #000 30%,
+    transparent 100%
   );
 }
 
@@ -201,34 +201,33 @@ body {
   position: absolute;
   border-radius: 50%;
   filter: blur(90px);
-  will-change: transform;
 }
 
-/* Top-right — primary blue wash (glow-a on personal site) */
+/* Top-right — primary wash (personal .glow-a) */
 .atmos-glow-a {
-  top: -22vh;
-  right: -14vw;
-  width: min(58vw, 36rem);
-  height: min(58vw, 36rem);
+  top: -24vw;
+  right: -18vw;
+  width: 62vw;
+  height: 62vw;
   background: radial-gradient(circle, var(--glow-a), transparent 65%);
 }
 
-/* Bottom-left — cooler secondary wash (glow-b) */
+/* Lower-left — cooler secondary (personal .glow-b) */
 .atmos-glow-b {
-  bottom: -28vh;
-  left: -18vw;
-  width: min(48vw, 28rem);
-  height: min(48vw, 28rem);
+  top: 60vh;
+  left: -20vw;
+  width: 48vw;
+  height: 48vw;
   background: radial-gradient(circle, var(--glow-b), transparent 65%);
 }
 
-/* Lower-right accent (glow-c) */
+/* Soft mid-right fill so the right edge stays lit like the founder site */
 .atmos-glow-c {
-  bottom: -32vh;
-  right: -10vw;
-  width: min(42vw, 24rem);
-  height: min(42vw, 24rem);
-  background: radial-gradient(circle, rgba(108, 155, 242, 0.12), transparent 65%);
+  top: 18vh;
+  right: -22vw;
+  width: 46vw;
+  height: 46vw;
+  background: radial-gradient(circle, rgba(108, 155, 242, 0.1), transparent 65%);
 }
 
 .atmos-grain {
