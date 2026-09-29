@@ -5,6 +5,7 @@ export function SiteAtmosphere() {
       <div className="atmos-glow atmos-glow-a" />
       <div className="atmos-glow atmos-glow-b" />
       <div className="atmos-glow atmos-glow-c" />
+      <div className="atmos-grain" />
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import { CustomCursor } from "@/components/effects/custom-cursor";
-import { FilmGrain } from "@/components/effects/film-grain";
 import { ScrollProgress } from "@/components/effects/scroll-progress";
 import { SiteAtmosphere } from "@/components/layout/site-atmosphere";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -17,7 +16,6 @@ export async function SiteShell({
     <>
       <SiteAtmosphere />
       <ScrollProgress />
-      <FilmGrain />
       <CustomCursor />
       <div className="site-content flex min-h-full flex-1 flex-col">
         <SiteHeader brandName={settings.brandName} />
