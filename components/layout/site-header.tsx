@@ -41,10 +41,10 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
+        "sticky top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-300",
         overHero
-          ? "border-b border-transparent bg-transparent"
-          : "border-b border-border/60 bg-background/80 backdrop-blur-md",
+          ? "border-white/10 bg-black/55 backdrop-blur-md"
+          : "border-border/60 bg-background/85 backdrop-blur-md",
       )}
     >
       <div className="mx-auto flex h-16 max-w-[100rem] items-center justify-between gap-4 px-6 lg:px-10">

@@ -68,6 +68,11 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
       </div>
 
       <div className="image-veil" />
+      {/* Top scrim keeps nav readable on bright skies / light photos */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/75 via-black/35 to-transparent"
+      />
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/20" />
 
       <div className="relative mx-auto flex min-h-[100svh] max-w-[100rem] flex-col justify-end px-6 pb-12 pt-28 sm:px-10 sm:pb-16 lg:px-16 lg:pb-20">
