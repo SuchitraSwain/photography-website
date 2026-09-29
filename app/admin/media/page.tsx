@@ -23,13 +23,14 @@ export default async function AdminMediaPage() {
     : [];
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-16">
-      <h1 className="font-[family-name:var(--font-display)] text-4xl">Media</h1>
-      <p className="mt-4 max-w-xl text-muted-foreground">
+    <main className="mx-auto max-w-5xl px-6 py-16 lg:px-8">
+      <p className="type-label">Admin</p>
+      <h1 className="type-title mt-3">Media</h1>
+      <p className="type-lead">
         Upload gallery images to Vercel Blob. Pick a category, then select one
         or many files.
       </p>
-      <div className="mt-10">
+      <div className="mt-12">
         <MediaUploadForm
           categories={categories}
           blobReady={blobReady}
