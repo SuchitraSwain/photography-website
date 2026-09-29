@@ -57,7 +57,19 @@ async function loadPublishedGalleryImages(): Promise<GalleryImage[] | null> {
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
-  return mockContent.siteSettings;
+  const { getContactEmail } = await import("@/lib/contact-email");
+  const contactEmail = getContactEmail();
+  const settings = mockContent.siteSettings;
+
+  return {
+    ...settings,
+    contactEmail,
+    socialLinks: settings.socialLinks.map((link) =>
+      link.label.toLowerCase() === "email"
+        ? { ...link, url: `mailto:${contactEmail}` }
+        : link,
+    ),
+  };
 }
 
 export async function getCategories(): Promise<Category[]> {

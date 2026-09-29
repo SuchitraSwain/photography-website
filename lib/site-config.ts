@@ -6,8 +6,9 @@ export const siteConfig = {
   /** Studio founders — shown on About, footer, and SEO copy. */
   founders: ["Sagar Zinzala", "Suchitra Swain"] as const,
 
-  /** Replace with your real inbox — shown on Contact and used as Formspree `_replyto` hint. */
-  contactEmail: "[MY_REAL_EMAIL]",
+  /** Public contact inbox — prefer NEXT_PUBLIC_CONTACT_EMAIL; server pages also fall back to ADMIN_EMAILS. */
+  contactEmail:
+    process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "[MY_REAL_EMAIL]",
 
   /**
    * Formspree form ID from https://formspree.io (e.g. "xyzabcde").
@@ -16,12 +17,9 @@ export const siteConfig = {
   formspreeId: process.env.NEXT_PUBLIC_FORMSPREE_ID?.trim() || "",
 
   /**
-   * Cal.com booking page URL (e.g. "https://cal.com/your-username/30min").
-   * Used as an iframe embed on /booking — no OAuth or API keys required.
+   * Optional Cal.com / Calendly URL. When unset, /booking uses the Google booking form.
    */
-  calUrl:
-    process.env.NEXT_PUBLIC_CAL_URL?.trim() ||
-    "https://cal.com/your-username/30min",
+  calUrl: process.env.NEXT_PUBLIC_CAL_URL?.trim() || "",
 } as const;
 
 export function foundersCredit(): string {

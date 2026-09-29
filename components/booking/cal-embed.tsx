@@ -7,9 +7,13 @@ type CalEmbedProps = {
 };
 
 export function CalEmbed({ calUrl = siteConfig.calUrl }: CalEmbedProps) {
+  if (!calUrl) {
+    return null;
+  }
+
   return (
     <div className="space-y-6">
-      <div className="overflow-hidden border border-border bg-secondary/20">
+      <div className="overflow-hidden rounded-[14px] border border-[rgba(148,176,224,0.14)] bg-[#0b101a]/50">
         <iframe
           title="Book a session"
           src={calUrl}
@@ -18,16 +22,17 @@ export function CalEmbed({ calUrl = siteConfig.calUrl }: CalEmbedProps) {
           allow="camera; microphone; fullscreen"
         />
       </div>
-      <p className="text-sm text-muted-foreground">
-        Prefer email? Reach out at{" "}
-        <span className="text-foreground">{siteConfig.contactEmail}</span> and
-        we’ll confirm availability within 24–48 hours.
-      </p>
-      {calUrl.includes("your-username") ? (
-        <p className="rounded-md border border-border bg-secondary/40 px-4 py-3 text-sm text-muted-foreground">
-          Set{" "}
-          <code className="text-foreground">NEXT_PUBLIC_CAL_URL</code> to your
-          Cal.com or Calendly booking link to replace this placeholder embed.
+      {siteConfig.contactEmail.includes("@") &&
+      !siteConfig.contactEmail.startsWith("[") ? (
+        <p className="text-sm text-muted-foreground">
+          Prefer email? Reach out at{" "}
+          <a
+            className="text-foreground underline underline-offset-4 hover:text-accent"
+            href={`mailto:${siteConfig.contactEmail}`}
+          >
+            {siteConfig.contactEmail}
+          </a>{" "}
+          and we’ll confirm availability within 24–48 hours.
         </p>
       ) : null}
     </div>

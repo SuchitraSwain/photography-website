@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/contact/contact-form";
 import { getSiteSettings } from "@/lib/content/fetch";
-import { siteConfig } from "@/lib/site-config";
+import { getContactEmail } from "@/lib/contact-email";
 
 /** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
 export const revalidate = 300;
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const { location, socialLinks } = await getSiteSettings();
+  const contactEmail = getContactEmail();
 
   return (
     <main className="px-4 py-16 md:px-8">
@@ -28,7 +29,7 @@ export default async function ContactPage() {
 
         <div className="mt-12">
           <ContactForm
-            contactEmail={siteConfig.contactEmail}
+            contactEmail={contactEmail}
             location={location}
             socialLinks={socialLinks}
           />
