@@ -1,104 +1,114 @@
 "use client";
 
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function canUseCustomCursor() {
   if (typeof window === "undefined") return false;
-  // Fine pointer + hover capability (excludes phones/tablets); not a CSS breakpoint
   return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 }
 
 /**
- * Desktop-only custom cursor. pointer-events: none — never blocks clicks.
- * Expands on buttons; shows "View" on [data-cursor="gallery"].
+ * Desktop-only accent cursor — follows the pointer 1:1 (no spring lag).
+ * Expands on interactive targets; shows "View" on [data-cursor="gallery"].
  */
 export function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [mode, setMode] = useState<"default" | "button" | "gallery">("default");
-
-  const mouseX = useMotionValue(-100);
-  const mouseY = useMotionValue(-100);
-  const x = useSpring(mouseX, { stiffness: 380, damping: 32, mass: 0.45 });
-  const y = useSpring(mouseY, { stiffness: 380, damping: 32, mass: 0.45 });
+  const rootRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const modeRef = useRef<"default" | "button" | "gallery">("default");
 
   useEffect(() => {
-    const ok = canUseCustomCursor();
-    setEnabled(ok);
-    if (!ok) return;
+    setEnabled(canUseCustomCursor());
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
+
+    const root = rootRef.current;
+    if (!root) return;
 
     document.documentElement.classList.add("has-custom-cursor");
 
-    const onMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-      setVisible(true);
+    let visible = false;
 
-      const target = (e.target as Element | null)?.closest?.(
-        "[data-cursor], a, button, [role='button']",
-      );
-      if (!target) {
-        setMode("default");
-        return;
-      }
-      const cursorAttr = target.getAttribute("data-cursor");
-      if (cursorAttr === "gallery") {
-        setMode("gallery");
-      } else if (
-        target.tagName === "A" ||
-        target.tagName === "BUTTON" ||
-        target.getAttribute("role") === "button" ||
-        cursorAttr === "button"
-      ) {
-        setMode("button");
-      } else {
-        setMode("default");
+    const applyMode = (mode: "default" | "button" | "gallery") => {
+      if (modeRef.current === mode) return;
+      modeRef.current = mode;
+      root.dataset.mode = mode;
+      if (labelRef.current) {
+        labelRef.current.hidden = mode !== "gallery";
       }
     };
 
-    const onLeave = () => setVisible(false);
-    const onEnter = () => setVisible(true);
+    const onMove = (e: MouseEvent) => {
+      root.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      if (!visible) {
+        visible = true;
+        root.style.opacity = "1";
+      }
+
+      const target = (e.target as Element | null)?.closest?.(
+        "[data-cursor], a, button, [role='button'], input, textarea, select, label",
+      );
+
+      if (!target) {
+        applyMode("default");
+        return;
+      }
+
+      const cursorAttr = target.getAttribute("data-cursor");
+      if (cursorAttr === "gallery") {
+        applyMode("gallery");
+      } else if (
+        target.tagName === "A" ||
+        target.tagName === "BUTTON" ||
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.tagName === "SELECT" ||
+        target.tagName === "LABEL" ||
+        target.getAttribute("role") === "button" ||
+        cursorAttr === "button"
+      ) {
+        applyMode("button");
+      } else {
+        applyMode("default");
+      }
+    };
+
+    const onLeave = () => {
+      visible = false;
+      root.style.opacity = "0";
+    };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     document.documentElement.addEventListener("mouseleave", onLeave);
-    document.documentElement.addEventListener("mouseenter", onEnter);
 
     return () => {
       document.documentElement.classList.remove("has-custom-cursor");
       window.removeEventListener("mousemove", onMove);
       document.documentElement.removeEventListener("mouseleave", onLeave);
-      document.documentElement.removeEventListener("mouseenter", onEnter);
     };
-  }, [mouseX, mouseY]);
+  }, [enabled]);
 
   if (!enabled) return null;
 
-  const expanded = mode === "button" || mode === "gallery";
-
   return (
-    <motion.div
+    <div
+      ref={rootRef}
       aria-hidden
-      className="pointer-events-none fixed top-0 left-0 z-[9999] mix-blend-difference"
-      style={{ x, y, translateX: "-50%", translateY: "-50%" }}
+      data-mode="default"
+      className="pointer-events-none fixed top-0 left-0 z-[9999] opacity-0 will-change-transform"
+      style={{ transform: "translate3d(-100px, -100px, 0)" }}
     >
-      <motion.div
-        className="flex items-center justify-center rounded-full border border-white bg-white"
-        animate={{
-          width: expanded ? 56 : 8,
-          height: expanded ? 56 : 8,
-          backgroundColor:
-            mode === "gallery" ? "rgba(255,255,255,0.12)" : "#ffffff",
-          opacity: visible ? 1 : 0,
-        }}
-        transition={{ type: "spring", stiffness: 420, damping: 28 }}
-      >
-        {mode === "gallery" ? (
-          <span className="text-[0.55rem] font-semibold tracking-[0.18em] text-white uppercase">
-            View
-          </span>
-        ) : null}
-      </motion.div>
-    </motion.div>
+      <div className="cursor-core -translate-x-1/2 -translate-y-1/2">
+        <span
+          ref={labelRef}
+          hidden
+          className="font-mono-nav text-[0.55rem] font-medium tracking-[0.16em] text-background uppercase"
+        >
+          View
+        </span>
+      </div>
+    </div>
   );
 }

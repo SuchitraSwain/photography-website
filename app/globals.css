@@ -300,6 +300,34 @@ html.has-custom-cursor * {
   cursor: none !important;
 }
 
+.cursor-core {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: hsl(var(--accent));
+  box-shadow: 0 0 0 1px hsl(var(--background) / 0.35);
+  transition:
+    width 0.15s ease,
+    height 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+[data-mode="button"] .cursor-core,
+[data-mode="gallery"] .cursor-core {
+  width: 44px;
+  height: 44px;
+  background: hsl(var(--accent));
+  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.2);
+}
+
+[data-mode="gallery"] .cursor-core {
+  background: hsl(var(--foreground));
+}
+
 .film-grain {
   position: fixed;
   inset: 0;
