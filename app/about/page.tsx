@@ -19,9 +19,7 @@ export default async function AboutPage() {
   return (
     <main className="px-4 py-16 md:px-8">
       <div className="mx-auto max-w-5xl">
-        <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
-          The studio
-        </p>
+        <p className="type-label">The studio</p>
         <div className="mt-3">
           <AboutView about={about} />
         </div>

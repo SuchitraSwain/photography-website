@@ -98,12 +98,73 @@ body {
 
 .font-display {
   font-family: var(--font-display), Inter, system-ui, sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
 }
 
 .font-mono-nav {
   font-family: var(--font-mono), ui-monospace, "SF Mono", monospace;
+}
+
+/* Typography — matched to suchitra-swain.web.app */
+.type-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono), ui-monospace, "SF Mono", monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: hsl(var(--muted));
+}
+
+.type-title {
+  font-family: var(--font-display), Inter, system-ui, sans-serif;
+  font-size: clamp(2rem, 4.4vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  color: hsl(var(--foreground));
+  text-wrap: balance;
+}
+
+.type-lead {
+  margin-top: 1.125rem;
+  max-width: 64ch;
+  font-size: clamp(1.02rem, 1.4vw, 1.16rem);
+  line-height: 1.7;
+  color: hsl(var(--muted));
+}
+
+.type-body {
+  font-size: 1.08rem;
+  line-height: 1.7;
+  color: hsl(var(--foreground));
+}
+
+.type-kpi {
+  font-family: var(--font-display), Inter, system-ui, sans-serif;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: hsl(var(--foreground));
+}
+
+.type-link {
+  font-family: var(--font-mono), ui-monospace, "SF Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--muted));
+  transition: color 0.3s ease;
+}
+
+.type-link:hover {
+  color: hsl(var(--foreground));
 }
 
 /* Atmosphere — matched to suchitra-swain.web.app (grid + glows + grain) */
@@ -210,24 +271,54 @@ body {
 .pill-cta {
   display: inline-flex;
   align-items: center;
+  gap: 0.6rem;
   border: 1px solid var(--cta-border);
   border-radius: 999px;
-  padding: 0.55rem 1.15rem;
+  padding: 0.85rem 1.5rem;
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: hsl(var(--foreground));
+  background: rgba(148, 176, 224, 0.04);
   transition:
-    border-color 0.25s ease,
-    color 0.25s ease,
-    background-color 0.25s ease;
+    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .pill-cta:hover {
-  border-color: hsl(var(--accent) / 0.55);
-  color: hsl(var(--accent));
-  background: hsl(var(--accent) / 0.06);
+  border-color: hsl(var(--accent));
+  color: hsl(var(--foreground));
+  background: hsl(var(--accent) / 0.12);
+}
+
+.pill-cta-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid hsl(var(--accent));
+  border-radius: 999px;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #06101f;
+  background: hsl(var(--accent));
+  transition:
+    background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pill-cta-accent:hover {
+  background: #86adf7;
+  box-shadow: 0 0 34px hsl(var(--accent) / 0.4);
+  color: #06101f;
 }
 
 /* Matched to personal-site KPI / project cards */

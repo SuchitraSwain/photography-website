@@ -50,10 +50,8 @@ export function Testimonials() {
   return (
     <section className="px-6 py-24 sm:px-10 sm:py-32 lg:px-16">
       <RevealOnScroll className="mx-auto max-w-[100rem]">
-        <p className="text-[0.7rem] font-medium tracking-[0.35em] text-muted-foreground uppercase">
-          Kind words
-        </p>
-        <h2 className="font-display mt-4 max-w-2xl text-[clamp(2.2rem,4.5vw,3.5rem)] leading-[1.1] font-medium tracking-[-0.02em]">
+        <p className="type-label">Kind words</p>
+        <h2 className="type-title mt-4 max-w-2xl">
           What clients remember
         </h2>
 
@@ -62,16 +60,14 @@ export function Testimonials() {
             key={active.name}
             className={cn("max-w-3xl motion-fade")}
           >
-            <p className="font-display text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.35] text-foreground/95 italic">
+            <p className="font-display text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.35] font-medium tracking-[-0.02em] text-foreground/95 italic">
               “{active.quote}”
             </p>
             <footer className="mt-8">
               <p className="text-sm font-medium tracking-wide text-foreground">
                 {active.name}
               </p>
-              <p className="mt-1 text-[0.7rem] tracking-[0.2em] text-muted-foreground uppercase">
-                {active.detail}
-              </p>
+              <p className="type-label mt-1">{active.detail}</p>
             </footer>
           </blockquote>
         </div>

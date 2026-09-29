@@ -27,19 +27,14 @@ export function AboutView({ about }: AboutViewProps) {
       </RevealOnScroll>
 
       <RevealOnScroll delay={0.1}>
-        <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
+        <p className="type-label">
           Two engineers. One eye for light.
         </p>
-        <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl font-medium tracking-tight md:text-5xl">
-          {about.headline}
-        </h1>
+        <h1 className="type-title mt-4">{about.headline}</h1>
 
         <div className="mt-10 space-y-6 border-t border-border pt-10">
           {bioParagraphs.map((paragraph, index) => (
-            <p
-              key={index}
-              className="max-w-prose text-base leading-relaxed text-foreground/90"
-            >
+            <p key={index} className="type-body max-w-prose">
               {paragraph}
             </p>
           ))}
@@ -52,9 +47,7 @@ export function AboutView({ about }: AboutViewProps) {
           >
             &ldquo;
           </span>
-          <p className="font-mono-nav text-[0.65rem] tracking-[0.18em] text-muted-foreground uppercase">
-            Philosophy
-          </p>
+          <p className="type-label">Philosophy</p>
           <p className="mt-4 max-w-prose text-lg leading-relaxed text-foreground/95 italic">
             {about.philosophy}
           </p>
@@ -62,9 +55,7 @@ export function AboutView({ about }: AboutViewProps) {
 
         {about.press.length > 0 ? (
           <section className="mt-16 border-t border-border pt-10">
-            <h2 className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
-              Press
-            </h2>
+            <h2 className="type-label">Press</h2>
             <ul className="mt-8 divide-y divide-border">
               {about.press.map((item) => (
                 <li key={`${item.url}-${item.year}`} className="py-5 first:pt-0">

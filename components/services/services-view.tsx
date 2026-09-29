@@ -16,13 +16,9 @@ export function ServicesView({ packages }: ServicesViewProps) {
   return (
     <>
       <RevealOnScroll>
-        <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
-          Packages
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-medium tracking-tight md:text-6xl">
-          Services
-        </h1>
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
+        <p className="type-label">Packages</p>
+        <h1 className="type-title mt-3">Services</h1>
+        <p className="type-lead">
           No two days look the same. No two frames should either.
         </p>
       </RevealOnScroll>

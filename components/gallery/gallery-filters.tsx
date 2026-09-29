@@ -35,10 +35,10 @@ export function GalleryFilters({
             aria-pressed={isActive}
             onClick={() => onFilterChange(slug)}
             className={cn(
-              "font-mono-nav rounded-full border px-4 py-2 text-[0.72rem] tracking-[0.12em] uppercase transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+              "font-mono-nav rounded-full border px-4 py-2 text-[0.74rem] font-medium tracking-[0.12em] uppercase transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
               isActive
-                ? "border-accent bg-accent text-background"
-                : "border-white/15 text-muted-foreground hover:border-accent/50 hover:text-foreground",
+                ? "border-accent bg-accent text-[#06101f]"
+                : "border-[rgba(148,176,224,0.14)] text-muted-foreground hover:border-accent/50 hover:text-foreground",
             )}
           >
             {label}

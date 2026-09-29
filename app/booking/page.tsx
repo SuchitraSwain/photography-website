@@ -13,13 +13,9 @@ export default function BookingPage() {
   return (
     <main className="px-4 py-16 md:px-8">
       <div className="mx-auto max-w-3xl">
-        <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
-          Inquire
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-medium tracking-tight md:text-6xl">
-          Booking
-        </h1>
-        <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+        <p className="type-label">Inquire</p>
+        <h1 className="type-title mt-3">Booking</h1>
+        <p className="type-lead">
           Choose a time that works for you. Confirmations are handled through
           the scheduling calendar — no account setup required on your end.
         </p>

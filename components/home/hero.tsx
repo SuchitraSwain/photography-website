@@ -81,7 +81,7 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
           variants={loadIn}
           initial={reduceMotion ? false : "hidden"}
           animate="show"
-          className="font-display max-w-[18ch] text-[clamp(4.5rem,16vw,14rem)] leading-[0.78] font-medium tracking-[-0.04em] text-white uppercase"
+          className="font-display max-w-[18ch] text-[clamp(2.5rem,8vw,4.55rem)] leading-[0.99] font-extrabold tracking-[-0.035em] text-white"
         >
           {brandName}
         </motion.h1>
@@ -91,7 +91,7 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
           variants={loadIn}
           initial={reduceMotion ? false : "hidden"}
           animate="show"
-          className="mt-6 max-w-md text-[0.7rem] font-medium tracking-[0.42em] text-white/70 uppercase sm:text-xs"
+          className="font-mono-nav mt-6 max-w-md text-[0.72rem] tracking-[0.18em] text-[#97a3b8] uppercase"
         >
           {tagline}
         </motion.p>
@@ -101,7 +101,7 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
           variants={loadIn}
           initial={reduceMotion ? false : "hidden"}
           animate="show"
-          className="mt-8 max-w-md text-base leading-relaxed text-white/78 sm:text-lg"
+          className="mt-8 max-w-md text-[1.08rem] leading-[1.7] text-[#97a3b8]"
         >
           Some moments aren&apos;t posed. They&apos;re witnessed.
         </motion.p>
@@ -111,18 +111,12 @@ export function Hero({ brandName, tagline, images }: HeroProps) {
           variants={loadIn}
           initial={reduceMotion ? false : "hidden"}
           animate="show"
-          className="mt-10 flex flex-col gap-4 border-t border-white/25 pt-8 sm:flex-row sm:items-center"
+          className="mt-10 flex flex-col gap-4 border-t border-white/20 pt-8 sm:flex-row sm:items-center"
         >
-          <MagneticButton
-            href="/gallery"
-            className="bg-white text-black hover:bg-white/90 focus-visible:outline-white"
-          >
+          <MagneticButton href="/gallery" className="pill-cta-accent">
             View work
           </MagneticButton>
-          <MagneticButton
-            href="/booking"
-            className="border border-white/80 text-white hover:bg-white hover:text-black focus-visible:outline-white"
-          >
+          <MagneticButton href="/booking" className="pill-cta">
             Book now
           </MagneticButton>
         </motion.div>

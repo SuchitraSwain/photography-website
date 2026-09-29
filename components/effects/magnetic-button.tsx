@@ -66,7 +66,7 @@ export function MagneticButton({
         onMouseMove={onMove}
         onMouseLeave={onLeave}
         className={cn(
-          "group inline-flex h-12 items-center justify-center gap-2 px-8 text-[0.7rem] font-semibold tracking-[0.22em] uppercase focus-visible:outline-2 focus-visible:outline-offset-2",
+          "group inline-flex items-center justify-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
           className,
         )}
       >

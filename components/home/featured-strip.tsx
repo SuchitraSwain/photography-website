@@ -27,16 +27,12 @@ export function FeaturedStrip({ images }: FeaturedStripProps) {
       <RevealOnScroll className="mx-auto max-w-[100rem]">
         <div className="mb-14 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[0.7rem] font-medium tracking-[0.35em] text-muted-foreground uppercase">
-              Selected stories
-            </p>
-            <h2 className="font-display mt-4 text-[clamp(2.5rem,5vw,4rem)] leading-none font-medium tracking-[-0.02em]">
-              Featured work
-            </h2>
+            <p className="type-label">Selected stories</p>
+            <h2 className="type-title mt-4">Featured work</h2>
           </div>
           <Link
             href="/gallery"
-            className="group inline-flex items-center gap-3 text-[0.7rem] font-semibold tracking-[0.24em] uppercase transition-colors hover:text-brass"
+            className="type-link group inline-flex items-center gap-3 text-foreground hover:text-accent"
           >
             Explore gallery
             <span

@@ -51,13 +51,13 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
         <Link
           href="/"
           className={cn(
-            "font-mono-nav relative z-10 flex items-center gap-2.5 text-[0.82rem] tracking-[0.08em] uppercase transition-colors",
+            "font-mono-nav relative z-10 flex items-center gap-2.5 text-[0.82rem] font-medium tracking-[0.08em] uppercase transition-colors",
             overHero ? "text-white" : "text-foreground",
           )}
         >
           <span
             aria-hidden
-            className="inline-block size-2.5 rounded-[2px] bg-accent"
+            className="inline-block size-[9px] rounded-[2px] bg-accent shadow-[0_0_12px_rgba(108,155,242,0.8)]"
           />
           {brandName}
         </Link>
@@ -74,7 +74,7 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
                 key={href}
                 href={href}
                 className={cn(
-                  "font-mono-nav group relative text-[0.72rem] tracking-[0.14em] uppercase transition-colors",
+                  "font-mono-nav group relative text-[0.72rem] font-medium tracking-[0.14em] uppercase transition-colors",
                   overHero
                     ? "text-white/65 hover:text-white"
                     : "text-muted-foreground hover:text-foreground",

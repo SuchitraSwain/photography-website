@@ -28,13 +28,9 @@ export default async function EventsPage() {
   return (
     <main className="px-4 py-16 md:px-8">
       <div className="mx-auto max-w-5xl">
-        <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
-          On the calendar
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-medium tracking-tight md:text-6xl">
-          Events
-        </h1>
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
+        <p className="type-label">On the calendar</p>
+        <h1 className="type-title mt-3">Events</h1>
+        <p className="type-lead">
           Join us for open studios, workshops, and seasonal pop-ups. Add any
           event to your calendar with one click.
         </p>

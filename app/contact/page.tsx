@@ -19,13 +19,9 @@ export default async function ContactPage() {
   return (
     <main className="px-4 py-16 md:px-8">
       <div className="mx-auto max-w-5xl">
-        <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
-          Reach out
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-medium tracking-tight md:text-6xl">
-          Contact
-        </h1>
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
+        <p className="type-label">Reach out</p>
+        <h1 className="type-title mt-3">Contact</h1>
+        <p className="type-lead">
           Questions, collaborations, or press — send a message and we&apos;ll
           reply by email.
         </p>

@@ -15,15 +15,15 @@ export function EventCard({ event }: EventCardProps) {
         <div className="order-2 md:order-1">
           <time
             dateTime={event.start}
-            className="text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase"
+            className="type-label"
           >
             {formatEventDateRange(event.start, event.end)}
           </time>
-          <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-medium tracking-tight md:text-4xl">
+          <h2 className="type-title mt-3">
             {event.title}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">{event.location}</p>
-          <p className="mt-6 max-w-prose text-base leading-relaxed text-foreground/90">
+          <p className="type-body mt-6 max-w-prose text-foreground/90">
             {event.description}
           </p>
           <div className="mt-8">

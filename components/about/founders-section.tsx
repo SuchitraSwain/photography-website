@@ -38,13 +38,9 @@ export function FoundersSection() {
   return (
     <section className="mt-24 border-t border-border pt-16 md:mt-28 md:pt-20">
       <RevealOnScroll>
-        <p className="text-[0.7rem] font-medium tracking-[0.35em] text-muted-foreground uppercase">
-          Engineers turned photographers
-        </p>
-        <h2 className="font-display mt-4 text-[clamp(2rem,4vw,3rem)] leading-tight font-medium tracking-[-0.02em]">
-          The founders
-        </h2>
-        <p className="mt-3 max-w-xl text-sm tracking-[0.08em] text-muted-foreground uppercase">
+        <p className="type-label">Engineers turned photographers</p>
+        <h2 className="type-title mt-4">The founders</h2>
+        <p className="type-lead">
           Two engineers. One eye for light.
         </p>
       </RevealOnScroll>
@@ -67,16 +63,14 @@ export function FoundersSection() {
                 />
               </div>
               <div className="mt-6 flex flex-1 flex-col">
-                <p className="text-[0.65rem] font-medium tracking-[0.28em] text-muted-foreground uppercase">
-                  {founder.role}
-                </p>
-                <h3 className="font-display mt-2 text-3xl font-medium tracking-tight">
+                <p className="type-label">{founder.role}</p>
+                <h3 className="font-display mt-2 text-[clamp(1.6rem,2.6vw,2.2rem)] text-foreground">
                   {founder.name}
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
                   {founder.title}
                 </p>
-                <p className="mt-5 text-base leading-relaxed text-foreground/90">
+                <p className="type-body mt-5 text-foreground/90">
                   {founder.bio}
                 </p>
               </div>

@@ -129,17 +129,15 @@ export function ContactForm({
 
       <aside className="space-y-8">
         <div className="space-y-2">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl">
+          <h2 className="font-display text-[clamp(1.6rem,2.6vw,2.2rem)]">
             Studio
           </h2>
           {location ? (
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {location}
-            </p>
+            <p className="type-lead mt-0 text-[0.95rem]">{location}</p>
           ) : null}
           <p className="text-sm">
             <a
-              className="underline underline-offset-4 hover:text-brass"
+              className="underline underline-offset-4 hover:text-accent"
               href={
                 contactEmail.includes("@") && !contactEmail.startsWith("[")
                   ? `mailto:${contactEmail}`
@@ -153,9 +151,7 @@ export function ContactForm({
 
         {socialLinks.length > 0 ? (
           <div className="space-y-3">
-            <h2 className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
-              Connect
-            </h2>
+            <h2 className="type-label">Connect</h2>
             <ul className="space-y-2">
               {socialLinks.map((link) => (
                 <li key={link.url}>

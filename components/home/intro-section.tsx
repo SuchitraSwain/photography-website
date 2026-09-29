@@ -19,18 +19,16 @@ export function IntroSection({ tagline }: IntroSectionProps) {
 
       <RevealOnScroll className="relative mx-auto grid max-w-[100rem] gap-14 lg:grid-cols-[0.35fr_1fr] lg:gap-20">
         <div className="space-y-6">
-          <p className="text-[0.7rem] font-medium tracking-[0.35em] text-muted-foreground uppercase">
+          <p className="type-label">
             We debug by day. We shoot at golden hour.
           </p>
           <div className="editorial-rule w-16" />
         </div>
 
         <div>
-          <h2 className="font-display max-w-4xl text-[clamp(2.4rem,5.5vw,4.75rem)] leading-[1.05] font-medium tracking-[-0.02em] text-foreground">
-            {tagline}
-          </h2>
+          <h2 className="type-title max-w-4xl">{tagline}</h2>
           <div className="mt-12 grid gap-10 border-t border-border/80 pt-10 md:grid-cols-[1.4fr_0.6fr]">
-            <p className="max-w-xl text-base leading-[1.75] text-muted-foreground sm:text-lg">
+            <p className="type-lead mt-0 max-w-xl">
               A two-person studio — {foundersCredit()} — shooting weddings,
               portraits, events, and editorial stories with patience and a bias
               toward natural light. Less posing, more presence.
@@ -38,7 +36,7 @@ export function IntroSection({ tagline }: IntroSectionProps) {
             <div className="md:pt-1 md:text-right">
               <Link
                 href="/about"
-                className="group inline-flex items-center gap-3 text-[0.7rem] font-semibold tracking-[0.24em] text-foreground uppercase transition-colors hover:text-brass"
+                className="type-link group inline-flex items-center gap-3 text-foreground hover:text-accent"
               >
                 Meet the founders
                 <span

@@ -14,30 +14,24 @@ export function PackageCard({ pkg }: PackageCardProps) {
       )}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 className="font-display text-3xl font-bold tracking-tight text-foreground">
+        <h2 className="font-display text-[clamp(1.6rem,2.6vw,2.2rem)] text-foreground">
           {pkg.name}
         </h2>
-        <p className="font-mono-nav text-sm tracking-[0.08em] text-foreground/90">
+        <p className="font-mono-nav text-[0.74rem] tracking-[0.12em] text-foreground/90 uppercase">
           {pkg.priceLabel}
         </p>
       </div>
 
       {pkg.featured ? (
-        <p className="font-mono-nav mt-3 text-[0.65rem] tracking-[0.18em] text-accent uppercase">
-          Featured
-        </p>
+        <p className="type-label mt-3 text-accent">Featured</p>
       ) : null}
 
-      <p className="mt-6 max-w-prose text-base leading-relaxed text-muted-foreground">
-        {pkg.description}
-      </p>
+      <p className="type-lead mt-6 max-w-prose">{pkg.description}</p>
 
       <div className="mt-10 grid gap-10 sm:grid-cols-2">
         <div>
-          <h3 className="font-mono-nav text-[0.65rem] tracking-[0.18em] text-muted-foreground uppercase">
-            Includes
-          </h3>
-          <ul className="mt-4 space-y-2 text-sm leading-relaxed text-foreground/90">
+          <h3 className="type-label">Includes</h3>
+          <ul className="mt-4 space-y-2 text-[0.95rem] leading-relaxed text-foreground/90">
             {pkg.includes.map((item) => (
               <li key={item} className="flex gap-2">
                 <span aria-hidden className="text-accent">
@@ -51,10 +45,8 @@ export function PackageCard({ pkg }: PackageCardProps) {
 
         {pkg.addOns.length > 0 ? (
           <div>
-            <h3 className="font-mono-nav text-[0.65rem] tracking-[0.18em] text-muted-foreground uppercase">
-              Add-ons
-            </h3>
-            <ul className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
+            <h3 className="type-label">Add-ons</h3>
+            <ul className="mt-4 space-y-2 text-[0.95rem] leading-relaxed text-muted-foreground">
               {pkg.addOns.map((item) => (
                 <li key={item}>{item}</li>
               ))}

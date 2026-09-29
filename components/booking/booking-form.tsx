@@ -150,7 +150,7 @@ export function BookingForm({ contactEmail, bookingEnabled }: BookingFormProps) 
             Online booking unlocks after Google Calendar is connected — meanwhile
             email{" "}
             <a
-              className="underline underline-offset-4 hover:text-brass"
+              className="underline underline-offset-4 hover:text-accent"
               href={`mailto:${contactEmail}`}
             >
               {contactEmail}

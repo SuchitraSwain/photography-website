@@ -21,12 +21,8 @@ export default async function GalleryPage() {
   return (
     <main className="px-4 py-16 md:px-8">
       <div className="mx-auto max-w-7xl">
-        <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
-          Selected work
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-medium tracking-tight md:text-6xl">
-          Gallery
-        </h1>
+        <p className="type-label">Selected work</p>
+        <h1 className="type-title mt-3">Gallery</h1>
         <GalleryView categories={categories} images={images} />
       </div>
     </main>
