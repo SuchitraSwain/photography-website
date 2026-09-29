@@ -1,6 +1,7 @@
 import { CustomCursor } from "@/components/effects/custom-cursor";
 import { FilmGrain } from "@/components/effects/film-grain";
 import { ScrollProgress } from "@/components/effects/scroll-progress";
+import { SiteAtmosphere } from "@/components/layout/site-atmosphere";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { getSiteSettings } from "@/lib/content/fetch";
@@ -14,12 +15,15 @@ export async function SiteShell({
 
   return (
     <>
+      <SiteAtmosphere />
       <ScrollProgress />
       <FilmGrain />
       <CustomCursor />
-      <SiteHeader brandName={settings.brandName} />
-      {children}
-      <SiteFooter settings={settings} />
+      <div className="site-content flex min-h-full flex-1 flex-col">
+        <SiteHeader brandName={settings.brandName} />
+        {children}
+        <SiteFooter settings={settings} />
+      </div>
     </>
   );
 }

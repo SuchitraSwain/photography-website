@@ -2,28 +2,32 @@
 @import "tw-animate-css";
 
 :root {
-  --background: 40 12% 97%;
-  --foreground: 0 0% 6%;
-  --muted: 30 6% 42%;
-  --accent: 36 28% 68%;
-  /* Warm brass — sparingly: nav underline, philosophy, prices, link hover, progress */
-  --brass: #c9a876;
-  --border: 30 8% 88%;
-  --input: 30 8% 88%;
-  --ring: 36 28% 68%;
+  /* Founder personal-site brand DNA (suchitra-swain.web.app) */
+  --background: 222 41% 3%; /* #05070c */
+  --foreground: 220 43% 94%; /* #e9eef8 */
+  --muted: 215 18% 64%; /* #97a3b8 */
+  --accent: 217 84% 69%; /* #6c9bf2 */
+  --brass: #6c9bf2; /* legacy alias → accent blue */
+  --border: 217 25% 18%;
+  --input: 217 25% 18%;
+  --ring: 217 84% 69%;
   --destructive: 0 72% 51%;
   --radius: 0;
+  --grid-line: rgba(148, 176, 224, 0.04);
+  --glow-a: rgba(15, 76, 129, 0.34);
+  --glow-b: rgba(78, 146, 214, 0.13);
+  --cta-border: rgba(148, 176, 224, 0.14);
 }
 
 .dark {
-  --background: 0 0% 3%;
-  --foreground: 40 18% 96%;
-  --muted: 30 6% 58%;
-  --accent: 36 32% 72%;
-  --brass: #c9a876;
-  --border: 0 0% 14%;
-  --input: 0 0% 14%;
-  --ring: 36 32% 72%;
+  --background: 222 41% 3%;
+  --foreground: 220 43% 94%;
+  --muted: 215 18% 64%;
+  --accent: 217 84% 69%;
+  --brass: #6c9bf2;
+  --border: 217 25% 18%;
+  --input: 217 25% 18%;
+  --ring: 217 84% 69%;
   --destructive: 0 63% 50%;
 }
 
@@ -41,13 +45,14 @@
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted));
   --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(0 0% 8%);
+  --color-accent-foreground: hsl(var(--background));
   --color-brass: var(--brass);
   --color-destructive: hsl(var(--destructive));
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
   --font-editorial: var(--font-display);
   --radius-sm: 0;
   --radius-md: 0;
@@ -57,17 +62,12 @@
 
 html {
   color-scheme: dark;
-  /* Lenis owns smooth scrolling — native smooth fights the rAF loop */
   scroll-behavior: auto;
 }
 
 html.lenis,
 html.lenis body {
   height: auto;
-}
-
-.light {
-  color-scheme: light;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -80,33 +80,6 @@ body {
   min-height: 100%;
   background: hsl(var(--background));
   color: hsl(var(--foreground));
-  /* Subtle vignette atmosphere — not flat */
-  background-image:
-    radial-gradient(
-      ellipse 120% 80% at 50% -20%,
-      hsl(36 20% 20% / 0.18),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 80% 50% at 100% 100%,
-      hsl(0 0% 100% / 0.03),
-      transparent 45%
-    );
-  background-attachment: fixed;
-}
-
-.light body {
-  background-image:
-    radial-gradient(
-      ellipse 120% 80% at 50% -20%,
-      hsl(36 30% 70% / 0.22),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 70% 40% at 0% 100%,
-      hsl(30 10% 80% / 0.35),
-      transparent 50%
-    );
 }
 
 * {
@@ -118,16 +91,72 @@ body {
   color: hsl(var(--foreground));
 }
 
-/* Fashion editorial utilities */
 .font-display {
-  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-family: var(--font-display), Inter, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.font-mono-nav {
+  font-family: var(--font-mono), ui-monospace, "SF Mono", monospace;
+}
+
+/* Atmosphere — matches founder personal site */
+.atmos {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.atmos-grid {
+  position: absolute;
+  inset: -4rem;
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 20%, transparent 75%);
+}
+
+.atmos-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+}
+
+.atmos-glow-a {
+  inset: -12rem -10rem auto auto;
+  width: min(42vw, 28rem);
+  height: min(42vw, 28rem);
+  background: radial-gradient(circle, var(--glow-a), transparent 65%);
+}
+
+.atmos-glow-b {
+  inset: auto auto -14rem -11rem;
+  width: min(48vw, 32rem);
+  height: min(48vw, 32rem);
+  background: radial-gradient(circle, var(--glow-b), transparent 65%);
+}
+
+.atmos-glow-c {
+  inset: 40% auto auto 55%;
+  width: min(30vw, 18rem);
+  height: min(30vw, 18rem);
+  background: radial-gradient(circle, rgba(108, 155, 242, 0.1), transparent 65%);
+}
+
+.site-content {
+  position: relative;
+  z-index: 1;
 }
 
 .editorial-rule {
   height: 1px;
   background: linear-gradient(
     90deg,
-    hsl(var(--foreground) / 0.55),
+    hsl(var(--accent) / 0.55),
     hsl(var(--foreground) / 0.08) 70%,
     transparent
   );
@@ -138,17 +167,36 @@ body {
   inset: 0;
   background: linear-gradient(
     180deg,
-    hsl(0 0% 0% / 0.15) 0%,
+    hsl(0 0% 0% / 0.25) 0%,
     transparent 35%,
-    hsl(0 0% 0% / 0.55) 100%
+    hsl(0 0% 0% / 0.7) 100%
   );
   pointer-events: none;
 }
 
-/*
- * Motion: keyframes run from first paint (fill-mode: both).
- * Never toggle visible → hidden → visible in JS — that flickers.
- */
+.pill-cta {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--cta-border);
+  border-radius: 999px;
+  padding: 0.55rem 1.15rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground));
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.pill-cta:hover {
+  border-color: hsl(var(--accent) / 0.55);
+  color: hsl(var(--accent));
+  background: hsl(var(--accent) / 0.06);
+}
+
 @keyframes motion-fade-up {
   from {
     opacity: 0;
@@ -185,7 +233,6 @@ body {
 }
 
 .motion-page-enter {
-  /* Prefer forwards (not both) so a stalled animation never leaves opacity at 0 */
   animation: motion-fade-up 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
@@ -248,7 +295,6 @@ body {
   }
 }
 
-/* Custom cursor — only when JS adds .has-custom-cursor (fine pointer, no touch) */
 html.has-custom-cursor,
 html.has-custom-cursor * {
   cursor: none !important;
@@ -259,10 +305,9 @@ html.has-custom-cursor * {
   inset: 0;
   z-index: 9990;
   pointer-events: none;
-  opacity: 0.04;
+  opacity: 0.05;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   background-repeat: repeat;
-  background-size: 180px 180px;
+  background-size: 140px 140px;
 }
-

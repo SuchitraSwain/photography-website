@@ -44,22 +44,26 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
         "sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
         overHero
           ? "border-b border-transparent bg-transparent"
-          : "border-b border-border/80 bg-background/85 backdrop-blur-md",
+          : "border-b border-border/60 bg-background/80 backdrop-blur-md",
       )}
     >
       <div className="mx-auto flex h-16 max-w-[100rem] items-center justify-between gap-4 px-6 lg:px-10">
         <Link
           href="/"
           className={cn(
-            "font-display text-lg tracking-[0.28em] uppercase transition-colors sm:text-xl",
+            "font-mono-nav relative z-10 flex items-center gap-2.5 text-[0.82rem] tracking-[0.08em] uppercase transition-colors",
             overHero ? "text-white" : "text-foreground",
           )}
         >
+          <span
+            aria-hidden
+            className="inline-block size-2.5 rounded-[2px] bg-accent"
+          />
           {brandName}
         </Link>
 
         <nav
-          className="hidden items-center gap-8 lg:flex"
+          className="hidden items-center gap-7 lg:flex"
           aria-label="Primary"
         >
           {NAV_LINKS.map(({ href, label }) => {
@@ -70,9 +74,9 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
                 key={href}
                 href={href}
                 className={cn(
-                  "group relative text-[0.7rem] tracking-[0.22em] uppercase transition-colors",
+                  "font-mono-nav group relative text-[0.72rem] tracking-[0.14em] uppercase transition-colors",
                   overHero
-                    ? "text-white/70 hover:text-white"
+                    ? "text-white/65 hover:text-white"
                     : "text-muted-foreground hover:text-foreground",
                   active && (overHero ? "text-white" : "text-foreground"),
                 )}
@@ -81,7 +85,7 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
                 <span
                   aria-hidden
                   className={cn(
-                    "absolute inset-x-0 -bottom-1 h-px origin-left bg-brass transition-transform duration-300",
+                    "absolute inset-x-0 -bottom-1 h-px origin-left bg-accent transition-transform duration-300",
                     active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100",
                   )}
                 />
@@ -91,10 +95,8 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
           <Link
             href="/booking"
             className={cn(
-              "inline-flex h-9 items-center px-4 text-[0.65rem] font-semibold tracking-[0.2em] uppercase transition-transform duration-300 hover:scale-[1.03] motion-reduce:hover:scale-100",
-              overHero
-                ? "bg-white text-black hover:bg-white/90"
-                : "bg-foreground text-background hover:opacity-90",
+              "pill-cta",
+              overHero && "border-white/25 text-white hover:border-accent/70 hover:text-accent",
             )}
           >
             Book
@@ -136,7 +138,7 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
               <li key={href}>
                 <Link
                   href={href}
-                  className="block py-3 text-sm tracking-[0.18em] text-foreground uppercase"
+                  className="font-mono-nav block py-3 text-[0.8rem] tracking-[0.14em] text-foreground uppercase"
                   onClick={() => setMobileOpen(false)}
                 >
                   {label}

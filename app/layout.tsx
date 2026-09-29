@@ -3,14 +3,24 @@ import { SiteShell } from "@/components/layout/site-shell";
 import { SmoothScrollProvider } from "@/components/motion/smooth-scroll";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { getSiteSettings } from "@/lib/content/fetch";
-import { GeistSans } from "geist/font/sans";
-import { Cormorant_Garamond } from "next/font/google";
+import { IBM_Plex_Mono, Inter, Inter_Tight } from "next/font/google";
 import "./globals.css";
 
-const display = Cormorant_Garamond({
+const display = Inter_Tight({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600"],
+  weight: ["500", "600", "700", "800"],
+});
+
+const body = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -48,7 +58,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" suppressHydrationWarning className="dark h-full">
       <body
         suppressHydrationWarning
-        className={`${display.variable} ${GeistSans.variable} flex min-h-full flex-col font-sans antialiased`}
+        className={`${display.variable} ${body.variable} ${mono.variable} flex min-h-full flex-col font-sans antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <SmoothScrollProvider>
