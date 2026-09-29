@@ -1,10 +1,27 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { getFormspreeEndpoint, siteConfig } from "@/lib/site-config";
 import type { SocialLink } from "@/lib/types/content";
@@ -16,6 +33,15 @@ type ContactFormProps = {
   socialLinks: SocialLink[];
 };
 
+const contactSchema = z.object({
+  name: z.string().trim().min(2, "Enter your name."),
+  email: z.string().trim().email("Enter a valid email."),
+  subject: z.string().trim().min(2, "Add a subject."),
+  message: z.string().trim().min(10, "Message should be at least 10 characters."),
+});
+
+type ContactValues = z.infer<typeof contactSchema>;
+
 export function ContactForm({
   contactEmail = siteConfig.contactEmail,
   location,
@@ -26,12 +52,17 @@ export function ContactForm({
   const [pending, startTransition] = useTransition();
   const endpoint = getFormspreeEndpoint();
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const form = useForm<ContactValues>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    },
+  });
 
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-
+  function onSubmit(values: ContactValues) {
     startTransition(async () => {
       setStatus("idle");
       setMessage(null);
@@ -52,11 +83,11 @@ export function ContactForm({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            name: String(formData.get("name") ?? ""),
-            email: String(formData.get("email") ?? ""),
-            subject: String(formData.get("subject") ?? ""),
-            message: String(formData.get("message") ?? ""),
-            _replyto: String(formData.get("email") ?? ""),
+            name: values.name,
+            email: values.email,
+            subject: values.subject,
+            message: values.message,
+            _replyto: values.email,
           }),
         });
 
@@ -81,101 +112,182 @@ export function ContactForm({
 
   return (
     <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-16">
-      <form className="space-y-6" onSubmit={onSubmit} noValidate>
-        <div className="space-y-2">
-          <Label htmlFor="contact-name">Name</Label>
-          <Input id="contact-name" name="name" autoComplete="name" required />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="contact-email">Email</Label>
-          <Input
-            id="contact-email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="subject">Subject</Label>
-          <Input id="subject" name="subject" autoComplete="off" required />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="contact-message">Message</Label>
-          <Textarea id="contact-message" name="message" rows={6} required />
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-display text-xl tracking-tight">
+            Send a message
+          </CardTitle>
+          <CardDescription>
+            We’ll reply by email — usually within a couple of days.
+          </CardDescription>
+        </CardHeader>
 
-        <div className="space-y-3 border-t border-border pt-6">
-          <Button type="submit" disabled={pending} className="w-full sm:w-auto">
-            {pending ? "Sending…" : "Send message"}
-          </Button>
-          {message ? (
-            <p
-              className={cn(
-                "text-sm",
-                status === "error"
-                  ? "text-destructive"
-                  : status === "success"
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-muted-foreground",
-              )}
-              role="status"
+        <CardContent>
+          <Form {...form}>
+            <form
+              className="space-y-6"
+              onSubmit={form.handleSubmit(onSubmit)}
+              noValidate
             >
-              {message}
-            </p>
-          ) : null}
-        </div>
-      </form>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        autoComplete="name"
+                        placeholder="Your name"
+                        disabled={pending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-      <aside className="space-y-8">
-        <div className="space-y-2">
-          <h2 className="font-display text-[clamp(1.6rem,2.6vw,2.2rem)]">
-            Studio
-          </h2>
-          {location ? (
-            <p className="type-lead mt-0 text-[0.95rem]">{location}</p>
-          ) : null}
-          <p className="text-sm">
-            <a
-              className="underline underline-offset-4 hover:text-accent"
-              href={
-                contactEmail.includes("@") && !contactEmail.startsWith("[")
-                  ? `mailto:${contactEmail}`
-                  : undefined
-              }
-            >
-              {contactEmail}
-            </a>
-          </p>
-        </div>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        autoComplete="email"
+                        placeholder="you@email.com"
+                        disabled={pending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-        {socialLinks.length > 0 ? (
-          <div className="space-y-3">
-            <h2 className="type-label">Connect</h2>
-            <ul className="space-y-2">
-              {socialLinks.map((link) => (
-                <li key={link.url}>
-                  <a
-                    href={link.url}
-                    className="text-sm underline-offset-4 hover:underline"
-                    {...(link.url.startsWith("http")
-                      ? { target: "_blank", rel: "noopener noreferrer" }
-                      : {})}
+              <FormField
+                control={form.control}
+                name="subject"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Subject</FormLabel>
+                    <FormControl>
+                      <Input
+                        autoComplete="off"
+                        placeholder="What’s this about?"
+                        disabled={pending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Message</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        rows={6}
+                        placeholder="Tell us a bit about the shoot or collaboration."
+                        disabled={pending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="space-y-3 border-t border-[rgba(148,176,224,0.08)] pt-6">
+                <Button
+                  type="submit"
+                  disabled={pending}
+                  className="rounded-full bg-accent px-6 text-[#06101f] hover:bg-[#86adf7] hover:text-[#06101f]"
+                >
+                  {pending ? "Sending…" : "Send message"}
+                </Button>
+                {message ? (
+                  <p
+                    className={cn(
+                      "text-sm",
+                      status === "error"
+                        ? "text-destructive"
+                        : status === "success"
+                          ? "text-accent"
+                          : "text-muted-foreground",
+                    )}
+                    role="status"
                   >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
+                    {message}
+                  </p>
+                ) : null}
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+
+      <aside className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-display text-xl tracking-tight">
+              Studio
+            </CardTitle>
+            <CardDescription>
+              {location || "Available worldwide"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm">
+              <a
+                className="underline underline-offset-4 hover:text-accent"
+                href={
+                  contactEmail.includes("@") && !contactEmail.startsWith("[")
+                    ? `mailto:${contactEmail}`
+                    : undefined
+                }
+              >
+                {contactEmail}
+              </a>
+            </p>
+
+            {socialLinks.length > 0 ? (
+              <div className="space-y-3 border-t border-[rgba(148,176,224,0.08)] pt-4">
+                <p className="type-label">Connect</p>
+                <ul className="space-y-2">
+                  {socialLinks.map((link) => (
+                    <li key={link.url}>
+                      <a
+                        href={link.url}
+                        className="type-link hover:text-accent"
+                        {...(link.url.startsWith("http")
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </CardContent>
+        </Card>
 
         {location ? (
-          <figure className="border border-border bg-secondary/30 p-6">
-            <figcaption className="text-sm text-muted-foreground">
+          <Card className="py-4">
+            <CardContent className="text-sm text-muted-foreground">
               Service area: {location}
-            </figcaption>
-          </figure>
+            </CardContent>
+          </Card>
         ) : null}
       </aside>
     </div>
