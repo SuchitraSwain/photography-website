@@ -9,7 +9,7 @@ function canUseCustomCursor() {
 
 /**
  * Desktop-only accent cursor — follows the pointer 1:1 (no spring lag).
- * Expands on interactive targets; shows "View" on [data-cursor="gallery"].
+ * Hollow ring on interactive UI; soft “View” disc on gallery media.
  */
 export function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
@@ -47,32 +47,29 @@ export function CustomCursor() {
         root.style.opacity = "1";
       }
 
-      const target = (e.target as Element | null)?.closest?.(
-        "[data-cursor], a, button, [role='button'], input, textarea, select, label",
-      );
-
-      if (!target) {
+      const el = e.target as Element | null;
+      if (!el || typeof el.closest !== "function") {
         applyMode("default");
         return;
       }
 
-      const cursorAttr = target.getAttribute("data-cursor");
-      if (cursorAttr === "gallery") {
+      // Prefer explicit gallery targets before generic interactive matches
+      const gallery = el.closest("[data-cursor='gallery']");
+      if (gallery) {
         applyMode("gallery");
-      } else if (
-        target.tagName === "A" ||
-        target.tagName === "BUTTON" ||
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.tagName === "SELECT" ||
-        target.tagName === "LABEL" ||
-        target.getAttribute("role") === "button" ||
-        cursorAttr === "button"
-      ) {
-        applyMode("button");
-      } else {
-        applyMode("default");
+        return;
       }
+
+      const interactive = el.closest(
+        "[data-cursor='button'], a, button, [role='button'], input, textarea, select, label, summary",
+      );
+
+      if (interactive) {
+        applyMode("button");
+        return;
+      }
+
+      applyMode("default");
     };
 
     const onLeave = () => {
@@ -104,7 +101,7 @@ export function CustomCursor() {
         <span
           ref={labelRef}
           hidden
-          className="font-mono-nav text-[0.55rem] font-medium tracking-[0.16em] text-background uppercase"
+          className="font-mono-nav text-[0.55rem] font-medium tracking-[0.16em] uppercase"
         >
           View
         </span>

@@ -363,32 +363,45 @@ html.has-custom-cursor * {
   cursor: none !important;
 }
 
+/* Default: small precise accent dot */
 .cursor-core {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 999px;
   background: hsl(var(--accent));
-  box-shadow: 0 0 0 1px hsl(var(--background) / 0.35);
+  border: 1.5px solid transparent;
+  box-shadow: none;
   transition:
-    width 0.15s ease,
-    height 0.15s ease,
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
+    width 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease;
 }
 
-[data-mode="button"] .cursor-core,
-[data-mode="gallery"] .cursor-core {
-  width: 44px;
-  height: 44px;
-  background: hsl(var(--accent));
-  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.2);
+/* Interactive UI (links, filters, CTAs): hollow ring — never covers text */
+[data-mode="button"] .cursor-core {
+  width: 32px;
+  height: 32px;
+  background: hsl(var(--accent) / 0.08);
+  border-color: hsl(var(--accent) / 0.85);
+  box-shadow: none;
 }
 
+/* Gallery media: soft disc with “View” label */
 [data-mode="gallery"] .cursor-core {
-  background: hsl(var(--foreground));
+  width: 52px;
+  height: 52px;
+  background: hsl(var(--foreground) / 0.92);
+  border-color: transparent;
+  box-shadow: 0 0 0 1px hsl(var(--background) / 0.2);
+}
+
+[data-mode="gallery"] .cursor-core span {
+  color: hsl(var(--background));
 }
 
 .film-grain {
