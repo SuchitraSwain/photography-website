@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 enum BookingStatus {
@@ -83,4 +84,22 @@ model Inquiry {
   subject   String
   message   String   @db.Text
   createdAt DateTime @default(now())
+}
+
+model GalleryImage {
+  id           String   @id @default(cuid())
+  title        String   @default("")
+  alt          String   @default("")
+  url          String
+  pathname     String
+  width        Int      @default(1600)
+  height       Int      @default(1200)
+  categorySlug String
+  featured     Boolean  @default(false)
+  sortOrder    Int      @default(0)
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([published, categorySlug, sortOrder])
 }

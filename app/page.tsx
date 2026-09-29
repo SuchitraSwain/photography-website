@@ -10,7 +10,7 @@ import { LocalBusinessJsonLd } from "@/components/seo/json-ld";
 import {
   getFeaturedGalleryImages,
   getSiteSettings,
-} from "@/lib/sanity/fetch";
+} from "@/lib/content/fetch";
 
 /** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
 export const revalidate = 300;

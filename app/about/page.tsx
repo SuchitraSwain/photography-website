@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { AboutView } from "@/components/about/about-view";
 import { FoundersSection } from "@/components/about/founders-section";
-import { getPageAbout } from "@/lib/sanity/fetch";
+import { getPageAbout } from "@/lib/content/fetch";
 
 /** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */
 export const revalidate = 300;

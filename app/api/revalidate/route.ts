@@ -21,15 +21,16 @@ function secretMatches(provided: string | null, expected: string): boolean {
 }
 
 /**
- * Sanity webhook target. Configure the webhook to POST here with the shared
- * secret in an `x-revalidate-secret` header (or a `?secret=` query parameter).
+ * Manual / webhook revalidation. POST with shared secret in
+ * `x-revalidate-secret` header or `?secret=` query parameter.
  */
 export async function POST(request: Request): Promise<NextResponse> {
-  const expected = process.env.SANITY_REVALIDATE_SECRET;
+  const expected =
+    process.env.REVALIDATE_SECRET ?? process.env.SANITY_REVALIDATE_SECRET;
 
   if (!expected) {
     return NextResponse.json(
-      { revalidated: false, reason: "SANITY_REVALIDATE_SECRET is not set" },
+      { revalidated: false, reason: "REVALIDATE_SECRET is not set" },
       { status: 501 },
     );
   }
@@ -42,9 +43,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ revalidated: false }, { status: 401 });
   }
 
-  // Every page reads site settings through the root layout, so a layout-scoped
-  // purge is the smallest thing that reliably covers a publish of any document.
   revalidatePath("/", "layout");
+  revalidatePath("/gallery");
 
   return NextResponse.json({ revalidated: true, now: Date.now() });
 }

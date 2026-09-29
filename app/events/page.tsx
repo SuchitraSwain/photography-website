@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { EventCard } from "@/components/events/event-card";
-import { getEvents } from "@/lib/sanity/fetch";
+import { getEvents } from "@/lib/content/fetch";
 import type { EventItem } from "@/lib/types/content";
 
 /** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */

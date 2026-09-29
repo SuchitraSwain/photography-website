@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { ServicesView } from "@/components/services/services-view";
-import { getServicePackages } from "@/lib/sanity/fetch";
+import { getServicePackages } from "@/lib/content/fetch";
 import type { ServicePackage } from "@/lib/types/content";
 
 /** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */

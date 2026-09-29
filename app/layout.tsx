@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SiteShell } from "@/components/layout/site-shell";
 import { SmoothScrollProvider } from "@/components/motion/smooth-scroll";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { getSiteSettings } from "@/lib/sanity/fetch";
+import { getSiteSettings } from "@/lib/content/fetch";
 import { GeistSans } from "geist/font/sans";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";

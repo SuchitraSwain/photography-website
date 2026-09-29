@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/contact/contact-form";
-import { getSiteSettings } from "@/lib/sanity/fetch";
+import { getSiteSettings } from "@/lib/content/fetch";
 import { siteConfig } from "@/lib/site-config";
 
 /** Refresh CMS-backed content every 5 minutes (see CONTENT_REVALIDATE_SECONDS). */

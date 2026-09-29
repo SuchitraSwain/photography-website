@@ -3,7 +3,7 @@ import { FilmGrain } from "@/components/effects/film-grain";
 import { ScrollProgress } from "@/components/effects/scroll-progress";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { getSiteSettings } from "@/lib/sanity/fetch";
+import { getSiteSettings } from "@/lib/content/fetch";
 
 export async function SiteShell({
   children,

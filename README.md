@@ -1,7 +1,8 @@
 # ATELIER Photography Portfolio
 
-Next.js portfolio site for ATELIER photography, with an embedded Sanity Studio
-and a built-in mock-content fallback.
+Next.js portfolio site for ATELIER photography. Gallery images upload through
+`/admin/media` to **Vercel Blob**, with metadata in Postgres (Prisma). About /
+Events / Services use typed mock content until you extend admin later.
 
 ## Install and run
 
@@ -12,59 +13,51 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The Sanity Studio is
-available at [http://localhost:3000/studio](http://localhost:3000/studio).
+Open [http://localhost:3000](http://localhost:3000). Admin is at
+[http://localhost:3000/admin](http://localhost:3000/admin) (Google auth +
+`ADMIN_EMAILS` allowlist).
 
 ## Mock mode
 
-No environment variables are required for local development. If
-`NEXT_PUBLIC_SANITY_PROJECT_ID` is unset, the website automatically uses the
-content and placeholder images in `lib/mock/content.ts`.
+No storage env vars are required for browsing the public site. Without
+`DATABASE_URL` gallery rows, the site uses placeholder images in
+`lib/mock/content.ts`.
 
-The `/studio` route still renders its setup shell in mock mode, but it is not
-connected to a real content project.
+## Gallery uploads (Vercel Blob)
 
-## Connect Sanity
-
-1. Create a project at [sanity.io/manage](https://www.sanity.io/manage) and
-   create or choose a dataset (the default used here is `production`).
-2. In the Sanity project settings, add `http://localhost:3000` as a CORS origin
-   with credentials enabled. Add the deployed site origin later as well.
-3. Copy the example environment file:
+1. Create a Blob store in the [Vercel dashboard](https://vercel.com/dashboard)
+   → Storage → Blob. Copy `BLOB_READ_WRITE_TOKEN`.
+2. Provision Postgres (Neon / Vercel Postgres) and set `DATABASE_URL`.
+3. Copy env and fill values:
 
    ```bash
    cp .env.example .env.local
    ```
 
-4. Set the project values:
-
    ```dotenv
-   NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
-   NEXT_PUBLIC_SANITY_DATASET=production
-   NEXT_PUBLIC_SANITY_API_VERSION=2025-01-01
+   DATABASE_URL=...
+   BLOB_READ_WRITE_TOKEN=...
+   AUTH_SECRET=...
+   AUTH_URL=http://localhost:3000
+   AUTH_GOOGLE_ID=...
+   AUTH_GOOGLE_SECRET=...
+   ADMIN_EMAILS=you@example.com
    ```
 
-5. Restart `npm run dev`, open `/studio`, sign in to Sanity, and create the site
-   settings and other documents. Replace all placeholder images through the
-   Studio.
+4. Push the schema:
 
-The current frontend reads public datasets and does not require a token.
-`SANITY_API_READ_TOKEN` is optional and reserved for private dataset or future
-authenticated server-side reads; never expose it with a `NEXT_PUBLIC_` prefix or
-commit it.
+   ```bash
+   npx prisma db push
+   ```
+
+5. Restart `npm run dev`, sign in at `/admin`, open **Media**, upload images
+   with a category. Published rows replace mock gallery content on `/gallery`.
 
 ### Content freshness
 
-Pages are statically generated and revalidated every 5 minutes, so published
-edits appear without a redeploy. Requests bypass the Sanity CDN
-(`useCdn: false`) so Next.js is the only cache layer.
-
-To publish immediately instead of waiting out the window, set
-`SANITY_REVALIDATE_SECRET` and point a Sanity webhook at
-`POST https://<your-site>/api/revalidate`, sending the same value in an
-`x-revalidate-secret` header (a `?secret=` query parameter also works). The
-route returns `501` until the secret is configured and `401` when it does not
-match.
+Public pages revalidate every 5 minutes. Uploads also call `revalidatePath` for
+`/` and `/gallery`. Optional manual purge: set `REVALIDATE_SECRET` and
+`POST /api/revalidate` with `x-revalidate-secret`.
 
 ### Event timezone
 
@@ -87,30 +80,27 @@ files are always written in UTC.
    Production and Preview environments:
    - `NEXT_PUBLIC_SITE_URL` — the canonical production URL, including `https://`
    - `NEXT_PUBLIC_SITE_TIMEZONE` — optional; IANA zone for event times (default `UTC`)
-   - `NEXT_PUBLIC_SANITY_PROJECT_ID`
-   - `NEXT_PUBLIC_SANITY_DATASET`
-   - `NEXT_PUBLIC_SANITY_API_VERSION`
-   - `SANITY_API_READ_TOKEN` — optional; only if private reads are implemented
-   - `SANITY_REVALIDATE_SECRET` — optional; enables the `/api/revalidate` webhook
-3. Add the Vercel production and preview origins to the Sanity project's CORS
-   origins with credentials enabled so `/studio` can authenticate.
-4. Deploy production:
+   - `DATABASE_URL`
+   - `BLOB_READ_WRITE_TOKEN`
+   - `AUTH_SECRET`, `AUTH_URL`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`
+   - `ADMIN_EMAILS`
+   - `REVALIDATE_SECRET` — optional; enables `/api/revalidate`
+3. Deploy production:
 
    ```bash
    vercel --prod
    ```
 
-If Sanity variables are omitted, the deployed website remains in mock mode.
+Without Blob/DB vars, the public site stays in mock gallery mode.
 
 ### Credentials to request from the site owner
 
 Do not invent or commit credentials. Request:
 
-- Sanity project ID
-- Sanity dataset name (usually `production`)
-- Sanity read token (optional; only for private authenticated reads)
-
-The site owner must also grant the content editors access to the Sanity project.
+- Vercel Blob read/write token
+- Postgres `DATABASE_URL`
+- Google OAuth client for admin sign-in
+- Admin allowlist emails
 
 ## Scripts
 
