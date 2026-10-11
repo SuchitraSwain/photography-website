@@ -80,40 +80,44 @@ function sanitizeFilename(name) {
   return name.replace(/[^a-zA-Z0-9._-]/g, "-").slice(0, 120) || "image.jpg";
 }
 
-function compressIfNeeded(filePath, tmpDir) {
-  const stat = fs.statSync(filePath);
-  if (stat.size <= MAX_BYTES) {
-    return { path: filePath, cleanup: false };
-  }
-
+function compressForWeb(filePath, tmpDir) {
   const out = path.join(
     tmpDir,
     `${path.basename(filePath, path.extname(filePath))}-${Date.now()}.jpg`,
   );
 
-  for (const maxEdge of [2400, 2000, 1600, 1200]) {
+  // Always make a web-friendly derivative so gallery tiles load quickly.
+  for (const maxEdge of [1600, 1400, 1200, 1000]) {
     try {
       execFileSync(
         "sips",
-        ["-s", "format", "jpeg", "-Z", String(maxEdge), filePath, "--out", out],
+        [
+          "-s",
+          "format",
+          "jpeg",
+          "-s",
+          "formatOptions",
+          "72",
+          "-Z",
+          String(maxEdge),
+          filePath,
+          "--out",
+          out,
+        ],
         { stdio: "ignore" },
       );
-      if (fs.existsSync(out) && fs.statSync(out).size <= MAX_BYTES) {
-        console.log(
-          `  compressed ${path.basename(filePath)} → ${(fs.statSync(out).size / 1024 / 1024).toFixed(1)}MB @${maxEdge}px`,
-        );
-        return { path: out, cleanup: true };
+      if (fs.existsSync(out) && fs.statSync(out).size > 0) {
+        const mb = fs.statSync(out).size / 1024 / 1024;
+        if (mb <= MAX_BYTES / (1024 * 1024)) {
+          return { path: out, cleanup: true, mb };
+        }
       }
     } catch {
       // try next size
     }
   }
 
-  if (fs.existsSync(out) && fs.statSync(out).size <= MAX_BYTES) {
-    return { path: out, cleanup: true };
-  }
-
-  throw new Error(`Could not compress under 12MB: ${filePath}`);
+  throw new Error(`Could not compress for web: ${filePath}`);
 }
 
 function walkImages(dir) {
@@ -155,6 +159,11 @@ async function main() {
   const items = walkImages(ROOT);
   console.log(`Found ${items.length} images under ${ROOT}`);
 
+  if (process.env.REPLACE_EXISTING === "1") {
+    const deleted = await prisma.galleryImage.deleteMany({});
+    console.log(`Cleared ${deleted.count} existing gallery rows`);
+  }
+
   let uploaded = 0;
   let failed = 0;
   const featuredBudget = { portraits: 3, events: 2, parties: 1 };
@@ -166,10 +175,10 @@ async function main() {
     );
     let prepared = null;
     try {
-      prepared = compressIfNeeded(item.filePath, tmpDir);
+      prepared = compressForWeb(item.filePath, tmpDir);
       const buffer = fs.readFileSync(prepared.path);
-      const contentType = mimeFor(prepared.path);
-      const pathname = `gallery/${item.categorySlug}/${Date.now()}-${sanitizeFilename(base)}`;
+      const contentType = "image/jpeg";
+      const pathname = `gallery/${item.categorySlug}/${Date.now()}-${sanitizeFilename(base.replace(/\.[^.]+$/, ".jpg"))}`;
       const blob = await put(pathname, buffer, {
         access: "public",
         addRandomSuffix: true,
@@ -188,6 +197,8 @@ async function main() {
           alt: title || item.categorySlug,
           url: blob.url,
           pathname: blob.pathname,
+          width: 1600,
+          height: 1200,
           categorySlug: item.categorySlug,
           featured,
           published: true,
@@ -196,7 +207,7 @@ async function main() {
       });
 
       uploaded += 1;
-      console.log("ok");
+      console.log(`ok (${prepared.mb.toFixed(2)}MB)`);
     } catch (error) {
       failed += 1;
       console.log("FAIL");

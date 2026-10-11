@@ -11,6 +11,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { GALLERY_CATEGORY_LABELS } from "@/lib/content/categories";
 import type { GalleryImage } from "@/lib/types/content";
 
 type LightboxProps = {
@@ -24,13 +25,7 @@ type LightboxProps = {
 };
 
 const SWIPE_THRESHOLD = 50;
-
-const CATEGORY_LABELS: Record<string, string> = {
-  weddings: "Weddings",
-  portraits: "Portraits",
-  events: "Events",
-  editorial: "Editorial",
-};
+const CATEGORY_LABELS = GALLERY_CATEGORY_LABELS;
 
 export function Lightbox({
   image,
