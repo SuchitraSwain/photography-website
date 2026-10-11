@@ -10,7 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Meet Sagar Zinzala and Suchitra Swain — engineers turned photographers behind ATELIER.",
+    "Meet Sagar Zinzala and Suchitra Swain — engineers turned photographers behind Krishym Production.",
 };
 
 export default async function AboutPage() {

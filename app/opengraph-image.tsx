@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 export const runtime = "nodejs";
-export const alt = "ATELIER — Photography for moments that deserve stillness";
+export const alt = "Krishym Production — Photography for moments that deserve stillness";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -66,7 +66,7 @@ export default async function OpenGraphImage() {
                 lineHeight: 0.9,
               }}
             >
-              ATELIER
+              Krishym Production
             </div>
             <div
               style={{

@@ -1,6 +1,6 @@
-# ATELIER Photography Portfolio
+# Krishym Production Photography Portfolio
 
-Next.js portfolio site for ATELIER photography. Gallery images upload through
+Next.js portfolio site for Krishym Production photography. Gallery images upload through
 `/admin/media` to **Vercel Blob**, with metadata in Postgres (Prisma). About /
 Events / Services use typed mock content until you extend admin later.
 

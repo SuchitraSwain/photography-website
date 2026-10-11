@@ -9,7 +9,7 @@ import { siteConfig } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "Booking",
   description:
-    "Schedule a wedding, portrait, or event session with ATELIER — pick a time that works for you.",
+    "Schedule a wedding, portrait, or event session with Krishym Production — pick a time that works for you.",
 };
 
 export default function BookingPage() {

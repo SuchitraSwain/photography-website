@@ -9,7 +9,7 @@ import type {
 import { foundersCredit, siteConfig } from "@/lib/site-config";
 
 export const mockSiteSettings: SiteSettings = {
-  brandName: "ATELIER",
+  brandName: "Krishym Production",
   tagline: "Photography for moments that deserve stillness",
   heroImages: [
     {
@@ -28,8 +28,8 @@ export const mockSiteSettings: SiteSettings = {
   location: "Available worldwide",
   contactEmail: siteConfig.contactEmail,
   seo: {
-    titleTemplate: "%s · ATELIER",
-    description: `ATELIER is the photography practice of ${foundersCredit()} — weddings, portraits, events, and editorial work.`,
+    titleTemplate: "%s · Krishym Production",
+    description: `Krishym Production is the photography practice of ${foundersCredit()} — weddings, portraits, events, and editorial work.`,
   },
 };
 
@@ -226,7 +226,7 @@ export const mockEvents: EventItem[] = [
     slug: "open-studio-evening",
     start: "2026-11-14T18:00:00.000Z",
     end: "2026-11-14T21:00:00.000Z",
-    location: "ATELIER Studio, Brooklyn NY",
+    location: "Krishym Production Studio, Brooklyn NY",
     description:
       "An intimate evening to view recent work, meet the team, and discuss upcoming sessions.",
     imageSrc: "/images/event-gala.jpg",
@@ -239,7 +239,7 @@ export const mockEvents: EventItem[] = [
     slug: "portrait-workshop",
     start: "2027-02-07T10:00:00.000Z",
     end: "2027-02-07T16:00:00.000Z",
-    location: "ATELIER Studio, Brooklyn NY",
+    location: "Krishym Production Studio, Brooklyn NY",
     description:
       "A hands-on day exploring natural light portraiture, posing, and editorial storytelling.",
     imageSrc: "/images/portrait-studio.jpg",
@@ -319,11 +319,11 @@ export const mockPackages: ServicePackage[] = [
 
 export const mockAbout: PageAbout = {
   headline: "Light, restraint, and the space between moments",
-  bio: `ATELIER is a two-person photography practice by ${foundersCredit()}. We founded the studio on the belief that the most enduring images leave room for breath — working with couples, creatives, and brands who value craft over noise, documenting weddings, portraits, events, and editorial stories with a calm, intentional eye.`,
+  bio: `Krishym Production is a two-person photography practice by ${foundersCredit()}. We founded the studio on the belief that the most enduring images leave room for breath — working with couples, creatives, and brands who value craft over noise, documenting weddings, portraits, events, and editorial stories with a calm, intentional eye.`,
   philosophy:
     "We favor natural light, honest emotion, and compositions that feel unforced. Every project begins with listening: understanding what you want to remember, then building a visual language that honors it without excess — together.",
   portraitSrc: "/images/about-portrait.jpg",
-  portraitAlt: `Studio portrait for ATELIER — ${foundersCredit()}`,
+  portraitAlt: `Studio portrait for Krishym Production — ${foundersCredit()}`,
   press: [
     {
       title: "The New Minimalism in Wedding Photography",
@@ -338,7 +338,7 @@ export const mockAbout: PageAbout = {
       year: "2024",
     },
     {
-      title: "ATELIER: Studio to Watch",
+      title: "Krishym Production: Studio to Watch",
       outlet: "The Editorialist",
       url: "https://example.com/editorialist-atelier",
       year: "2026",

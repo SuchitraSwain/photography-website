@@ -20,7 +20,7 @@ export async function sendGmail(input: {
   const auth = await getPhotographerGoogleAuth();
   const gmail = google.gmail({ version: "v1", auth });
 
-  const fromName = input.fromName ?? "ATELIER";
+  const fromName = input.fromName ?? "Krishym Production";
   const boundary = `boundary_${Date.now()}`;
   const lines = [
     `From: ${fromName}`,

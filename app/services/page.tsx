@@ -10,7 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "ATELIER photography packages for portraits, full wedding days, and brand events — inclusions, add-ons, and pricing.",
+    "Krishym Production photography packages for portraits, full wedding days, and brand events — inclusions, add-ons, and pricing.",
 };
 
 function sortPackages(packages: ServicePackage[]): ServicePackage[] {

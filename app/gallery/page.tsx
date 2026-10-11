@@ -9,7 +9,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Gallery",
   description:
-    "Browse ATELIER’s curated gallery of weddings, portraits, events, and editorial photography.",
+    "Browse Krishym Production’s curated gallery of weddings, portraits, events, and editorial photography.",
 };
 
 export default async function GalleryPage() {

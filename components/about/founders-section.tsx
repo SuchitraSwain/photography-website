@@ -30,7 +30,7 @@ const FOUNDERS = [
     seed: "Suchitra",
     imageSrc: "https://api.dicebear.com/7.x/notionists/svg?seed=Suchitra",
     imageAlt: "Portrait placeholder for Suchitra Swain",
-    bio: "Suchitra spends her days solving engineering problems and her weekends chasing golden hour. She co-founded ATELIER to prove that a technical mind and an artistic eye aren't opposites — they're the same instinct for noticing what matters. Focused on portraits and the quiet, in-between moments most people rush past.",
+    bio: "Suchitra spends her days solving engineering problems and her weekends chasing golden hour. She co-founded Krishym Production to prove that a technical mind and an artistic eye aren't opposites — they're the same instinct for noticing what matters. Focused on portraits and the quiet, in-between moments most people rush past.",
   },
 ];
 

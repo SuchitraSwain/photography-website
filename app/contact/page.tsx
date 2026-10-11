@@ -10,7 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Write to ATELIER for collaborations, press, and general questions — we reply by email.",
+    "Write to Krishym Production for collaborations, press, and general questions — we reply by email.",
 };
 
 export default async function ContactPage() {
