@@ -34,10 +34,11 @@ export const mockSiteSettings: SiteSettings = {
 };
 
 export const mockCategories: Category[] = [
-  { _id: "cat-weddings", title: "Weddings", slug: "weddings", order: 1 },
-  { _id: "cat-portraits", title: "Portraits", slug: "portraits", order: 2 },
-  { _id: "cat-events", title: "Events", slug: "events", order: 3 },
-  { _id: "cat-editorial", title: "Editorial", slug: "editorial", order: 4 },
+  { _id: "cat-portraits", title: "Portraits", slug: "portraits", order: 1 },
+  { _id: "cat-events", title: "Events", slug: "events", order: 2 },
+  { _id: "cat-parties", title: "Parties", slug: "parties", order: 3 },
+  { _id: "cat-djs", title: "DJs", slug: "djs", order: 4 },
+  { _id: "cat-baby-shower", title: "Baby Shower", slug: "baby-shower", order: 5 },
 ];
 
 export const mockGalleryImages: GalleryImage[] = [
