@@ -1,7 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { useMemo, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -33,24 +34,34 @@ type ContactFormProps = {
   socialLinks: SocialLink[];
 };
 
-const contactSchema = z.object({
-  name: z.string().trim().min(2, "Enter your name."),
-  email: z.string().trim().email("Enter a valid email."),
-  subject: z.string().trim().min(2, "Add a subject."),
-  message: z.string().trim().min(10, "Message should be at least 10 characters."),
-});
-
-type ContactValues = z.infer<typeof contactSchema>;
+type ContactValues = {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+};
 
 export function ContactForm({
   contactEmail = siteConfig.contactEmail,
   location,
   socialLinks,
 }: ContactFormProps) {
+  const t = useTranslations("contact");
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const endpoint = getFormspreeEndpoint();
+
+  const contactSchema = useMemo(
+    () =>
+      z.object({
+        name: z.string().trim().min(2, t("errorName")),
+        email: z.string().trim().email(t("errorEmail")),
+        subject: z.string().trim().min(2, t("errorSubject")),
+        message: z.string().trim().min(10, t("errorMessage")),
+      }),
+    [t],
+  );
 
   const form = useForm<ContactValues>({
     resolver: zodResolver(contactSchema),
@@ -96,16 +107,16 @@ export function ContactForm({
             error?: string;
           };
           setStatus("error");
-          setMessage(data.error ?? "Could not send message. Please try again.");
+          setMessage(data.error ?? t("errorGeneric"));
           return;
         }
 
         setStatus("success");
-        setMessage("Message sent. We’ll get back to you soon.");
+        setMessage(t("success"));
         form.reset();
       } catch {
         setStatus("error");
-        setMessage("Could not send message. Please try again.");
+        setMessage(t("errorGeneric"));
       }
     });
   }
@@ -115,7 +126,7 @@ export function ContactForm({
       <Card>
         <CardHeader>
           <CardTitle className="font-display text-xl tracking-tight">
-            Send a message
+            {t("title")}
           </CardTitle>
           <CardDescription>
             We’ll reply by email — usually within a couple of days.
@@ -134,11 +145,11 @@ export function ContactForm({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>{t("name")}</FormLabel>
                     <FormControl>
                       <Input
                         autoComplete="name"
-                        placeholder="Your name"
+                        placeholder={t("namePlaceholder")}
                         disabled={pending}
                         {...field}
                       />
@@ -153,7 +164,7 @@ export function ContactForm({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t("email")}</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -173,11 +184,11 @@ export function ContactForm({
                 name="subject"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Subject</FormLabel>
+                    <FormLabel>{t("subject")}</FormLabel>
                     <FormControl>
                       <Input
                         autoComplete="off"
-                        placeholder="What’s this about?"
+                        placeholder={t("subjectPlaceholder")}
                         disabled={pending}
                         {...field}
                       />
@@ -192,11 +203,11 @@ export function ContactForm({
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Message</FormLabel>
+                    <FormLabel>{t("message")}</FormLabel>
                     <FormControl>
                       <Textarea
                         rows={6}
-                        placeholder="Tell us a bit about the shoot or collaboration."
+                        placeholder={t("messagePlaceholder")}
                         disabled={pending}
                         {...field}
                       />
@@ -206,13 +217,13 @@ export function ContactForm({
                 )}
               />
 
-              <div className="space-y-3 border-t border-[rgba(148,176,224,0.08)] pt-6">
+              <div className="space-y-3 border-t border-[rgba(134,150,160,0.08)] pt-6">
                 <Button
                   type="submit"
                   disabled={pending}
-                  className="rounded-full bg-accent px-6 text-[#06101f] hover:bg-[#86adf7] hover:text-[#06101f]"
+                  className="rounded-full bg-accent px-6 text-[#0b141a] hover:bg-[#3fe07a] hover:text-[#0b141a]"
                 >
-                  {pending ? "Sending…" : "Send message"}
+                  {pending ? t("sending") : t("send")}
                 </Button>
                 {message ? (
                   <p
@@ -242,7 +253,7 @@ export function ContactForm({
               Studio
             </CardTitle>
             <CardDescription>
-              {location || "Available worldwide"}
+              {location || t("serviceArea")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -260,8 +271,8 @@ export function ContactForm({
             </p>
 
             {socialLinks.length > 0 ? (
-              <div className="space-y-3 border-t border-[rgba(148,176,224,0.08)] pt-4">
-                <p className="type-label">Connect</p>
+              <div className="space-y-3 border-t border-[rgba(134,150,160,0.08)] pt-4">
+                <p className="type-label">{t("connect")}</p>
                 <ul className="space-y-2">
                   {socialLinks.map((link) => (
                     <li key={link.url}>
@@ -285,7 +296,7 @@ export function ContactForm({
         {location ? (
           <Card className="py-4">
             <CardContent className="text-sm text-muted-foreground">
-              Service area: {location}
+              {t("serviceArea")} {location}
             </CardContent>
           </Card>
         ) : null}

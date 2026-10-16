@@ -8,12 +8,16 @@ import type { EventItem } from "@/lib/types/content";
 
 type AddToCalendarButtonProps = {
   event: EventItem;
+  label?: string;
 };
 
 /** Safari needs the object URL to outlive the click before it is released. */
 const OBJECT_URL_TTL_MS = 10_000;
 
-export function AddToCalendarButton({ event }: AddToCalendarButtonProps) {
+export function AddToCalendarButton({
+  event,
+  label = "Add to calendar",
+}: AddToCalendarButtonProps) {
   if (!event.addToCalendar) {
     return null;
   }
@@ -43,7 +47,7 @@ export function AddToCalendarButton({ event }: AddToCalendarButtonProps) {
   return (
     <Button type="button" variant="outline" size="sm" onClick={handleClick}>
       <CalendarPlus className="size-4" aria-hidden />
-      Add to calendar
+      {label}
     </Button>
   );
 }

@@ -60,12 +60,12 @@ type MediaFormValues = z.infer<typeof mediaFormSchema>;
 export function MediaUploadForm({
   categories,
   initialImages,
-  blobReady,
+  storageReady,
   dbReady,
 }: {
   categories: Category[];
   initialImages: AdminImage[];
-  blobReady: boolean;
+  storageReady: boolean;
   dbReady: boolean;
 }) {
   const router = useRouter();
@@ -77,7 +77,7 @@ export function MediaUploadForm({
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
-  const canUpload = blobReady && dbReady;
+  const canUpload = storageReady && dbReady;
 
   const form = useForm<MediaFormValues>({
     resolver: zodResolver(mediaFormSchema),
@@ -160,7 +160,9 @@ export function MediaUploadForm({
           <CardContent className="text-sm text-muted-foreground">
             Connect storage before uploading:{" "}
             {!dbReady ? "set DATABASE_URL. " : null}
-            {!blobReady ? "set BLOB_READ_WRITE_TOKEN (Vercel Blob)." : null}
+            {!storageReady
+              ? "set Firebase Storage env vars (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY, FIREBASE_STORAGE_BUCKET)."
+              : null}
           </CardContent>
         </Card>
       ) : null}
@@ -217,7 +219,7 @@ export function MediaUploadForm({
                   control={form.control}
                   name="featured"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center gap-3 rounded-[10px] border border-[rgba(148,176,224,0.14)] bg-[#0b101a]/60 px-4 py-3 space-y-0">
+                    <FormItem className="flex flex-row items-center gap-3 rounded-[10px] border border-[rgba(134,150,160,0.14)] bg-[#111b21]/60 px-4 py-3 space-y-0">
                       <FormControl>
                         <Checkbox
                           checked={field.value}
@@ -262,7 +264,7 @@ export function MediaUploadForm({
                           "mt-1 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-[14px] border border-dashed px-6 py-12 text-center transition-colors",
                           dragOver
                             ? "border-accent bg-accent/10"
-                            : "border-[rgba(148,176,224,0.22)] bg-[#0b101a]/50 hover:border-accent/50",
+                            : "border-[rgba(134,150,160,0.22)] bg-[#111b21]/50 hover:border-accent/50",
                         )}
                       >
                         <span className="font-mono-nav text-[0.72rem] tracking-[0.14em] text-accent uppercase">
@@ -306,11 +308,11 @@ export function MediaUploadForm({
               />
             </CardContent>
 
-            <CardFooter className="flex flex-wrap items-center gap-4 border-t border-[rgba(148,176,224,0.08)] pt-6">
+            <CardFooter className="flex flex-wrap items-center gap-4 border-t border-[rgba(134,150,160,0.08)] pt-6">
               <Button
                 type="submit"
                 disabled={!canUpload || pending}
-                className="rounded-full bg-accent px-6 text-[#06101f] hover:bg-[#86adf7] hover:text-[#06101f]"
+                className="rounded-full bg-accent px-6 text-[#0b141a] hover:bg-[#3fe07a] hover:text-[#0b141a]"
               >
                 {pending ? "Working…" : "Upload"}
               </Button>

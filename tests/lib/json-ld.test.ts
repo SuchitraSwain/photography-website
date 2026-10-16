@@ -5,7 +5,7 @@ import { serializeJsonLd } from "@/lib/seo/json-ld";
 describe("serializeJsonLd", () => {
   it("escapes angle brackets so a script tag cannot break out", () => {
     const serialized = serializeJsonLd({
-      name: "Krishym Production</script><script>alert(1)</script>",
+      name: "Krishyam Production</script><script>alert(1)</script>",
     });
 
     expect(serialized).not.toContain("</script>");

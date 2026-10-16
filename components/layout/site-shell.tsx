@@ -7,10 +7,12 @@ import { getSiteSettings } from "@/lib/content/fetch";
 
 export async function SiteShell({
   children,
+  locale,
 }: {
   children: React.ReactNode;
+  locale: string;
 }) {
-  const settings = await getSiteSettings();
+  const settings = await getSiteSettings(locale);
 
   return (
     <>

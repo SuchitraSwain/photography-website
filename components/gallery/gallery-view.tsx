@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useState } from "react";
 
 import { GalleryFilters } from "@/components/gallery/gallery-filters";
 import { GalleryMasonry } from "@/components/gallery/gallery-masonry";
@@ -13,6 +14,21 @@ type GalleryViewProps = {
   images: GalleryImage[];
 };
 
+/** Keep the public gallery light: show a random subset on each visit. */
+export const GALLERY_VISIBLE_COUNT = 10;
+
+export function shuffleGalleryImages(images: GalleryImage[]): GalleryImage[] {
+  const next = [...images];
+  for (let i = next.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const a = next[i]!;
+    const b = next[j]!;
+    next[i] = b;
+    next[j] = a;
+  }
+  return next;
+}
+
 export function filterGalleryImages(
   images: GalleryImage[],
   activeFilter: string,
@@ -22,6 +38,19 @@ export function filterGalleryImages(
   }
 
   return images.filter((image) => image.categorySlug === activeFilter);
+}
+
+export function pickGalleryImages(
+  images: GalleryImage[],
+  activeFilter: string,
+  limit = GALLERY_VISIBLE_COUNT,
+) {
+  const filtered = filterGalleryImages(images, activeFilter);
+  // Only the All tab is capped + shuffled; category tabs show the full set.
+  if (activeFilter !== "all") {
+    return filtered;
+  }
+  return shuffleGalleryImages(filtered).slice(0, limit);
 }
 
 export function getAdjacentImageIndex(
@@ -37,22 +66,30 @@ export function getAdjacentImageIndex(
 }
 
 export function GalleryView({ categories, images }: GalleryViewProps) {
+  const t = useTranslations("gallery");
   const [activeFilter, setActiveFilter] = useState("all");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [gridKey, setGridKey] = useState(0);
-
-  const filteredImages = useMemo(
-    () => filterGalleryImages(images, activeFilter),
-    [activeFilter, images],
+  // Stable first paint (SSR/hydration), then reshuffle on the client.
+  const [visibleImages, setVisibleImages] = useState(() =>
+    filterGalleryImages(images, "all").slice(0, GALLERY_VISIBLE_COUNT),
   );
-  const selectedImage = filteredImages[selectedIndex] ?? null;
+
+  useEffect(() => {
+    setVisibleImages(pickGalleryImages(images, activeFilter));
+    setSelectedIndex(0);
+    setGridKey((k) => k + 1);
+  }, [images, activeFilter]);
+
+  const selectedImage = useMemo(
+    () => visibleImages[selectedIndex] ?? null,
+    [selectedIndex, visibleImages],
+  );
 
   function changeFilter(slug: string) {
     setLightboxOpen(false);
-    setSelectedIndex(0);
     setActiveFilter(slug);
-    setGridKey((k) => k + 1);
   }
 
   function openImage(index: number) {
@@ -62,7 +99,7 @@ export function GalleryView({ categories, images }: GalleryViewProps) {
 
   function navigate(direction: -1 | 1) {
     setSelectedIndex((currentIndex) =>
-      getAdjacentImageIndex(currentIndex, direction, filteredImages.length),
+      getAdjacentImageIndex(currentIndex, direction, visibleImages.length),
     );
   }
 
@@ -75,18 +112,15 @@ export function GalleryView({ categories, images }: GalleryViewProps) {
       />
 
       <div className="relative mt-8 min-h-[20rem]">
-        <div
-          key={gridKey}
-          className={cn("motion-fade")}
-        >
-          {filteredImages.length > 0 ? (
+        <div key={gridKey} className={cn("motion-fade")}>
+          {visibleImages.length > 0 ? (
             <GalleryMasonry
-              images={filteredImages}
+              images={visibleImages}
               onImageSelect={openImage}
             />
           ) : (
             <p className="py-20 text-center text-sm text-muted-foreground">
-              No images are available in this category yet.
+              {t("empty")}
             </p>
           )}
         </div>
@@ -95,7 +129,7 @@ export function GalleryView({ categories, images }: GalleryViewProps) {
       <Lightbox
         image={selectedImage}
         position={selectedIndex}
-        total={filteredImages.length}
+        total={visibleImages.length}
         open={lightboxOpen}
         onOpenChange={setLightboxOpen}
         onPrevious={() => navigate(-1)}

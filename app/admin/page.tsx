@@ -27,7 +27,7 @@ export default function AdminHomePage() {
           <li key={item.href}>
             <Link
               href={item.href}
-              className="surface-card group block p-6 transition-colors hover:border-[rgba(148,176,224,0.28)]"
+              className="surface-card group block p-6 transition-colors hover:border-[rgba(134,150,160,0.28)]"
             >
               <p className="font-display text-[clamp(1.35rem,2vw,1.75rem)] text-foreground">
                 {item.label}

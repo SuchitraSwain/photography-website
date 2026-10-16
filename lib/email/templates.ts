@@ -8,12 +8,12 @@ export function bookingClientConfirmation(input: {
     text: [
       `Hi ${input.name},`,
       "",
-      `Thanks for requesting a ${input.eventType} session with Krishym Production.`,
+      `Thanks for requesting a ${input.eventType} session with Krishyam Production.`,
       `Requested time: ${input.dateLabel}`,
       "",
       "This is held tentatively until we confirm. We'll email you soon.",
       "",
-      "— Krishym Production",
+      "— Krishyam Production",
     ].join("\n"),
   };
 }
@@ -55,9 +55,9 @@ export function inquiryClientConfirmation(input: {
     text: [
       `Hi ${input.name},`,
       "",
-      "Thanks for writing to Krishym Production. We received your inquiry and will reply soon.",
+      "Thanks for writing to Krishyam Production. We received your inquiry and will reply soon.",
       "",
-      "— Krishym Production",
+      "— Krishyam Production",
     ].join("\n"),
   };
 }
@@ -94,7 +94,7 @@ export function bookingStatusUpdate(input: {
       "",
       `Your booking request for ${input.dateLabel} is now ${input.status.toLowerCase()}.`,
       "",
-      "— Krishym Production",
+      "— Krishyam Production",
     ].join("\n"),
   };
 }

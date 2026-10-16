@@ -8,7 +8,8 @@ export const siteConfig = {
 
   /** Public contact inbox — prefer NEXT_PUBLIC_CONTACT_EMAIL; server pages also fall back to ADMIN_EMAILS. */
   contactEmail:
-    process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "[MY_REAL_EMAIL]",
+    process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() ||
+    "krishyamproduction@gmail.com",
 
   /**
    * Formspree form ID from https://formspree.io (e.g. "xyzabcde").

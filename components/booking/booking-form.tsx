@@ -1,7 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { useMemo, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -39,18 +40,29 @@ type BookingFormProps = {
   bookingEnabled: boolean;
 };
 
-const bookingSchema = z.object({
-  name: z.string().trim().min(2, "Enter your name."),
-  email: z.string().trim().email("Enter a valid email."),
-  eventType: z.string().min(1, "Select an event type."),
-  location: z.string().trim().min(2, "Add a location."),
-  budget: z.string().trim().optional(),
-  message: z.string().trim().min(10, "Tell us a bit more (10+ characters)."),
-});
-
-type BookingValues = z.infer<typeof bookingSchema>;
+type BookingValues = {
+  name: string;
+  email: string;
+  eventType: string;
+  location: string;
+  budget?: string;
+  message: string;
+};
 
 export function BookingForm({ contactEmail, bookingEnabled }: BookingFormProps) {
+  const t = useTranslations("booking");
+  const bookingSchema = useMemo(
+    () =>
+      z.object({
+        name: z.string().trim().min(2, t("errorName")),
+        email: z.string().trim().email(t("errorEmail")),
+        eventType: z.string().min(1, t("errorEventType")),
+        location: z.string().trim().min(2, t("errorLocation")),
+        budget: z.string().trim().optional(),
+        message: z.string().trim().min(10, t("errorMessage")),
+      }),
+    [t],
+  );
   const [selectedStart, setSelectedStart] = useState<string | null>(null);
   const [selectedEnd, setSelectedEnd] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
@@ -102,17 +114,17 @@ export function BookingForm({ contactEmail, bookingEnabled }: BookingFormProps) 
         const data = (await res.json()) as { error?: string };
         if (!res.ok) {
           setStatus("error");
-          setMessage(data.error ?? "Could not submit booking");
+          setMessage(data.error ?? t("errorGeneric"));
           return;
         }
         setStatus("success");
-        setMessage("Request received. Check your email for confirmation.");
+        setMessage(t("success"));
         form.reset();
         setSelectedStart(null);
         setSelectedEnd(null);
       } catch {
         setStatus("error");
-        setMessage("Could not submit booking");
+        setMessage(t("errorGeneric"));
       }
     });
   }
@@ -203,14 +215,14 @@ export function BookingForm({ contactEmail, bookingEnabled }: BookingFormProps) 
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select type" />
+                          <SelectValue placeholder={t("selectType")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Wedding">Wedding</SelectItem>
-                        <SelectItem value="Portrait">Portrait</SelectItem>
-                        <SelectItem value="Event">Event</SelectItem>
-                        <SelectItem value="Editorial">Editorial</SelectItem>
+                        <SelectItem value="Wedding">{t("wedding")}</SelectItem>
+                        <SelectItem value="Portrait">{t("portrait")}</SelectItem>
+                        <SelectItem value="Event">{t("event")}</SelectItem>
+                        <SelectItem value="Editorial">{t("editorial")}</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -273,13 +285,13 @@ export function BookingForm({ contactEmail, bookingEnabled }: BookingFormProps) 
               />
             </CardContent>
 
-            <CardFooter className="flex flex-col items-start gap-3 border-t border-[rgba(148,176,224,0.08)] pt-6">
+            <CardFooter className="flex flex-col items-start gap-3 border-t border-[rgba(134,150,160,0.08)] pt-6">
               <Button
                 type="submit"
                 disabled={!bookingEnabled || pending}
-                className="rounded-full bg-accent px-6 text-[#06101f] hover:bg-[#86adf7] hover:text-[#06101f]"
+                className="rounded-full bg-accent px-6 text-[#0b141a] hover:bg-[#3fe07a] hover:text-[#0b141a]"
               >
-                {pending ? "Sending…" : "Request booking"}
+                {pending ? t("sending") : t("submit")}
               </Button>
 
               {!bookingEnabled ? (

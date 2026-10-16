@@ -6,7 +6,13 @@ export type SocialLink = {
 export type SiteSettings = {
   brandName: string;
   tagline: string;
-  heroImages: Array<{ src: string; alt: string; lqip?: string }>;
+  heroImages: Array<{
+    src: string;
+    alt: string;
+    lqip?: string;
+    width?: number;
+    height?: number;
+  }>;
   socialLinks: SocialLink[];
   location: string;
   contactEmail: string;
@@ -48,6 +54,9 @@ export type EventItem = {
   description: string;
   imageSrc?: string;
   imageAlt?: string;
+  /** External tickets / details page */
+  ticketUrl?: string;
+  ticketLabel?: string;
   addToCalendar: boolean;
 };
 
@@ -69,10 +78,25 @@ export type PressItem = {
   year: string;
 };
 
+export type AboutBelief = {
+  title: string;
+  body: string;
+};
+
 export type PageAbout = {
+  eyebrow: string;
   headline: string;
-  bio: string; // plain text for Phase 1; portable text can map to string in fetch layer
-  philosophy: string;
+  subhead: string;
+  /** Paragraphs separated by blank lines */
+  bio: string;
+  storyHeadline: string;
+  storyBody: string;
+  philosophyHeadline: string;
+  philosophyIntro: string;
+  beliefs: AboutBelief[];
+  whatWeCreate: string;
+  ctaHeadline: string;
+  ctaBody: string;
   portraitSrc: string;
   portraitAlt: string;
   press: PressItem[];

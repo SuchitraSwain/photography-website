@@ -1,38 +1,40 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useState } from "react";
 
 import { RevealOnScroll } from "@/components/motion/reveal-on-scroll";
 import { cn } from "@/lib/utils";
 
-/**
- * Edit quotes here — carousel logic stays the same.
- */
-const TESTIMONIALS = [
-  {
-    quote:
-      "Every frame felt intentional. They disappeared into the day and still somehow caught the quiet moments we care about most.",
-    name: "Maya & Jordan",
-    detail: "Wedding · Hudson Valley",
-  },
-  {
-    quote:
-      "The portraits feel like us — unforced, elegant, and completely free of the stiff energy we dreaded.",
-    name: "Elena Voss",
-    detail: "Editorial portrait session",
-  },
-  {
-    quote:
-      "Our brand launch looked cinematic without losing the human energy in the room. Turnaround was remarkably fast.",
-    name: "Northline Studio",
-    detail: "Product launch coverage",
-  },
-] as const;
-
 export function Testimonials() {
+  const t = useTranslations("home");
+  const testimonials = useMemo(
+    () => [
+      {
+        quote: t("testimonial1Quote"),
+        name: t("testimonial1Name"),
+        detail: t("testimonial1Detail"),
+      },
+      {
+        quote: t("testimonial2Quote"),
+        name: t("testimonial2Name"),
+        detail: t("testimonial2Detail"),
+      },
+      {
+        quote: t("testimonial3Quote"),
+        name: t("testimonial3Name"),
+        detail: t("testimonial3Detail"),
+      },
+    ],
+    [t],
+  );
   const [index, setIndex] = useState(0);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const active = TESTIMONIALS[index] ?? TESTIMONIALS[0];
+  const active = testimonials[index] ?? {
+    quote: "",
+    name: "",
+    detail: "",
+  };
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -40,19 +42,19 @@ export function Testimonials() {
   }, []);
 
   useEffect(() => {
-    if (reduceMotion || TESTIMONIALS.length < 2) return;
+    if (reduceMotion || testimonials.length < 2) return;
     const id = window.setInterval(() => {
-      setIndex((current) => (current + 1) % TESTIMONIALS.length);
+      setIndex((current) => (current + 1) % testimonials.length);
     }, 6000);
     return () => window.clearInterval(id);
-  }, [reduceMotion]);
+  }, [reduceMotion, testimonials.length]);
 
   return (
     <section className="px-6 py-24 sm:px-10 sm:py-32 lg:px-16">
       <RevealOnScroll className="mx-auto max-w-[100rem]">
-        <p className="type-label">Kind words</p>
+        <p className="type-label">{t("testimonialsEyebrow")}</p>
         <h2 className="type-title mt-4 max-w-2xl">
-          What clients remember
+          {t("testimonialsHeadline")}
         </h2>
 
         <div className="relative mt-14 min-h-[14rem] border-t border-border/80 pt-10 md:min-h-[12rem]">
@@ -64,10 +66,12 @@ export function Testimonials() {
               “{active.quote}”
             </p>
             <footer className="mt-8">
-              <p className="text-sm font-medium tracking-wide text-foreground">
+              <p className="text-base font-semibold tracking-wide text-foreground">
                 {active.name}
               </p>
-              <p className="type-label mt-1">{active.detail}</p>
+              <p className="mt-2 font-mono-nav text-[0.875rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+                {active.detail}
+              </p>
             </footer>
           </blockquote>
         </div>
@@ -75,15 +79,15 @@ export function Testimonials() {
         <div
           className="mt-10 flex items-center gap-2"
           role="tablist"
-          aria-label="Testimonials"
+          aria-label={t("testimonialsEyebrow")}
         >
-          {TESTIMONIALS.map((item, i) => (
+          {testimonials.map((item, i) => (
             <button
               key={item.name}
               type="button"
               role="tab"
               aria-selected={i === index}
-              aria-label={`Show testimonial from ${item.name}`}
+              aria-label={item.name}
               onClick={() => setIndex(i)}
               className={`h-1.5 rounded-full transition-all duration-300 ${
                 i === index

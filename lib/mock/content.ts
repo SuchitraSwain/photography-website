@@ -9,16 +9,16 @@ import type {
 import { foundersCredit, siteConfig } from "@/lib/site-config";
 
 export const mockSiteSettings: SiteSettings = {
-  brandName: "Krishym Production",
-  tagline: "Photography for moments that deserve stillness",
+  brandName: "Krishyam Production",
+  tagline: "We code with logic. We create with emotion. We capture with purpose.",
   heroImages: [
     {
-      src: "/images/hero-1.jpg",
-      alt: "Silhouette photographer against dusk sky",
+      src: "/images/hero/hero-01.jpg",
+      alt: "Guest in traditional attire at a celebration",
     },
     {
-      src: "/images/hero-2.jpg",
-      alt: "Wedding couple walking through soft light",
+      src: "/images/hero/hero-05.jpg",
+      alt: "DJ performing behind the decks",
     },
   ],
   socialLinks: [
@@ -28,8 +28,8 @@ export const mockSiteSettings: SiteSettings = {
   location: "Available worldwide",
   contactEmail: siteConfig.contactEmail,
   seo: {
-    titleTemplate: "%s · Krishym Production",
-    description: `Krishym Production is the photography practice of ${foundersCredit()} — weddings, portraits, events, and editorial work.`,
+    titleTemplate: "%s · Krishyam Production",
+    description: `Krishyam Production is the practice of ${foundersCredit()} — two engineers turning events, portraits, fashion, and brand stories into visual work worth remembering.`,
   },
 };
 
@@ -222,42 +222,19 @@ export const mockGalleryImages: GalleryImage[] = [
 
 export const mockEvents: EventItem[] = [
   {
-    _id: "evt-001",
-    title: "Open Studio Evening",
-    slug: "open-studio-evening",
-    start: "2026-11-14T18:00:00.000Z",
-    end: "2026-11-14T21:00:00.000Z",
-    location: "Krishym Production Studio, Brooklyn NY",
+    _id: "evt-nav-shakti-2026",
+    title: "Nav Shakti Navratri 2026",
+    slug: "nav-shakti-navratri-2026",
+    start: "2026-10-18T13:00:00.000Z",
+    end: "2026-10-18T20:00:00.000Z",
+    location: "Tek Dream Event, Flohrstraße 19, 13507 Berlin, Germany",
     description:
-      "An intimate evening to view recent work, meet the team, and discuss upcoming sessions.",
-    imageSrc: "/images/event-gala.jpg",
-    imageAlt: "Guests mingling at a gallery-style studio event",
-    addToCalendar: true,
-  },
-  {
-    _id: "evt-002",
-    title: "Portrait Workshop",
-    slug: "portrait-workshop",
-    start: "2027-02-07T10:00:00.000Z",
-    end: "2027-02-07T16:00:00.000Z",
-    location: "Krishym Production Studio, Brooklyn NY",
-    description:
-      "A hands-on day exploring natural light portraiture, posing, and editorial storytelling.",
-    imageSrc: "/images/portrait-studio.jpg",
-    imageAlt: "Portrait session in soft window light",
-    addToCalendar: true,
-  },
-  {
-    _id: "evt-003",
-    title: "Spring Pop-Up Gallery",
-    slug: "spring-pop-up-gallery",
-    start: "2027-04-18T12:00:00.000Z",
-    end: "2027-04-18T20:00:00.000Z",
-    location: "SoHo Pop-Up Space, New York NY",
-    description:
-      "A one-day pop-up showcasing wedding and editorial selections from the past season.",
-    imageSrc: "/images/editorial-runway.jpg",
-    imageAlt: "Fashion editorial display in a bright gallery space",
+      "Berlin’s premium Navratri experience by Taandav Events — Garba, Raas, and nonstop Ramzat with 360° Dolby Atmos sound at Tek Dream Event. Family-friendly and alcohol-free, with authentic vegetarian Indian food available at the venue. One night, one rhythm, one Shakti. ॥ જય માતાજી ॥",
+    imageSrc: "/images/events/nav-shakti-navratri-2026.jpg",
+    imageAlt: "Nav Shakti Navratri 2026 — Taandav Events in Berlin",
+    ticketUrl:
+      "https://brizz.me/events/nav-shakti-navratri-2026",
+    ticketLabel: "Book tickets on Brizz",
     addToCalendar: true,
   },
 ];
@@ -265,86 +242,115 @@ export const mockEvents: EventItem[] = [
 export const mockPackages: ServicePackage[] = [
   {
     _id: "pkg-001",
-    name: "Essential Portrait",
-    priceLabel: "From $850",
+    name: "The Essential",
+    priceLabel: "01",
     description:
-      "A focused session for individuals and couples who want timeless portraits with an editorial feel.",
+      "The perfect starting point for your next creative project — focused, intentional, and designed to capture the heart of the moment.",
     includes: [
-      "90-minute session",
-      "One location",
-      "20 edited high-resolution images",
-      "Online gallery delivery",
+      "Creative planning call",
+      "1–2 hours of coverage",
+      "One primary location or look",
+      "Curated edited gallery",
+      "Online delivery & personal usage",
     ],
-    addOns: ["Additional hour", "Hair & makeup coordination", "Rush delivery"],
+    addOns: ["Extra hour", "Additional location", "Rush selects"],
     featured: false,
     order: 1,
   },
   {
     _id: "pkg-002",
-    name: "Full Wedding Day",
-    priceLabel: "From $6,500",
+    name: "The Signature",
+    priceLabel: "Most Popular",
     description:
-      "Complete coverage from preparation through reception, crafted for couples who value quiet, honest storytelling.",
+      "A more complete experience, thoughtfully crafted around your story — ideal when the day deserves fuller coverage and a refined edit.",
     includes: [
-      "Up to 10 hours of coverage",
-      "Two photographers",
-      "Engagement session",
-      "400+ edited images",
-      "Fine art print credit",
+      "Creative consultation",
+      "Extended coverage window",
+      "Two looks or locations as needed",
+      "Expanded edited gallery",
+      "Social-ready highlight selects",
+      "Usage guidance for web & press",
     ],
-    addOns: [
-      "Rehearsal dinner coverage",
-      "Album design",
-      "Destination travel",
-    ],
+    addOns: ["Second shooter", "Same-week preview", "Print-ready set"],
     featured: true,
     order: 2,
   },
   {
     _id: "pkg-003",
-    name: "Event & Brand",
-    priceLabel: "Custom quote",
+    name: "The Masterpiece",
+    priceLabel: "03",
     description:
-      "Flexible coverage for galas, launches, and brand activations with fast turnaround for press and social.",
+      "Our most comprehensive creative experience for ambitious visions — campaigns, celebrations, and stories that need room to breathe.",
     includes: [
-      "Half- or full-day coverage",
-      "Same-day preview selects",
-      "Commercial usage license",
-      "Dedicated project manager",
+      "Full creative direction",
+      "Multi-hour or multi-segment coverage",
+      "Second shooter when the brief calls for it",
+      "Extensive gallery with priority edit",
+      "Hero selects for campaigns & decks",
+      "Dedicated project lead",
     ],
-    addOns: ["On-site printing", "Video highlight reel", "Multi-city coverage"],
+    addOns: ["Multi-day coverage", "On-site previews", "Retouched hero set"],
     featured: false,
     order: 3,
+  },
+  {
+    _id: "pkg-004",
+    name: "The Bespoke",
+    priceLabel: "Custom",
+    description:
+      "No templates. No predefined limits. A plan built around you — scoped from a blank page after we understand the vision.",
+    includes: [
+      "Discovery workshop",
+      "Custom scope, timeline & deliverables",
+      "Dedicated creative lead",
+      "Flexible crew as needed",
+      "Gallery & licensing tailored to the brief",
+    ],
+    addOns: ["Travel & destination", "Production support", "Long-term retainers"],
+    featured: false,
+    order: 4,
   },
 ];
 
 export const mockAbout: PageAbout = {
-  headline: "Light, restraint, and the space between moments",
-  bio: `Krishym Production is a two-person photography practice by ${foundersCredit()}. We founded the studio on the belief that the most enduring images leave room for breath — working with couples, creatives, and brands who value craft over noise, documenting weddings, portraits, events, and editorial stories with a calm, intentional eye.`,
-  philosophy:
-    "We favor natural light, honest emotion, and compositions that feel unforced. Every project begins with listening: understanding what you want to remember, then building a visual language that honors it without excess — together.",
-  portraitSrc: "/images/about-portrait.jpg",
-  portraitAlt: `Studio portrait for Krishym Production — ${foundersCredit()}`,
-  press: [
+  eyebrow: "Two engineers. One creative vision.",
+  headline: "Krishyam Production",
+  subhead: "What happens when engineering meets creativity?",
+  bio: `Founded by ${foundersCredit()}, Krishyam Production brings together technical precision, creative thinking, and a deep appreciation for the stories that make us human.
+
+We believe great photography is more than capturing an image—it's understanding the light, anticipating the moment, and creating something that makes people feel.`,
+  storyHeadline: "Different minds. One shared vision.",
+  storyBody: `Engineering taught us to think critically, solve problems, and pay attention to detail. Photography gave us a way to express those qualities through light, composition, emotion, and storytelling.
+
+At Krishyam, we plan with precision, create with curiosity, and approach every project with an open mind. We don't just capture what happens. We capture what it feels like.`,
+  philosophyHeadline: "Engineering gives us precision. Creativity gives us purpose.",
+  philosophyIntro: "",
+  beliefs: [
     {
-      title: "The New Minimalism in Wedding Photography",
-      outlet: "Vogue Weddings",
-      url: "https://example.com/vogue-weddings-minimalism",
-      year: "2025",
+      title: "Authenticity",
+      body: "Real expressions and genuine moments will always mean more than forced perfection.",
     },
     {
-      title: "Portraits That Feel Like Stillness",
-      outlet: "Kinfolk",
-      url: "https://example.com/kinfolk-portraits",
-      year: "2024",
+      title: "Intention",
+      body: "Every frame should have a reason to exist.",
     },
     {
-      title: "Krishym Production: Studio to Watch",
-      outlet: "The Editorialist",
-      url: "https://example.com/editorialist-atelier",
-      year: "2026",
+      title: "Perspective",
+      body: "Sometimes the most powerful story is in the detail everyone else overlooked.",
+    },
+    {
+      title: "Collaboration",
+      body: "The best creative work happens when ideas, people, and perspectives come together.",
     },
   ],
+  whatWeCreate:
+    "From events and celebrations to fashion, portraits, hospitality, and brand campaigns, our work adapts to the story—not the other way around. We blend documentary storytelling, cinematic aesthetics, and editorial thinking into visuals that feel authentic and memorable.",
+  ctaHeadline: "Let's create something meaningful.",
+  ctaBody:
+    "Building a brand, planning an event, creating a campaign, or celebrating a moment that matters? We'd love to hear your story.",
+  portraitSrc: "/images/about-hero-v2.jpg",
+  portraitAlt: "Vintage camera and travel prints — Krishyam Production",
+  press: [],
 };
 
 export const mockContent = {

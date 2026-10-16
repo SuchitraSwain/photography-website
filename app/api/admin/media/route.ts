@@ -1,10 +1,14 @@
-import { del, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 
 import { requireAdmin } from "@/lib/booking/require-admin";
 import { GALLERY_CATEGORY_SLUGS } from "@/lib/content/fetch";
 import { isDatabaseConfigured, prisma } from "@/lib/db";
+import { isFirebaseStorageConfigured } from "@/lib/firebase/admin";
+import {
+  deleteStorageObject,
+  uploadPublicImage,
+} from "@/lib/firebase/storage";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,10 +20,6 @@ const ALLOWED_TYPES = new Set([
   "image/webp",
   "image/gif",
 ]);
-
-function isBlobConfigured(): boolean {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
-}
 
 function sanitizeFilename(name: string): string {
   return name.replace(/[^a-zA-Z0-9._-]/g, "-").slice(0, 120) || "image.jpg";
@@ -51,9 +51,12 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!isBlobConfigured()) {
+  if (!isFirebaseStorageConfigured()) {
     return NextResponse.json(
-      { error: "BLOB_READ_WRITE_TOKEN is not set" },
+      {
+        error:
+          "Firebase Storage is not configured. Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY, FIREBASE_STORAGE_BUCKET.",
+      },
       { status: 501 },
     );
   }
@@ -91,19 +94,16 @@ export async function POST(request: Request) {
     }
 
     const pathname = `gallery/${categorySlug}/${Date.now()}-${sanitizeFilename(file.name)}`;
-    const blob = await put(pathname, file, {
-      access: "public",
-      addRandomSuffix: true,
-      contentType: file.type,
-    });
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const uploaded = await uploadPublicImage(pathname, buffer, file.type);
 
     const title = file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
     const row = await prisma.galleryImage.create({
       data: {
         title,
         alt: title,
-        url: blob.url,
-        pathname: blob.pathname,
+        url: uploaded.url,
+        pathname: uploaded.pathname,
         categorySlug,
         featured,
         published: true,
@@ -140,12 +140,8 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  if (isBlobConfigured()) {
-    try {
-      await del(existing.url);
-    } catch (err) {
-      console.error("[admin/media] blob delete failed", err);
-    }
+  if (isFirebaseStorageConfigured()) {
+    await deleteStorageObject(existing.pathname || existing.url);
   }
 
   await prisma.galleryImage.delete({ where: { id } });

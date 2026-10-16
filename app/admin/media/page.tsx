@@ -2,6 +2,7 @@ import { MediaUploadForm } from "@/components/admin/media-upload-form";
 import { requireAdmin } from "@/lib/booking/require-admin";
 import { getCategories } from "@/lib/content/fetch";
 import { isDatabaseConfigured, prisma } from "@/lib/db";
+import { isFirebaseStorageConfigured } from "@/lib/firebase/admin";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,7 @@ export default async function AdminMediaPage() {
 
   const categories = await getCategories();
   const dbReady = isDatabaseConfigured();
-  const blobReady = Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
+  const storageReady = isFirebaseStorageConfigured();
 
   const images = dbReady
     ? await prisma.galleryImage.findMany({
@@ -27,13 +28,13 @@ export default async function AdminMediaPage() {
       <p className="type-label">Admin</p>
       <h1 className="type-title mt-3">Media</h1>
       <p className="type-lead">
-        Upload gallery images to Vercel Blob. Pick a category, then select one
-        or many files.
+        Upload gallery images to Firebase Storage. Pick a category, then select
+        one or many files.
       </p>
       <div className="mt-12">
         <MediaUploadForm
           categories={categories}
-          blobReady={blobReady}
+          storageReady={storageReady}
           dbReady={dbReady}
           initialImages={images.map((image) => ({
             id: image.id,

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { SiteShell } from "@/components/layout/site-shell";
-import { SmoothScrollProvider } from "@/components/motion/smooth-scroll";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-import { getSiteSettings } from "@/lib/content/fetch";
+import { getLocale } from "next-intl/server";
 import { IBM_Plex_Mono, Inter, Inter_Tight } from "next/font/google";
+
+import { SmoothScrollProvider } from "@/components/motion/smooth-scroll";
+import { getSiteSettings } from "@/lib/content/fetch";
+import { openGraphLocale, resolveLocale } from "@/lib/i18n/locale";
 import "./globals.css";
 
 const display = Inter_Tight({
@@ -29,7 +30,14 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { brandName, seo } = await getSiteSettings();
+  let locale = "en";
+  try {
+    locale = await getLocale();
+  } catch {
+    locale = "en";
+  }
+  const resolved = resolveLocale(locale);
+  const { brandName, seo } = await getSiteSettings(resolved);
 
   return {
     metadataBase: new URL(siteUrl),
@@ -40,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: seo.description,
     openGraph: {
       type: "website",
-      locale: "en_US",
+      locale: openGraphLocale(resolved),
       siteName: brandName,
       title: brandName,
       description: seo.description,
@@ -50,21 +58,34 @@ export async function generateMetadata(): Promise<Metadata> {
       title: brandName,
       description: seo.description,
     },
+    alternates: {
+      languages: {
+        en: "/",
+        de: "/de",
+      },
+    },
   };
 }
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  let locale = "en";
+  try {
+    locale = await getLocale();
+  } catch {
+    locale = "en";
+  }
+
   return (
-    <html lang="en" suppressHydrationWarning className="dark h-full">
+    <html lang={locale} suppressHydrationWarning className="dark h-full">
       <body
         suppressHydrationWarning
         className={`${display.variable} ${body.variable} ${mono.variable} flex min-h-full flex-col font-sans antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <SmoothScrollProvider>
-            <SiteShell>{children}</SiteShell>
-          </SmoothScrollProvider>
-        </ThemeProvider>
+        <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>
   );

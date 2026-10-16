@@ -4,7 +4,8 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 export const runtime = "nodejs";
-export const alt = "Krishym Production — Photography for moments that deserve stillness";
+export const alt =
+  "Krishyam Production — We code with logic. We create with emotion. We capture with purpose.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -22,7 +23,7 @@ export default async function OpenGraphImage() {
           height: "100%",
           display: "flex",
           position: "relative",
-          background: "#0a0a0a",
+          background: "#0b141a",
         }}
       >
         <img
@@ -66,13 +67,13 @@ export default async function OpenGraphImage() {
                 lineHeight: 0.9,
               }}
             >
-              Krishym Production
+              Krishyam Production
             </div>
             <div
               style={{
                 fontSize: 22,
                 letterSpacing: "0.28em",
-                color: "#6c9bf2",
+                color: "#25d366",
                 textTransform: "uppercase",
               }}
             >

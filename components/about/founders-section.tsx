@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import {
   RevealOnScroll,
@@ -8,70 +9,64 @@ import {
   StaggerReveal,
 } from "@/components/motion/reveal-on-scroll";
 
-/**
- * Edit founders here — bios, titles, and Dicebear seeds / imageSrc.
- * Swap imageSrc for real headshots in /public/images/founders later.
- */
-const FOUNDERS = [
-  {
-    name: "Sagar Zinzala",
-    role: "Co-Founder",
-    title: "Co-Founder & Photographer",
-    /** Dicebear seed — change seed (and imageSrc) to regenerate the placeholder */
-    seed: "Sagar",
-    imageSrc: "https://api.dicebear.com/7.x/notionists/svg?seed=Sagar",
-    imageAlt: "Portrait placeholder for Sagar Zinzala",
-    bio: "Sagar is a software engineer by trade and a photographer by obsession. What started as a way to unwind from shipping code turned into a genuine craft — he brings the same precision he applies to systems design to composing a frame. Based in [CITY], drawn to natural light and unscripted moments.",
-  },
-  {
-    name: "Suchitra Swain",
-    role: "Co-Founder",
-    title: "Co-Founder & Photographer",
-    seed: "Suchitra",
-    imageSrc: "https://api.dicebear.com/7.x/notionists/svg?seed=Suchitra",
-    imageAlt: "Portrait placeholder for Suchitra Swain",
-    bio: "Suchitra spends her days solving engineering problems and her weekends chasing golden hour. She co-founded Krishym Production to prove that a technical mind and an artistic eye aren't opposites — they're the same instinct for noticing what matters. Focused on portraits and the quiet, in-between moments most people rush past.",
-  },
-];
-
 export function FoundersSection() {
+  const t = useTranslations("about");
+  const founders = [
+    {
+      name: "Sagar Zinzala",
+      title: t("sagarTitle"),
+      imageSrc: "/images/founders/sagar-v3.jpg",
+      imageAlt: "Portrait of Sagar Zinzala",
+      objectPosition: "object-center",
+      bio: t("sagarBio"),
+      pullQuote: t("sagarNote"),
+    },
+    {
+      name: "Suchitra Swain",
+      title: t("suchitraTitle"),
+      imageSrc: "/images/founders/suchitra.jpg",
+      imageAlt: "Portrait of Suchitra Swain",
+      objectPosition: "object-center",
+      bio: t("suchitraBio"),
+      pullQuote: t("suchitraNote"),
+    },
+  ] as const;
+
   return (
-    <section className="mt-24 border-t border-border pt-16 md:mt-28 md:pt-20">
+    <section className="mt-24 border-t border-border/70 pt-16 md:mt-32 md:pt-20">
       <RevealOnScroll>
-        <p className="type-label">Engineers turned photographers</p>
-        <h2 className="type-title mt-4">The founders</h2>
-        <p className="type-lead">
-          Two engineers. One eye for light.
-        </p>
+        <p className="type-label">{t("foundersHeadline")}</p>
+        <h2 className="type-title mt-4">{t("foundersEyebrow")}</h2>
       </RevealOnScroll>
 
       <StaggerReveal
-        className="mt-10 grid gap-10 md:grid-cols-2 md:gap-8 lg:gap-12"
-        stagger={0.1}
+        className="mt-12 grid gap-12 md:grid-cols-2 md:gap-10"
+        stagger={0.08}
       >
-        {FOUNDERS.map((founder) => (
+        {founders.map((founder) => (
           <StaggerItem key={founder.name}>
             <article className="group flex h-full flex-col">
-              <div className="relative aspect-[4/5] overflow-hidden bg-secondary">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[12px] bg-secondary">
                 <Image
                   src={founder.imageSrc}
                   alt={founder.imageAlt}
                   fill
                   sizes="(min-width: 768px) 40vw, 100vw"
-                  className="object-cover object-top transition duration-[400ms] ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-                  unoptimized
+                  className={`object-cover transition duration-[400ms] ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100 ${founder.objectPosition}`}
                 />
               </div>
               <div className="mt-6 flex flex-1 flex-col">
-                <p className="type-label">{founder.role}</p>
-                <h3 className="font-display mt-2 text-[clamp(1.6rem,2.6vw,2.2rem)] text-foreground">
+                <h3 className="font-display text-[clamp(1.5rem,2.4vw,2rem)] tracking-tight text-foreground">
                   {founder.name}
                 </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-2 text-[0.875rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
                   {founder.title}
                 </p>
-                <p className="type-body mt-5 text-foreground/90">
+                <p className="mt-5 text-[1.12rem] leading-[1.7] text-muted-foreground">
                   {founder.bio}
+                </p>
+                <p className="mt-5 border-l-2 border-accent pl-4 text-base leading-relaxed text-foreground/90 italic">
+                  {founder.pullQuote}
                 </p>
               </div>
             </article>

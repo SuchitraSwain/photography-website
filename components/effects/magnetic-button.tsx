@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, useSpring, useMotionTemplate } from "framer-motion";
-import Link from "next/link";
 import {
   useCallback,
   useRef,
@@ -9,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 type MagneticButtonProps = {

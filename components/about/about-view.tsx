@@ -1,82 +1,126 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { SafeImage } from "@/components/media/safe-image";
 import { RevealOnScroll } from "@/components/motion/reveal-on-scroll";
+import { Link } from "@/i18n/navigation";
 import type { PageAbout } from "@/lib/types/content";
 
 type AboutViewProps = {
   about: PageAbout;
 };
 
+function paragraphs(text: string) {
+  return text.split(/\n\n+/).filter(Boolean);
+}
+
 export function AboutView({ about }: AboutViewProps) {
-  const bioParagraphs = about.bio.split(/\n\n+/).filter(Boolean);
+  const t = useTranslations("about");
+  const bio = paragraphs(about.bio);
+  const story = paragraphs(about.storyBody);
 
   return (
-    <div className="grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start lg:gap-16">
-      <RevealOnScroll className="relative aspect-[3/4] overflow-hidden bg-secondary lg:sticky lg:top-24">
-        <div className="absolute inset-0">
+    <div className="space-y-24 md:space-y-32">
+      {/* Hero */}
+      <section className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <RevealOnScroll className="relative aspect-[4/3] overflow-hidden rounded-[12px] bg-secondary lg:aspect-[5/4]">
           <SafeImage
             src={about.portraitSrc}
             alt={about.portraitAlt}
             fill
             priority
-            sizes="(min-width: 1024px) 40vw, 100vw"
-            className="object-cover"
+            sizes="(min-width: 1024px) 45vw, 100vw"
+            className="object-cover object-center"
           />
-        </div>
-      </RevealOnScroll>
+        </RevealOnScroll>
 
-      <RevealOnScroll delay={0.1}>
-        <p className="type-label">
-          Two engineers. One eye for light.
-        </p>
-        <h1 className="type-title mt-4">{about.headline}</h1>
-
-        <div className="mt-10 space-y-6 border-t border-border pt-10">
-          {bioParagraphs.map((paragraph, index) => (
-            <p key={index} className="type-body max-w-prose">
-              {paragraph}
-            </p>
-          ))}
-        </div>
-
-        <blockquote className="relative mt-12 border-l-2 border-accent pl-6">
-          <span
-            aria-hidden
-            className="font-display absolute -top-3 left-4 text-5xl leading-none text-accent select-none"
-          >
-            &ldquo;
-          </span>
-          <p className="type-label">Philosophy</p>
-          <p className="mt-4 max-w-prose text-lg leading-relaxed text-foreground/95 italic">
-            {about.philosophy}
+        <RevealOnScroll delay={0.08} className="max-w-xl">
+          <p className="type-label">{about.eyebrow}</p>
+          <h1 className="type-title mt-4">{about.headline}</h1>
+          <p className="mt-5 text-xl leading-relaxed text-foreground/90 md:text-2xl">
+            {about.subhead}
           </p>
-        </blockquote>
+          <div className="mt-8 space-y-4 border-t border-border/80 pt-8">
+            {bio.map((paragraph) => (
+              <p
+                key={paragraph.slice(0, 40)}
+                className="text-[1.05rem] leading-[1.75] text-muted-foreground"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </RevealOnScroll>
+      </section>
 
-        {about.press.length > 0 ? (
-          <section className="mt-16 border-t border-border pt-10">
-            <h2 className="type-label">Press</h2>
-            <ul className="mt-8 divide-y divide-border">
-              {about.press.map((item) => (
-                <li key={`${item.url}-${item.year}`} className="py-5 first:pt-0">
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group block"
-                  >
-                    <p className="font-display text-xl font-bold tracking-tight transition-colors group-hover:text-accent">
-                      {item.title}
-                    </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {item.outlet} · {item.year}
-                    </p>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
+      {/* Story */}
+      <section className="mx-auto max-w-3xl">
+        <RevealOnScroll>
+          <p className="type-label">{t("story")}</p>
+          <h2 className="type-title mt-4">{about.storyHeadline}</h2>
+          <div className="mt-8 space-y-5">
+            {story.map((paragraph) => (
+              <p
+                key={paragraph.slice(0, 40)}
+                className="text-[1.05rem] leading-[1.75] text-muted-foreground"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </RevealOnScroll>
+      </section>
+
+      {/* Philosophy */}
+      <section>
+        <RevealOnScroll className="max-w-3xl">
+          <p className="type-label">{t("philosophy")}</p>
+          <h2 className="type-title mt-4">{about.philosophyHeadline}</h2>
+        </RevealOnScroll>
+        <ul className="mt-12 grid gap-px overflow-hidden rounded-[12px] border border-border/70 bg-border/70 sm:grid-cols-2">
+          {about.beliefs.map((belief, index) => (
+            <RevealOnScroll key={belief.title} delay={index * 0.04}>
+              <li className="h-full bg-[#111b21] px-6 py-8 sm:px-8 sm:py-10">
+                <p className="font-display text-lg font-bold tracking-tight text-foreground">
+                  {belief.title}
+                </p>
+                <p className="mt-3 text-[0.98rem] leading-relaxed text-muted-foreground">
+                  {belief.body}
+                </p>
+              </li>
+            </RevealOnScroll>
+          ))}
+        </ul>
+      </section>
+
+      {/* What we create */}
+      <section className="mx-auto max-w-3xl">
+        <RevealOnScroll>
+          <p className="type-label">{t("whatWeCreate")}</p>
+          <p className="mt-6 text-[1.1rem] leading-[1.75] text-muted-foreground">
+            {about.whatWeCreate}
+          </p>
+        </RevealOnScroll>
+      </section>
+
+      {/* CTA */}
+      <RevealOnScroll>
+        <section className="rounded-[16px] border border-border/70 bg-[#111b21] px-6 py-12 sm:px-10 sm:py-14">
+          <h2 className="type-title max-w-2xl">{about.ctaHeadline}</h2>
+          <p className="mt-5 max-w-xl text-[1.05rem] leading-relaxed text-muted-foreground">
+            {about.ctaBody}
+          </p>
+          <Link
+            href="/booking"
+            className="pill-cta-accent mt-8 inline-flex items-center"
+          >
+            {t("cta")}
+            <span aria-hidden className="ml-2">
+              →
+            </span>
+          </Link>
+        </section>
       </RevealOnScroll>
     </div>
   );

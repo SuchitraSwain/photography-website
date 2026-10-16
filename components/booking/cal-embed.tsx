@@ -13,7 +13,7 @@ export function CalEmbed({ calUrl = siteConfig.calUrl }: CalEmbedProps) {
 
   return (
     <div className="space-y-6">
-      <div className="overflow-hidden rounded-[14px] border border-[rgba(148,176,224,0.14)] bg-[#0b101a]/50">
+      <div className="overflow-hidden rounded-[14px] border border-[rgba(134,150,160,0.14)] bg-[#111b21]/50">
         <iframe
           title="Book a session"
           src={calUrl}

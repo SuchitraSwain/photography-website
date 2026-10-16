@@ -45,7 +45,7 @@ export function SafeImage({
         role="img"
         aria-label={alt || "Image unavailable"}
         className={cn(
-          "block animate-pulse bg-gradient-to-br from-[#0b101a] via-[#152035] to-[#0b101a]",
+          "block animate-pulse bg-gradient-to-br from-[#111b21] via-[#202c33] to-[#111b21]",
           fill && "absolute inset-0",
           !fill && "h-full w-full min-h-[12rem]",
           fallbackClassName,
@@ -55,15 +55,22 @@ export function SafeImage({
     );
   }
 
+  const resolvedPlaceholder = placeholder ?? "blur";
+  const useBlurPlaceholder = resolvedPlaceholder === "blur";
+
   return (
     <Image
       {...props}
       src={src}
       alt={alt}
       unoptimized={skipOptimize}
-      placeholder={placeholder ?? "blur"}
-      blurDataURL={blurDataURL ?? DEFAULT_BLUR_DATA_URL}
-      className={cn("bg-[#0b101a]", className)}
+      placeholder={resolvedPlaceholder}
+      blurDataURL={
+        useBlurPlaceholder
+          ? (blurDataURL ?? DEFAULT_BLUR_DATA_URL)
+          : undefined
+      }
+      className={cn("bg-[#111b21]", className)}
       onLoad={onLoad}
       onError={(event) => {
         setFailed(true);

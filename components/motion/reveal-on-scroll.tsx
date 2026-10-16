@@ -33,7 +33,9 @@ export function RevealOnScroll({
       className={className}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      // amount:0 = any pixel visible — tall sections (e.g. gallery) never
+      // reach 20% intersection, which left content stuck at opacity 0.
+      viewport={{ once: true, amount: 0 }}
       transition={{ duration: 0.6, delay, ease: EASE }}
       {...props}
     >
@@ -80,7 +82,8 @@ export function StaggerReveal({
       }}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
+      // Tall masonry/column grids never hit a 20% intersection ratio.
+      viewport={{ once: true, amount: 0 }}
     >
       {children}
     </motion.div>

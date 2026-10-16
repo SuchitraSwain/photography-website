@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import type { Category } from "@/lib/types/content";
 import { cn } from "@/lib/utils";
 
@@ -14,8 +16,9 @@ export function GalleryFilters({
   activeFilter,
   onFilterChange,
 }: GalleryFiltersProps) {
+  const t = useTranslations("gallery");
   const filters = [
-    { label: "All", slug: "all" },
+    { label: t("all"), slug: "all" },
     ...categories.map(({ title, slug }) => ({ label: title, slug })),
   ];
 
@@ -23,7 +26,7 @@ export function GalleryFilters({
     <div
       className="flex flex-wrap gap-2"
       role="group"
-      aria-label="Filter gallery by category"
+      aria-label={t("filterAria")}
     >
       {filters.map(({ label, slug }) => {
         const isActive = activeFilter === slug;
@@ -35,10 +38,10 @@ export function GalleryFilters({
             aria-pressed={isActive}
             onClick={() => onFilterChange(slug)}
             className={cn(
-              "font-mono-nav rounded-full border px-4 py-2 text-[0.74rem] font-medium tracking-[0.12em] uppercase transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+              "font-mono-nav rounded-full border px-4 py-2.5 text-[0.875rem] font-semibold tracking-[0.1em] uppercase transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
               isActive
-                ? "border-accent bg-accent text-[#06101f]"
-                : "border-[rgba(148,176,224,0.14)] text-muted-foreground hover:border-accent/50 hover:text-foreground",
+                ? "border-accent bg-accent text-[#0b141a]"
+                : "border-[rgba(134,150,160,0.14)] text-muted-foreground hover:border-accent/50 hover:text-foreground",
             )}
           >
             {label}

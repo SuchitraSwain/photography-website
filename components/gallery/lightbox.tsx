@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
@@ -11,7 +12,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { GALLERY_CATEGORY_LABELS } from "@/lib/content/categories";
 import type { GalleryImage } from "@/lib/types/content";
 
 type LightboxProps = {
@@ -25,7 +25,6 @@ type LightboxProps = {
 };
 
 const SWIPE_THRESHOLD = 50;
-const CATEGORY_LABELS = GALLERY_CATEGORY_LABELS;
 
 export function Lightbox({
   image,
@@ -36,6 +35,7 @@ export function Lightbox({
   onPrevious,
   onNext,
 }: LightboxProps) {
+  const t = useTranslations("gallery");
   const pointerStartX = useRef<number | null>(null);
 
   function handlePointerDown(event: React.PointerEvent) {
@@ -83,7 +83,7 @@ export function Lightbox({
       >
         <DialogTitle className="sr-only">{image.title}</DialogTitle>
         <DialogDescription className="sr-only">
-          {image.alt}. Image {position + 1} of {total}.
+          {image.alt}. {t("position", { current: position + 1, total })}.
         </DialogDescription>
 
         <SafeImage
@@ -91,6 +91,7 @@ export function Lightbox({
           src={image.src}
           alt={image.alt}
           fill
+          unoptimized
           sizes="100vw"
           priority
           blurDataURL={image.lqip}
@@ -98,7 +99,7 @@ export function Lightbox({
         />
 
         <DialogClose
-          aria-label="Close"
+          aria-label={t("close")}
           className="absolute top-4 right-4 z-10 rounded-full bg-black/45 p-3 text-white transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           <X aria-hidden="true" className="size-5" />
@@ -108,7 +109,7 @@ export function Lightbox({
           <>
             <button
               type="button"
-              aria-label="Previous image"
+              aria-label={t("previous")}
               onClick={onPrevious}
               className="absolute top-1/2 left-3 z-10 -translate-y-1/2 rounded-full bg-black/45 p-3 text-white transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:left-6"
             >
@@ -116,7 +117,7 @@ export function Lightbox({
             </button>
             <button
               type="button"
-              aria-label="Next image"
+              aria-label={t("next")}
               onClick={onNext}
               className="absolute top-1/2 right-3 z-10 -translate-y-1/2 rounded-full bg-black/45 p-3 text-white transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6"
             >
@@ -125,15 +126,6 @@ export function Lightbox({
           </>
         )}
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-6 pt-14 pb-5 text-center">
-          <p className="text-[0.65rem] tracking-[0.2em] text-white/65 uppercase">
-            {CATEGORY_LABELS[image.categorySlug] ?? image.categorySlug}
-          </p>
-          <p className="mt-1 text-sm font-medium">{image.title}</p>
-          <p className="mt-1 text-xs text-white/70">
-            {position + 1} / {total}
-          </p>
-        </div>
       </DialogContent>
     </Dialog>
   );

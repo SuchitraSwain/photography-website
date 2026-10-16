@@ -16,7 +16,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const WORKTREE = path.resolve(__dirname, "..");
 
-const MAX_BYTES = 12 * 1024 * 1024;
+// Keep well under Blob Hobby 1GB and make gallery tiles load quickly.
+const MAX_BYTES = 800 * 1024;
 const ROOT = process.argv[2];
 
 if (!ROOT || !fs.existsSync(ROOT)) {
@@ -87,7 +88,7 @@ function compressForWeb(filePath, tmpDir) {
   );
 
   // Always make a web-friendly derivative so gallery tiles load quickly.
-  for (const maxEdge of [1600, 1400, 1200, 1000]) {
+  for (const maxEdge of [1400, 1200, 1000, 800]) {
     try {
       execFileSync(
         "sips",
@@ -97,7 +98,7 @@ function compressForWeb(filePath, tmpDir) {
           "jpeg",
           "-s",
           "formatOptions",
-          "72",
+          "65",
           "-Z",
           String(maxEdge),
           filePath,
@@ -107,9 +108,9 @@ function compressForWeb(filePath, tmpDir) {
         { stdio: "ignore" },
       );
       if (fs.existsSync(out) && fs.statSync(out).size > 0) {
-        const mb = fs.statSync(out).size / 1024 / 1024;
-        if (mb <= MAX_BYTES / (1024 * 1024)) {
-          return { path: out, cleanup: true, mb };
+        const bytes = fs.statSync(out).size;
+        if (bytes <= MAX_BYTES) {
+          return { path: out, cleanup: true, mb: bytes / (1024 * 1024) };
         }
       }
     } catch {
@@ -197,8 +198,8 @@ async function main() {
           alt: title || item.categorySlug,
           url: blob.url,
           pathname: blob.pathname,
-          width: 1600,
-          height: 1200,
+          width: 1400,
+          height: 1050,
           categorySlug: item.categorySlug,
           featured,
           published: true,

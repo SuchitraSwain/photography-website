@@ -1,26 +1,74 @@
 "use client";
 
-import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { routing, type AppLocale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
-const NAV_LINKS = [
-  { href: "/gallery", label: "Gallery" },
-  { href: "/events", label: "Events" },
-  { href: "/about", label: "About" },
-  { href: "/services", label: "Services" },
-  { href: "/contact", label: "Contact" },
+const NAV_HREFS = [
+  { href: "/gallery", key: "gallery" },
+  { href: "/events", key: "events" },
+  { href: "/about", key: "about" },
+  { href: "/services", key: "services" },
+  { href: "/contact", key: "contact" },
 ] as const;
 
 type SiteHeaderProps = {
   brandName: string;
 };
 
+function LanguageSwitcher({
+  overHero,
+  className,
+}: {
+  overHero: boolean;
+  className?: string;
+}) {
+  const t = useTranslations("nav");
+  const locale = useLocale() as AppLocale;
+  const pathname = usePathname();
+  const router = useRouter();
+
+  return (
+    <div
+      className={cn("flex items-center gap-1", className)}
+      role="group"
+      aria-label={t("language")}
+    >
+      {routing.locales.map((code) => {
+        const active = locale === code;
+        return (
+          <button
+            key={code}
+            type="button"
+            onClick={() => router.replace(pathname, { locale: code })}
+            className={cn(
+              "font-mono-nav rounded px-1.5 py-0.5 text-[0.8rem] font-semibold tracking-[0.12em] uppercase transition-colors",
+              active
+                ? overHero
+                  ? "text-white"
+                  : "text-foreground"
+                : overHero
+                  ? "text-white/75 hover:text-white"
+                  : "text-muted-foreground hover:text-foreground",
+            )}
+            aria-pressed={active}
+          >
+            {code}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export function SiteHeader({ brandName }: SiteHeaderProps) {
+  const t = useTranslations("nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -50,23 +98,25 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
       <div className="mx-auto flex h-16 max-w-[100rem] items-center justify-between gap-4 px-6 lg:px-10">
         <Link
           href="/"
-          className={cn(
-            "font-mono-nav relative z-10 flex items-center gap-2.5 text-[0.82rem] font-medium tracking-[0.08em] uppercase transition-colors",
-            overHero ? "text-white" : "text-foreground",
-          )}
+          className="relative z-10 flex items-center"
+          aria-label={brandName}
         >
-          <span
-            aria-hidden
-            className="inline-block size-[9px] rounded-[2px] bg-accent shadow-[0_0_12px_rgba(108,155,242,0.8)]"
+          <Image
+            src="/images/brand/krishyam-logo-white.svg"
+            alt={brandName}
+            width={220}
+            height={52}
+            priority
+            unoptimized
+            className="h-9 w-auto object-contain object-left sm:h-10"
           />
-          {brandName}
         </Link>
 
         <nav
           className="hidden items-center gap-7 lg:flex"
-          aria-label="Primary"
+          aria-label={t("primary")}
         >
-          {NAV_LINKS.map(({ href, label }) => {
+          {NAV_HREFS.map(({ href, key }) => {
             const active =
               pathname === href || pathname.startsWith(`${href}/`);
             return (
@@ -74,14 +124,14 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
                 key={href}
                 href={href}
                 className={cn(
-                  "font-mono-nav group relative text-[0.72rem] font-medium tracking-[0.14em] uppercase transition-colors",
+                  "font-mono-nav group relative text-[0.875rem] font-semibold tracking-[0.12em] uppercase transition-colors",
                   overHero
-                    ? "text-white/65 hover:text-white"
-                    : "text-muted-foreground hover:text-foreground",
+                    ? "text-white/85 hover:text-white"
+                    : "text-foreground/80 hover:text-foreground",
                   active && (overHero ? "text-white" : "text-foreground"),
                 )}
               >
-                {label}
+                {t(key)}
                 <span
                   aria-hidden
                   className={cn(
@@ -92,36 +142,40 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
               </Link>
             );
           })}
+          <LanguageSwitcher overHero={overHero} />
           <Link
             href="/booking"
             className={cn(
               "pill-cta",
-              overHero && "border-white/25 text-white hover:border-accent/70 hover:text-accent",
+              overHero &&
+                "border-white/25 text-white hover:border-accent/70 hover:text-accent",
             )}
           >
-            Book
+            {t("book")}
           </Link>
         </nav>
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className={cn(
-            "lg:hidden",
-            overHero && "text-white hover:bg-white/10 hover:text-white",
-          )}
-          aria-expanded={mobileOpen}
-          aria-controls="mobile-nav"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          onClick={() => setMobileOpen((open) => !open)}
-        >
-          {mobileOpen ? (
-            <X className="size-5" aria-hidden />
-          ) : (
-            <Menu className="size-5" aria-hidden />
-          )}
-        </Button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSwitcher overHero={overHero} />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className={cn(
+              overHero && "text-white hover:bg-white/10 hover:text-white",
+            )}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav"
+            aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
+            onClick={() => setMobileOpen((open) => !open)}
+          >
+            {mobileOpen ? (
+              <X className="size-5" aria-hidden />
+            ) : (
+              <Menu className="size-5" aria-hidden />
+            )}
+          </Button>
+        </div>
       </div>
 
       <nav
@@ -130,22 +184,23 @@ export function SiteHeader({ brandName }: SiteHeaderProps) {
           "border-t border-border bg-background lg:hidden",
           mobileOpen ? "block" : "hidden",
         )}
-        aria-label="Primary mobile"
+        aria-label={t("primaryMobile")}
       >
         <ul className="mx-auto flex max-w-[100rem] flex-col px-6 py-5">
-          {[...NAV_LINKS, { href: "/booking", label: "Book" }].map(
-            ({ href, label }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className="font-mono-nav block py-3 text-[0.8rem] tracking-[0.14em] text-foreground uppercase"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {label}
-                </Link>
-              </li>
-            ),
-          )}
+          {[
+            ...NAV_HREFS,
+            { href: "/booking" as const, key: "book" as const },
+          ].map(({ href, key }) => (
+            <li key={href}>
+              <Link
+                href={href}
+                className="font-mono-nav block py-3 text-[1rem] font-semibold tracking-[0.12em] text-foreground uppercase"
+                onClick={() => setMobileOpen(false)}
+              >
+                {t(key)}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
     </header>

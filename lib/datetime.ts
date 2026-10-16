@@ -22,8 +22,12 @@ export function getSiteTimeZone(): string {
   }
 }
 
-function timeZoneAbbreviation(date: Date, timeZone: string): string {
-  const parts = new Intl.DateTimeFormat("en-US", {
+function timeZoneAbbreviation(
+  date: Date,
+  timeZone: string,
+  locale: string = "en-US",
+): string {
+  const parts = new Intl.DateTimeFormat(locale, {
     timeZone,
     timeZoneName: "short",
   }).formatToParts(date);
@@ -35,18 +39,19 @@ export function formatEventDateRange(
   startIso: string,
   endIso: string,
   timeZone: string = getSiteTimeZone(),
+  locale: string = "en-US",
 ): string {
   const start = new Date(startIso);
   const end = new Date(endIso);
 
-  const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  const dateFormatter = new Intl.DateTimeFormat(locale, {
     weekday: "long",
     month: "long",
     day: "numeric",
     year: "numeric",
     timeZone,
   });
-  const timeFormatter = new Intl.DateTimeFormat("en-US", {
+  const timeFormatter = new Intl.DateTimeFormat(locale, {
     hour: "numeric",
     minute: "2-digit",
     timeZone,
@@ -54,7 +59,7 @@ export function formatEventDateRange(
 
   const startDate = dateFormatter.format(start);
   const endDate = dateFormatter.format(end);
-  const zone = timeZoneAbbreviation(start, timeZone);
+  const zone = timeZoneAbbreviation(start, timeZone, locale);
 
   if (startDate === endDate) {
     return `${startDate} · ${timeFormatter.format(start)} – ${timeFormatter.format(end)} ${zone}`;

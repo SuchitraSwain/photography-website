@@ -1,4 +1,13 @@
+import type { AppLocale } from "@/i18n/routing";
+import { resolveLocale } from "@/lib/i18n/locale";
 import { mockContent } from "@/lib/mock/content";
+import {
+  mockAboutDe,
+  mockCategoriesDe,
+  mockEventsDe,
+  mockPackagesDe,
+  mockSiteSettingsDe,
+} from "@/lib/mock/content-de";
 import { isDatabaseConfigured, prisma } from "@/lib/db";
 import type {
   Category,
@@ -56,24 +65,117 @@ async function loadPublishedGalleryImages(): Promise<GalleryImage[] | null> {
   }
 }
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+/** Wide hero plates prepared for full-bleed framing. */
+const HERO_WIDE_PLATES = [
+  {
+    src: "/images/hero/hero-01.jpg",
+    alt: "Guest in traditional attire at a celebration",
+    width: 3712,
+    height: 2088,
+  },
+  {
+    src: "/images/hero/hero-02.jpg",
+    alt: "Live performance moment from an event",
+    width: 3712,
+    height: 2088,
+  },
+  {
+    src: "/images/hero/hero-03.jpg",
+    alt: "Vocalist performing on stage",
+    width: 3712,
+    height: 2088,
+  },
+  {
+    src: "/images/hero/hero-04.jpg",
+    alt: "Celebration crowd energy",
+    width: 3712,
+    height: 2088,
+  },
+  {
+    src: "/images/hero/hero-05.jpg",
+    alt: "DJ performing behind the decks",
+    width: 3840,
+    height: 2560,
+  },
+  {
+    src: "/images/hero/hero-06.jpg",
+    alt: "Party atmosphere on the dance floor",
+    width: 3840,
+    height: 2885,
+  },
+  {
+    src: "/images/hero/hero-07.jpg",
+    alt: "DJ set under club lights",
+    width: 3840,
+    height: 2560,
+  },
+  {
+    src: "/images/hero/hero-08.jpg",
+    alt: "Night event atmosphere",
+    width: 3840,
+    height: 2560,
+  },
+] as const;
+
+function isLandscape(width: number, height: number) {
+  return width > 0 && height > 0 && width / height >= 1.25;
+}
+
+function localizedSiteSettings(locale: AppLocale): SiteSettings {
+  return locale === "de" ? mockSiteSettingsDe : mockContent.siteSettings;
+}
+
+export async function getSiteSettings(
+  locale?: string | null,
+): Promise<SiteSettings> {
+  const resolved = resolveLocale(locale);
   const { getContactEmail } = await import("@/lib/contact-email");
   const contactEmail = getContactEmail();
-  const settings = mockContent.siteSettings;
+  const settings = localizedSiteSettings(resolved);
+  const gallery = await getGalleryImages();
+
+  // Hero carousel: landscape only, skip the portraits category (events/parties/djs/etc. stay).
+  const landscapeGallery = gallery
+    .filter(
+      (image) =>
+        image.categorySlug !== "portraits" &&
+        isLandscape(image.width, image.height),
+    )
+    .map((image) => ({
+      src: image.src,
+      alt: image.alt,
+      lqip: image.lqip,
+      width: image.width,
+      height: image.height,
+    }));
+
+  const plateSrc = new Set<string>(HERO_WIDE_PLATES.map((plate) => plate.src));
+  const heroImages = [
+    ...HERO_WIDE_PLATES.map((plate) => ({ ...plate })),
+    ...landscapeGallery.filter((image) => !plateSrc.has(image.src)),
+  ];
 
   return {
     ...settings,
+    heroImages:
+      heroImages.length > 0
+        ? heroImages
+        : HERO_WIDE_PLATES.map((plate) => ({ ...plate })),
     contactEmail,
     socialLinks: settings.socialLinks.map((link) =>
-      link.label.toLowerCase() === "email"
+      ["email", "e-mail"].includes(link.label.toLowerCase())
         ? { ...link, url: `mailto:${contactEmail}` }
         : link,
     ),
   };
 }
 
-export async function getCategories(): Promise<Category[]> {
-  return mockContent.categories;
+export async function getCategories(
+  locale?: string | null,
+): Promise<Category[]> {
+  return resolveLocale(locale) === "de"
+    ? mockCategoriesDe
+    : mockContent.categories;
 }
 
 export async function getGalleryImages(): Promise<GalleryImage[]> {
@@ -81,25 +183,27 @@ export async function getGalleryImages(): Promise<GalleryImage[]> {
   return fromDb ?? mockContent.galleryImages;
 }
 
+/** Full published gallery pool for the homepage Featured Work shuffle. */
 export async function getFeaturedGalleryImages(): Promise<GalleryImage[]> {
-  const fromDb = await loadPublishedGalleryImages();
-  if (fromDb) {
-    const featured = fromDb.filter((image) => image.featured);
-    return featured.length > 0 ? featured : fromDb.slice(0, 6);
-  }
-  return mockContent.galleryImages.filter((image) => image.featured);
+  return getGalleryImages();
 }
 
-export async function getEvents(): Promise<EventItem[]> {
-  return mockContent.events;
+export async function getEvents(locale?: string | null): Promise<EventItem[]> {
+  return resolveLocale(locale) === "de" ? mockEventsDe : mockContent.events;
 }
 
-export async function getServicePackages(): Promise<ServicePackage[]> {
-  return mockContent.packages;
+export async function getServicePackages(
+  locale?: string | null,
+): Promise<ServicePackage[]> {
+  return resolveLocale(locale) === "de"
+    ? mockPackagesDe
+    : mockContent.packages;
 }
 
-export async function getPageAbout(): Promise<PageAbout> {
-  return mockContent.about;
+export async function getPageAbout(
+  locale?: string | null,
+): Promise<PageAbout> {
+  return resolveLocale(locale) === "de" ? mockAboutDe : mockContent.about;
 }
 
 export const GALLERY_CATEGORY_SLUGS = mockContent.categories.map((c) => c.slug);

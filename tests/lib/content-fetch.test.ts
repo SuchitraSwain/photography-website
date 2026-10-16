@@ -26,7 +26,10 @@ describe("content fetch", () => {
     } = await import("@/lib/content/fetch");
     const { mockContent } = await import("@/lib/mock/content");
 
-    await expect(getSiteSettings()).resolves.toEqual(mockContent.siteSettings);
+    const settings = await getSiteSettings();
+    expect(settings.brandName).toBe(mockContent.siteSettings.brandName);
+    expect(settings.tagline).toBe(mockContent.siteSettings.tagline);
+    expect(settings.heroImages.length).toBeGreaterThan(0);
     await expect(getCategories()).resolves.toEqual(mockContent.categories);
     await expect(getGalleryImages()).resolves.toEqual(mockContent.galleryImages);
     await expect(getEvents()).resolves.toEqual(mockContent.events);
